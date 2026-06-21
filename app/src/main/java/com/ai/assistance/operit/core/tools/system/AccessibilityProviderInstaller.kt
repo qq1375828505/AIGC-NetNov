@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.util.AppLogger
 import com.ai.assistance.operit.data.repository.UIHierarchyManager
 import kotlin.math.min

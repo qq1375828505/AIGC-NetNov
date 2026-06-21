@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.core.tools.system.AndroidShellExecutor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

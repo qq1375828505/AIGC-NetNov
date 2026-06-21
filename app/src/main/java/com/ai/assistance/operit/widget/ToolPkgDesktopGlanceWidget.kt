@@ -27,7 +27,7 @@ import androidx.glance.layout.padding
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 
 class ToolPkgDesktopGlanceWidget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) {

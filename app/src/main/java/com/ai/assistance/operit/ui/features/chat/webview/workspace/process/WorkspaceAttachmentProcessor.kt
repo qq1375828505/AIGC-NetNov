@@ -1,7 +1,7 @@
 package com.ai.assistance.operit.ui.features.chat.webview.workspace.process
 
 import android.content.Context
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 
 object WorkspaceAttachmentProcessor {
     fun generateWorkspaceAttachment(

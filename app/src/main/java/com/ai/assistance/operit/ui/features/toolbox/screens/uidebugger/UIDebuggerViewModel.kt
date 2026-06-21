@@ -9,7 +9,7 @@ import com.ai.assistance.operit.core.tools.UIPageResultData
 import com.ai.assistance.operit.data.model.AITool
 import com.ai.assistance.operit.core.tools.system.action.ActionListener
 import com.ai.assistance.operit.core.tools.system.action.ActionListenerFactory
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.data.model.ToolParameter
 import com.ai.assistance.operit.util.AppLogger
 import kotlinx.coroutines.Dispatchers

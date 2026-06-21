@@ -3,7 +3,7 @@ package com.ai.assistance.operit.ui.features.packages.market
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.data.api.ArtifactProjectRankEntryResponse
 import com.ai.assistance.operit.data.api.GitHubIssue
 import com.ai.assistance.operit.data.mcp.InstallProgress

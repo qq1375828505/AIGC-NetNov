@@ -13,7 +13,7 @@ import android.os.RemoteException
 import com.ai.assistance.operit.util.AppLogger
 import android.widget.Toast
 import androidx.core.content.FileProvider
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.core.tools.system.AccessibilityProviderInstaller
 import com.ai.assistance.operit.provider.IAccessibilityProvider
 import kotlinx.coroutines.Dispatchers

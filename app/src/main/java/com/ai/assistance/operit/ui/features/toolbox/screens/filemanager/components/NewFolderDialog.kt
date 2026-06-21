@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 
 /**
  * 新建文件夹对话框

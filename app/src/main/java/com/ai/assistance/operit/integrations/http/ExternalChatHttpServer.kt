@@ -1,7 +1,7 @@
 package com.ai.assistance.operit.integrations.http
 
 import android.content.Context
-import com.ai.assistance.operit.BuildConfig
+import com.ai.assistance.novelide.BuildConfig
 import com.ai.assistance.operit.data.preferences.ExternalHttpApiPreferences
 import com.ai.assistance.operit.integrations.externalchat.ExternalChatAcceptedResponse
 import com.ai.assistance.operit.integrations.externalchat.ExternalChatHealthResponse

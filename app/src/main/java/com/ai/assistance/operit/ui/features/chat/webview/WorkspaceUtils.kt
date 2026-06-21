@@ -1,7 +1,7 @@
 package com.ai.assistance.operit.ui.features.chat.webview
 
 import android.content.Context
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.util.OperitPaths
 import java.io.File
 import java.io.IOException

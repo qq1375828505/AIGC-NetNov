@@ -2,7 +2,7 @@ package com.ai.assistance.operit.data.converter
 
 import com.ai.assistance.operit.data.model.ChatHistory
 import com.ai.assistance.operit.data.model.ChatMessage
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.core.application.OperitApplication
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.*

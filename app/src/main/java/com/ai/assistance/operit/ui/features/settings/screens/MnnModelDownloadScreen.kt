@@ -22,7 +22,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.data.mnn.DownloadState
 import com.ai.assistance.operit.data.mnn.MnnModel
 import com.ai.assistance.operit.data.mnn.MnnModelDownloadManager

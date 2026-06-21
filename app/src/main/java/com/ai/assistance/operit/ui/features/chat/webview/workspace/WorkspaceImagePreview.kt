@@ -43,7 +43,7 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.CachePolicy
 import coil.request.ImageRequest
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 
 private const val WORKSPACE_IMAGE_MIN_SCALE = 1f
 private const val WORKSPACE_IMAGE_DOUBLE_TAP_SCALE = 2.5f

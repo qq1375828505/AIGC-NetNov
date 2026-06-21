@@ -8,7 +8,7 @@ import android.net.Uri
 import android.os.Build
 import com.ai.assistance.operit.util.AppLogger
 import androidx.core.content.FileProvider
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException

@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 
 /** MCP插件部署命令编辑对话框 允许用户在部署前编辑自动生成的部署命令 */
 @Composable

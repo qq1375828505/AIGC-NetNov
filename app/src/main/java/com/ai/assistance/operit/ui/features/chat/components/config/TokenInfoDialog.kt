@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 
 /**
  * Dialog that explains the token usage policy before redirecting to the token configuration screen.

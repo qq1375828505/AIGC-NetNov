@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 
 /** 
  * 错误弹窗组件，完整显示错误消息内容，包括堆栈跟踪

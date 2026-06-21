@@ -86,7 +86,7 @@ import com.ai.assistance.operit.ui.permissions.PermissionLevel
 import java.text.DecimalFormat
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 
 @Composable
 fun ClassicChatSettingsBar(

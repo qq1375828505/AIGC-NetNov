@@ -1,7 +1,7 @@
 package com.ai.assistance.operit.data.converter
 
 import android.content.Context
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.data.model.ChatHistory
 import com.ai.assistance.operit.data.model.ChatMessage
 import kotlinx.serialization.json.*

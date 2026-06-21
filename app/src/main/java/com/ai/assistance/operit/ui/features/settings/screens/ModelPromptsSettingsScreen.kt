@@ -48,7 +48,7 @@ import android.provider.MediaStore
 import android.widget.Toast
 import android.content.ClipData
 import android.content.ClipboardManager
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.data.model.CharacterCard
 import com.ai.assistance.operit.data.model.CharacterGroupCard
 import com.ai.assistance.operit.data.model.GroupMemberConfig

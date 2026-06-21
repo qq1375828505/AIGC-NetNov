@@ -26,7 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.produceState
 import androidx.core.content.FileProvider
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.novelide.bridge.NovelNativeBridge
 import com.ai.assistance.novelide.data.repository.novel.NovelRepository
 import com.ai.assistance.novelide.data.dao.novel.NovelDao

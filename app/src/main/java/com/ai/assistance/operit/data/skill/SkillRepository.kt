@@ -3,7 +3,7 @@ package com.ai.assistance.operit.data.skill
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.core.tools.skill.SkillManager
 import com.ai.assistance.operit.core.tools.skill.SkillPackage
 import com.ai.assistance.operit.data.preferences.SkillVisibilityPreferences

@@ -10,7 +10,7 @@ import com.ai.assistance.operit.data.repository.UIHierarchyManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.concurrent.atomic.AtomicBoolean
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 
 /**
  * 基于无障碍服务的UI操作监听器 实现ACCESSIBILITY权限级别的操作监听

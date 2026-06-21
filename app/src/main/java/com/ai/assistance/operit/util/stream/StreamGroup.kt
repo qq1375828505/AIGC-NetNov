@@ -1,7 +1,7 @@
 package com.ai.assistance.operit.util.stream
 
 import android.content.Context
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.util.AppLogger
 
 /**

@@ -12,7 +12,7 @@ import android.provider.DocumentsContract
 import android.provider.DocumentsProvider
 import android.util.Base64
 import android.util.Log
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.data.preferences.UserPreferencesManager
 import com.ai.assistance.operit.data.model.Memory
 import com.ai.assistance.operit.data.model.PreferenceProfile

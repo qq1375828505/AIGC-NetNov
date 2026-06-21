@@ -2,7 +2,7 @@ package com.ai.assistance.operit.data.repository
 
 import android.content.Context
 import androidx.compose.ui.graphics.Color
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.data.db.ObjectBoxManager
 import com.ai.assistance.operit.data.model.Memory
 import com.ai.assistance.operit.data.model.MemoryLink

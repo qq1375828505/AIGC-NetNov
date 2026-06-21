@@ -69,7 +69,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 private data class ExternalPackageImportResult(
     val message: String,
     val availablePackages: Map<String, ToolPackage>,

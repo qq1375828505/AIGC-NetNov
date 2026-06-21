@@ -1,7 +1,7 @@
 package com.ai.assistance.operit.ui.features.packages.market
 
 import androidx.annotation.StringRes
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.data.api.GitHubIssue
 import com.ai.assistance.operit.data.api.MarketRankIssueEntryResponse
 import com.ai.assistance.operit.data.api.MarketStatsEntryResponse

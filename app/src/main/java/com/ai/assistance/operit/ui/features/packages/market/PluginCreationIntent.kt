@@ -1,7 +1,7 @@
 package com.ai.assistance.operit.ui.features.packages.market
 
 import android.content.Context
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 
 sealed interface PluginCreationIntent {
     val requirement: String

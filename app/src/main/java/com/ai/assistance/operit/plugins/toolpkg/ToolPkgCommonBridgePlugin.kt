@@ -2,7 +2,7 @@ package com.ai.assistance.operit.plugins.toolpkg
 
 import android.content.Context
 import androidx.compose.ui.graphics.Color
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.core.chat.logMessageTiming
 import com.ai.assistance.operit.core.chat.messageTimingNow
 import com.ai.assistance.operit.core.chat.plugins.MessageProcessingController

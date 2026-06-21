@@ -3,7 +3,7 @@ package com.ai.assistance.operit.util
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 
 object NetworkUtils {
     /**

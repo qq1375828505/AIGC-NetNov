@@ -27,7 +27,7 @@ import com.ai.assistance.operit.ui.floating.FloatContext
 import kotlin.math.*
 
 import androidx.compose.ui.platform.LocalContext
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.data.model.InputProcessingState
 import com.ai.assistance.operit.data.model.PromptFunctionType
 import com.ai.assistance.operit.ui.floating.voice.SpeechInteractionManager

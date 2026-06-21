@@ -2,7 +2,7 @@ package com.ai.assistance.operit.core.subpack
 
 import android.content.Context
 import android.graphics.Bitmap
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.util.AppLogger
 import com.android.apksig.ApkSigner
 import java.io.*

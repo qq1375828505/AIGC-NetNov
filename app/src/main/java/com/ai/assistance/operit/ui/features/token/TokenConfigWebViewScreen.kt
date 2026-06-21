@@ -49,7 +49,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.ui.features.token.components.UrlConfigDialog
 import com.ai.assistance.operit.ui.features.token.model.NavDestination
 import com.ai.assistance.operit.ui.features.token.model.getIconForIndex

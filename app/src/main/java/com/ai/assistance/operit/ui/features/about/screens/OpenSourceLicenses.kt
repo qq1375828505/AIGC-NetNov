@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 
 data class OpenSourceLibrary(
     val name: String,

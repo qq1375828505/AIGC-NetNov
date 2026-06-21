@@ -5,7 +5,7 @@ import android.app.Activity
 import android.net.Uri
 import android.os.Build
 import com.ai.assistance.operit.util.AppLogger
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT

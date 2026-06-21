@@ -24,7 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.core.tools.defaultTool.websession.browser.BrowserDownloadFilter
 import com.ai.assistance.operit.core.tools.defaultTool.websession.browser.BrowserDownloadItem
 import com.ai.assistance.operit.core.tools.defaultTool.websession.browser.BrowserDownloadUiState

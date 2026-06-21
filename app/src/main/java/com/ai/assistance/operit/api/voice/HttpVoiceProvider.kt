@@ -2,7 +2,7 @@ package com.ai.assistance.operit.api.voice
 
 import android.content.Context
 import android.util.Base64
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.data.preferences.SpeechServicesPreferences
 import com.ai.assistance.operit.util.AppLogger
 import com.ai.assistance.operit.util.HttpLogSanitizer

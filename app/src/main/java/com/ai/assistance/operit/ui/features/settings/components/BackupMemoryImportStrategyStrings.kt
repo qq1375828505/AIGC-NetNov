@@ -2,7 +2,7 @@ package com.ai.assistance.operit.ui.features.settings.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 
 internal data class MemoryImportStrategyTexts(
     val question: String,

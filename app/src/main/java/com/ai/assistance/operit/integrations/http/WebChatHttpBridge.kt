@@ -4,8 +4,8 @@ import android.content.Context
 import android.graphics.Color
 import android.net.Uri
 import android.webkit.MimeTypeMap
-import com.ai.assistance.operit.R
-import com.ai.assistance.operit.BuildConfig
+import com.ai.assistance.novelide.R
+import com.ai.assistance.novelide.BuildConfig
 import com.ai.assistance.operit.api.chat.EnhancedAIService
 import com.ai.assistance.operit.api.chat.llmprovider.MediaLinkParser
 import com.ai.assistance.operit.api.chat.ChatRuntimeHolder

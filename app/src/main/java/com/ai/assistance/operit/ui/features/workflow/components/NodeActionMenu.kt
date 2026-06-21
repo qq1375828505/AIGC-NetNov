@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 
 /**
  * 节点操作菜单对话框

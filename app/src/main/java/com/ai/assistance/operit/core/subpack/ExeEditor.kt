@@ -1,7 +1,7 @@
 package com.ai.assistance.operit.core.subpack
 
 import android.content.Context
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.ai.assistance.operit.util.AssetCopyUtils

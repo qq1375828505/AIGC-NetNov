@@ -56,7 +56,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat

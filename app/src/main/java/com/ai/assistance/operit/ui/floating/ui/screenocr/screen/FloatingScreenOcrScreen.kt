@@ -1,6 +1,6 @@
 package com.ai.assistance.operit.ui.floating.ui.screenocr.screen
 
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import android.widget.Toast
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory

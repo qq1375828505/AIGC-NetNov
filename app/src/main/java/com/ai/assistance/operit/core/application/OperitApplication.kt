@@ -20,8 +20,8 @@ import coil.disk.DiskCache
 import coil.request.CachePolicy
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
-import com.ai.assistance.operit.BuildConfig
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.BuildConfig
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.core.chat.AIMessageManager
 import com.ai.assistance.operit.api.chat.AIForegroundService
 import com.ai.assistance.operit.api.chat.library.MemoryAutoSaveScheduler

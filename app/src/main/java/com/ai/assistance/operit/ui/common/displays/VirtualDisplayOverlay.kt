@@ -76,7 +76,7 @@ import kotlin.random.Random
 import com.ai.assistance.operit.ui.floating.ui.ball.rememberParticleSystem
 import androidx.core.graphics.drawable.toBitmap
 import com.ai.assistance.operit.data.preferences.UserPreferencesManager
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import java.util.concurrent.ConcurrentHashMap
 import androidx.compose.ui.res.stringResource
 

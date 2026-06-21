@@ -53,7 +53,7 @@ import com.ai.assistance.operit.data.mcp.plugins.MCPBridge
 import com.ai.assistance.operit.util.AppLogger
 import android.widget.Toast
 import androidx.compose.ui.res.stringResource
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import org.json.JSONObject
 
 import java.util.*

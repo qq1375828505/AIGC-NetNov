@@ -2,7 +2,7 @@ package com.ai.assistance.operit.ui.features.packages.screens
 
 import android.content.Context
 import android.os.Environment
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.core.tools.AIToolHandler
 import com.ai.assistance.operit.core.tools.StringResultData
 import com.ai.assistance.operit.core.tools.packTool.PackageManager

@@ -1,7 +1,7 @@
 package com.ai.assistance.operit.ui.features.toolbox.screens.filemanager.utils
 
 import android.content.Context
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.util.AppLogger
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*

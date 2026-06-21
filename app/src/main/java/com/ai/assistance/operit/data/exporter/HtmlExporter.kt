@@ -1,7 +1,7 @@
 package com.ai.assistance.operit.data.exporter
 
 import android.content.Context
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.data.model.ChatHistory
 import com.ai.assistance.operit.data.model.ChatMessage
 import java.time.format.DateTimeFormatter

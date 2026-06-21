@@ -28,7 +28,7 @@ import com.ai.assistance.operit.core.tools.system.AccessibilityProviderInstaller
 import com.ai.assistance.operit.core.tools.system.ShizukuAuthorizer
 import com.ai.assistance.operit.core.tools.system.Terminal
 import com.ai.assistance.operit.data.mcp.plugins.MCPSharedSession
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 
 private const val TAG = "DemoStateManager"
 

@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import android.net.Uri
 import android.content.Context
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 
 /** ViewModel for MCP 服务器管理，包括安装、卸载等功能 */
 class MCPViewModel(

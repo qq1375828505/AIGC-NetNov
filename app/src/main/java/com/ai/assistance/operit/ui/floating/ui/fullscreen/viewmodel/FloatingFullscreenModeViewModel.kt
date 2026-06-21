@@ -2,7 +2,7 @@ package com.ai.assistance.operit.ui.floating.ui.fullscreen.viewmodel
 
 import android.content.Context
 import androidx.compose.runtime.*
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.core.avatar.common.state.AvatarEmotion
 import com.ai.assistance.operit.data.model.ChatMessage
 import com.ai.assistance.operit.data.model.InputProcessingState

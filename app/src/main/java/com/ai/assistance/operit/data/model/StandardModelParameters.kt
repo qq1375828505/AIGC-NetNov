@@ -1,7 +1,7 @@
 package com.ai.assistance.operit.data.model
 
 import androidx.annotation.StringRes
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 
 /**
  * A data class to hold the static definition of a model parameter.

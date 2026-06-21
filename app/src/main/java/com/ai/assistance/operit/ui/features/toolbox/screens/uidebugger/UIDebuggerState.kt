@@ -2,7 +2,7 @@ package com.ai.assistance.operit.ui.features.toolbox.screens.uidebugger
 
 import android.content.Context
 import android.graphics.Rect
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.core.tools.system.action.ActionListener
 
 /** UI调试工具的状态类（仅保留布局分析和 Activity 监听相关状态） */

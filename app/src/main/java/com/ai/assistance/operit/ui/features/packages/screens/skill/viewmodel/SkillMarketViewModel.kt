@@ -30,7 +30,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import com.ai.assistance.operit.R
+import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.ui.features.packages.market.CommentPostSuccessBehavior
 import com.ai.assistance.operit.ui.features.packages.market.GitHubIssueMarketDefinition
 import com.ai.assistance.operit.ui.features.packages.market.GitHubIssueMarketService
