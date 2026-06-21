@@ -82,42 +82,10 @@ h1{color:#e6edf3;font-size:28px;margin-bottom:8px;letter-spacing:-0.5px}
 <div class="title">我的作品</div>
 <div class="actions"><span>🔍</span><span>＋</span></div>
 </div>
-<div class="content">
-<div class="card" style="display:flex;align-items:center;gap:12px">
-<div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#a855f7,#dda0dd);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">📕</div>
-<div style="flex:1">
-<div class="card-title">凡人修仙之仙界篇</div>
-<div style="display:flex;gap:6px;margin-top:6px;align-items:center">
-<span class="tag tag-green">已完结</span>
-<span style="color:#8b949e;font-size:12px">284.7万字</span>
-</div>
-</div>
-<span style="color:#8b949e;font-size:20px">›</span>
-</div>
-<div class="card" style="display:flex;align-items:center;gap:12px">
-<div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#1f6feb,#58a6ff);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">📕</div>
-<div style="flex:1">
-<div class="card-title">灵境纪元</div>
-<div style="display:flex;gap:6px;margin-top:6px;align-items:center">
-<span class="tag tag-purple">连载中</span>
-<span style="color:#8b949e;font-size:12px">123.4万字</span>
-</div>
-</div>
-<span style="color:#8b949e;font-size:20px">›</span>
-</div>
-<div class="card" style="display:flex;align-items:center;gap:12px">
-<div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#f59e0b,#fbbf24);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">📕</div>
-<div style="flex:1">
-<div class="card-title">我在异界当卷王</div>
-<div style="display:flex;gap:6px;margin-top:6px;align-items:center">
-<span class="tag tag-yellow">草稿</span>
-<span style="color:#8b949e;font-size:12px">1.2万字</span>
-</div>
-</div>
-<span style="color:#8b949e;font-size:20px">›</span>
-</div>
+<div class="content" id="workListContent">
+<div id="workListContainer"></div>
 <div style="margin-top:12px">
-<button style="width:100%;padding:14px;border:2px dashed #30363d;background:transparent;border-radius:12px;color:#58a6ff;font-size:14px;cursor:pointer">＋ 新建作品</button>
+<button id="btnNewWork" style="width:100%;padding:14px;border:2px dashed #30363d;background:transparent;border-radius:12px;color:#58a6ff;font-size:14px;cursor:pointer">＋ 新建作品</button>
 </div>
 </div>
 </div>
@@ -129,33 +97,23 @@ h1{color:#e6edf3;font-size:28px;margin-bottom:8px;letter-spacing:-0.5px}
 <div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
 <div class="top-bar">
 <div class="back-btn">←</div>
-<div class="title" style="font-size:15px">凡人修仙之仙界篇</div>
-<div class="actions"><span>💾</span><span>⋮</span></div>
+<div class="title" id="editorWorkTitle" style="font-size:15px">未选择作品</div>
+<div class="actions"><span id="btnSaveChapter" style="cursor:pointer">💾</span><span style="cursor:pointer" id="btnMoreActions">⋮</span></div>
 </div>
-<div class="chapter-tabs">
-<div class="chapter-tab active">第1章</div>
-<div class="chapter-tab">第2章</div>
-<div class="chapter-tab">第3章</div>
-<div class="chapter-tab">第4章</div>
-<div class="chapter-tab">第5章</div>
+<div class="chapter-tabs" id="chapterTabsContainer">
+<div class="chapter-tab" style="color:#8b949e">请先选择作品</div>
 </div>
 <div class="editor">
 <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-<span style="color:#e6edf3;font-size:13px;font-weight:500">第1章 · 灵界风云</span>
+<span id="chapterTitleLabel" style="color:#e6edf3;font-size:13px;font-weight:500">未选择章节</span>
 <div style="display:flex;gap:8px">
 <span style="color:#8b949e;font-size:12px;cursor:pointer">📝 纯文本</span>
 <span style="color:#8b949e;font-size:12px;cursor:pointer;color:#58a6ff">🎨 富文本</span>
 </div>
 </div>
-<textarea>天地之间，罡风凛冽。
-韩立立于虚空之上，俯瞰着下方连绵起伏的山脉。灵气如潮水般汹涌，一层层金色的霞光在天际线上剧烈翻涌。
-
-"这便是灵界吗......"
-他低语一声，眼中闪过一丝复杂之色。飞升通道已开，身后是熟悉的人界，前方却是未知的灵界天地。
-
-忽然，一道惊雷从九天之上劈落，天地为之震颤。</textarea>
+<textarea id="editorTextarea" placeholder="选择或新建章节开始写作..."></textarea>
 <div style="display:flex;justify-content:space-between;margin-top:8px">
-<span style="color:#8b949e;font-size:12px">字数：126 · 自动保存中...</span>
+<span id="wordCountLabel" style="color:#8b949e;font-size:12px">字数：0 · 就绪</span>
 <div style="display:flex;gap:8px">
 <span style="color:#8b949e;font-size:12px;cursor:pointer">🎤 语音</span>
 <span style="color:#8b949e;font-size:12px;cursor:pointer">✨ AI润色</span>
@@ -348,5 +306,303 @@ h1{color:#e6edf3;font-size:28px;margin-bottom:8px;letter-spacing:-0.5px}
 
 </div>
 <div class="sub" style="margin-top:32px;color:#8b949e">网文写作模块 · 作品 · 编辑器 · 资料 · 大纲 · 统计 · 工具 · 工作区 · 记忆库</div>
+<script>
+// ==================== NativeBridge Helpers ====================
+var currentWorkId = null;
+var currentWorkTitle = '';
+var currentChapterId = null;
+var _saveTimer = null;
+
+function NB_check() {
+  if (typeof window.NativeBridge === 'undefined' || !window.NativeBridge) {
+    return false;
+  }
+  return true;
+}
+function NB_parse(str) {
+  if (!str) return null;
+  try { return JSON.parse(str); } catch (e) { return null; }
+}
+function escapeHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ==================== 作品列表渲染 (Phone 1) ====================
+function renderWorkList() {
+  var container = document.getElementById('workListContainer');
+  if (!container) return;
+  if (!NB_check()) {
+    container.innerHTML = '<div style="text-align:center;padding:20px;color:#8b949e;font-size:13px">请在App中打开以加载数据</div>';
+    return;
+  }
+  var works = [];
+  try {
+    works = NB_parse(window.NativeBridge.getNovelWorks()) || [];
+  } catch (e) {
+    container.innerHTML = '<div style="text-align:center;padding:20px;color:#8b949e;font-size:13px">加载失败</div>';
+    return;
+  }
+  if (works.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:20px;color:#8b949e;font-size:13px">暂无作品，点击下方“新建作品”创建</div>';
+    return;
+  }
+  var gradients = [
+    'linear-gradient(135deg,#a855f7,#dda0dd)',
+    'linear-gradient(135deg,#1f6feb,#58a6ff)',
+    'linear-gradient(135deg,#f59e0b,#fbbf24)',
+    'linear-gradient(135deg,#10b981,#34d399)',
+    'linear-gradient(135deg,#ef4444,#f87171)',
+    'linear-gradient(135deg,#8b5cf6,#c084fc)'
+  ];
+  var html = '';
+  works.forEach(function(w, i) {
+    var grad = gradients[i % gradients.length];
+    var status = w.status || 'draft';
+    var tagClass = status === 'done' ? 'tag-green' : (status === 'wip' ? 'tag-purple' : 'tag-yellow');
+    var statusText = status === 'done' ? '已完结' : (status === 'wip' ? '连载中' : '草稿');
+    var wordCount = w.currentWordCount || 0;
+    var wordStr = wordCount >= 10000 ? (wordCount / 10000).toFixed(1) + '万字' : wordCount + '字';
+    html += '<div class="card" style="display:flex;align-items:center;gap:12px;cursor:pointer" onclick="enterWork(\'' + escapeHtml(w.id) + '\',\'' + escapeHtml(w.title) + '\')">' +
+      '<div style="width:48px;height:48px;border-radius:12px;background:' + grad + ';display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">📕</div>' +
+      '<div style="flex:1">' +
+        '<div class="card-title">' + escapeHtml(w.title || '未命名') + '</div>' +
+        '<div style="display:flex;gap:6px;margin-top:6px;align-items:center">' +
+          '<span class="tag ' + tagClass + '">' + statusText + '</span>' +
+          '<span style="color:#8b949e;font-size:12px">' + wordStr + '</span>' +
+          '<span style="color:#8b949e;font-size:12px">·</span>' +
+          '<span style="color:#8b949e;font-size:12px">' + (w.chapterCount || 0) + '章</span>' +
+        '</div>' +
+      '</div>' +
+      '<div style="display:flex;flex-direction:column;gap:4px;align-items:center">' +
+        '<span style="color:#8b949e;font-size:20px">›</span>' +
+        '<span onclick="event.stopPropagation();deleteWork(\'' + escapeHtml(w.id) + '\')" style="font-size:10px;color:#f85149;cursor:pointer">删除</span>' +
+      '</div>' +
+    '</div>';
+  });
+  container.innerHTML = html;
+}
+
+// ==================== 创建作品 ====================
+function createWork() {
+  var title = prompt('新作品标题：', '');
+  if (!title || !title.trim()) return;
+  var genre = prompt('题材类型（如：玄幻/都市/科幻）：', '玄幻') || '';
+  var description = prompt('作品简介（可留空）：', '') || '';
+  if (!NB_check()) { alert('NativeBridge 不可用'); return; }
+  try {
+    var result = NB_parse(window.NativeBridge.createWork(title.trim(), genre.trim(), description.trim()));
+    if (result && result.success) {
+      renderWorkList();
+    } else {
+      alert('创建失败' + (result && result.error ? ': ' + result.error : ''));
+    }
+  } catch (e) {
+    alert('创建失败: ' + e.message);
+  }
+}
+
+// ==================== 删除作品 ====================
+function deleteWork(workId) {
+  if (!confirm('确认删除该作品？')) return;
+  if (!NB_check()) { alert('NativeBridge 不可用'); return; }
+  try {
+    var result = NB_parse(window.NativeBridge.deleteWork(workId));
+    if (result && result.success) {
+      if (currentWorkId === workId) {
+        currentWorkId = null;
+        currentWorkTitle = '';
+        resetEditor();
+      }
+      renderWorkList();
+    } else {
+      alert('删除失败');
+    }
+  } catch (e) {
+    alert('删除失败: ' + e.message);
+  }
+}
+
+// ==================== 进入作品 (加载章节到 Phone 2) ====================
+function enterWork(workId, title) {
+  currentWorkId = workId;
+  currentWorkTitle = title || '未命名';
+  var titleEl = document.getElementById('editorWorkTitle');
+  if (titleEl) titleEl.textContent = currentWorkTitle;
+  renderChapterTabs();
+}
+
+function resetEditor() {
+  var titleEl = document.getElementById('editorWorkTitle');
+  if (titleEl) titleEl.textContent = '未选择作品';
+  var tabs = document.getElementById('chapterTabsContainer');
+  if (tabs) tabs.innerHTML = '<div class="chapter-tab" style="color:#8b949e">请先选择作品</div>';
+  var label = document.getElementById('chapterTitleLabel');
+  if (label) label.textContent = '未选择章节';
+  var editor = document.getElementById('editorTextarea');
+  if (editor) editor.value = '';
+  var wc = document.getElementById('wordCountLabel');
+  if (wc) wc.textContent = '字数：0 · 就绪';
+}
+
+// ==================== 章节列表渲染 (Phone 2 tabs) ====================
+function renderChapterTabs() {
+  var tabs = document.getElementById('chapterTabsContainer');
+  if (!tabs) return;
+  if (!currentWorkId) {
+    tabs.innerHTML = '<div class="chapter-tab" style="color:#8b949e">请先选择作品</div>';
+    return;
+  }
+  if (!NB_check()) return;
+  var chapters = [];
+  try {
+    chapters = NB_parse(window.NativeBridge.getChapters(currentWorkId)) || [];
+  } catch (e) {
+    tabs.innerHTML = '<div class="chapter-tab" style="color:#f85149">加载失败</div>';
+    return;
+  }
+  var html = '';
+  if (chapters.length === 0) {
+    html = '<div class="chapter-tab" style="color:#8b949e">暂无章节</div>';
+  } else {
+    chapters.forEach(function(c, i) {
+      var t = c.title || ('第' + (i + 1) + '章');
+      html += '<div class="chapter-tab' + (i === 0 ? ' active' : '') + '" onclick="loadChapterContent(\'' + escapeHtml(c.id) + '\',\'' + escapeHtml(t) + '\',this)">' + escapeHtml(t) + '</div>';
+    });
+  }
+  html += '<div class="chapter-tab" style="color:#58a6ff;cursor:pointer;margin-left:auto" onclick="createChapter()">＋ 新章节</div>';
+  tabs.innerHTML = html;
+  // 自动加载第一章
+  if (chapters.length > 0) {
+    var firstTitle = chapters[0].title || '第1章';
+    loadChapterContent(chapters[0].id, firstTitle, tabs.firstElementChild);
+  } else {
+    currentChapterId = null;
+    var editor = document.getElementById('editorTextarea');
+    if (editor) editor.value = '';
+    updateWordCount();
+  }
+}
+
+// ==================== 加载章节内容到编辑器 ====================
+function loadChapterContent(chapterId, title, el) {
+  currentChapterId = chapterId;
+  if (el) {
+    document.querySelectorAll('#chapterTabsContainer .chapter-tab').forEach(function(t) { t.classList.remove('active'); });
+    el.classList.add('active');
+  }
+  var label = document.getElementById('chapterTitleLabel');
+  if (label) label.textContent = title || '';
+  if (!NB_check()) return;
+  var content = '';
+  try {
+    content = window.NativeBridge.getChapterContent(chapterId) || '';
+  } catch (e) {}
+  var editor = document.getElementById('editorTextarea');
+  if (editor) editor.value = content;
+  updateWordCount('已加载');
+}
+
+// ==================== 创建新章节 ====================
+function createChapter() {
+  if (!currentWorkId) { alert('请先选择作品'); return; }
+  var title = prompt('新章节标题：', '');
+  if (!title || !title.trim()) return;
+  if (!NB_check()) { alert('NativeBridge 不可用'); return; }
+  try {
+    var result = NB_parse(window.NativeBridge.createChapter(currentWorkId, title.trim(), 999));
+    if (result && result.success) {
+      renderChapterTabs();
+    } else {
+      alert('创建失败' + (result && result.error ? ': ' + result.error : ''));
+    }
+  } catch (e) {
+    alert('创建失败: ' + e.message);
+  }
+}
+
+// ==================== 保存章节内容 ====================
+function saveChapter() {
+  if (!currentChapterId) { alert('请先选择章节'); return; }
+  if (!NB_check()) { alert('NativeBridge 不可用'); return; }
+  var editor = document.getElementById('editorTextarea');
+  if (!editor) return;
+  try {
+    var wordCount = editor.value.length;
+    var result = NB_parse(window.NativeBridge.saveChapterContent(currentChapterId, editor.value, wordCount));
+    if (result && result.success) {
+      updateWordCount('已保存');
+    } else {
+      updateWordCount('保存失败');
+    }
+  } catch (e) {
+    updateWordCount('保存失败');
+  }
+}
+
+function scheduleSave() {
+  updateWordCount('编辑中…');
+  if (_saveTimer) clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(saveChapter, 1500);
+}
+
+// ==================== 删除章节 ====================
+function deleteCurrentChapter() {
+  if (!currentChapterId) { alert('请先选择章节'); return; }
+  if (!confirm('确认删除该章节？')) return;
+  if (!NB_check()) { alert('NativeBridge 不可用'); return; }
+  try {
+    var result = NB_parse(window.NativeBridge.deleteChapter(currentChapterId));
+    if (result && result.success) {
+      currentChapterId = null;
+      renderChapterTabs();
+    } else {
+      alert('删除失败');
+    }
+  } catch (e) {
+    alert('删除失败: ' + e.message);
+  }
+}
+
+// ==================== 字数统计显示 ====================
+function updateWordCount(status) {
+  var editor = document.getElementById('editorTextarea');
+  var wc = document.getElementById('wordCountLabel');
+  if (!wc) return;
+  var count = editor ? editor.value.length : 0;
+  var statusText = status || '就绪';
+  wc.textContent = '字数：' + count + ' · ' + statusText;
+}
+
+// ==================== 初始化绑定 ====================
+document.addEventListener('DOMContentLoaded', function() {
+  // 新建作品按钮
+  var btnNew = document.getElementById('btnNewWork');
+  if (btnNew) btnNew.addEventListener('click', createWork);
+
+  // 保存按钮
+  var btnSave = document.getElementById('btnSaveChapter');
+  if (btnSave) btnSave.addEventListener('click', saveChapter);
+
+  // 更多操作按钮 (删除当前章节)
+  var btnMore = document.getElementById('btnMoreActions');
+  if (btnMore) btnMore.addEventListener('click', function() {
+    if (currentChapterId) {
+      if (confirm('删除当前章节？')) deleteCurrentChapter();
+    } else {
+      alert('请先选择章节');
+    }
+  });
+
+  // 编辑器输入自动保存
+  var editor = document.getElementById('editorTextarea');
+  if (editor) {
+    editor.addEventListener('input', scheduleSave);
+  }
+
+  // 加载作品列表
+  renderWorkList();
+});
+</script>
 </body>
 </html>

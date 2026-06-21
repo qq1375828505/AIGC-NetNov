@@ -4475,11 +4475,11 @@ function createNewWork() {
   var description = prompt('作品简介（可留空）：', '') || '';
   if (!NB_check()) return;
   try {
-    var id = window.NativeBridge.createNovelWork(title.trim(), genre.trim(), description.trim());
-    if (id) {
+    var result = NB_parse(window.NativeBridge.createWork(title.trim(), genre.trim(), description.trim()));
+    if (result && result.success) {
       renderNovelWorks();
     } else {
-      alert('创建失败');
+      alert('创建失败' + (result && result.error ? ': ' + result.error : ''));
     }
   } catch (e) {
     alert('创建失败: ' + e.message);
@@ -4509,7 +4509,8 @@ function deleteWork(workId) {
   if (!confirm('确认删除该作品？所有章节和资料将一并删除。')) return;
   if (!NB_check()) return;
   try {
-    if (window.NativeBridge.deleteNovelWork(workId)) {
+    var result = NB_parse(window.NativeBridge.deleteWork(workId));
+    if (result && result.success) {
       if (currentWorkId === workId) currentWorkId = null;
       renderNovelWorks();
     } else {
@@ -4602,7 +4603,9 @@ function saveChapterContent() {
   var editor = document.getElementById('editorText');
   if (!editor) return;
   try {
-    if (window.NativeBridge.updateChapterContent(currentChapterId, editor.value)) {
+    var wordCount = editor.value.length;
+    var result = NB_parse(window.NativeBridge.saveChapterContent(currentChapterId, editor.value, wordCount));
+    if (result && result.success) {
       setSaveStatus('已自动保存');
     } else {
       setSaveStatus('保存失败');
@@ -4623,11 +4626,11 @@ function createNewChapter() {
   if (!title || !title.trim()) return;
   if (!NB_check()) return;
   try {
-    var id = window.NativeBridge.createChapter(currentWorkId, title.trim());
-    if (id) {
+    var result = NB_parse(window.NativeBridge.createChapter(currentWorkId, title.trim(), 999));
+    if (result && result.success) {
       renderChapters();
     } else {
-      alert('创建失败');
+      alert('创建失败' + (result && result.error ? ': ' + result.error : ''));
     }
   } catch (e) {
     alert('创建失败: ' + e.message);
@@ -4638,7 +4641,8 @@ function deleteChapter(chapterId) {
   if (!confirm('确认删除该章节？')) return;
   if (!NB_check()) return;
   try {
-    if (window.NativeBridge.deleteChapter(chapterId)) {
+    var result = NB_parse(window.NativeBridge.deleteChapter(chapterId));
+    if (result && result.success) {
       renderChapters();
     } else {
       alert('删除失败');
@@ -4649,18 +4653,61 @@ function deleteChapter(chapterId) {
 }
 
 // ===== 资料管理页 =====
+// 按类型分发到对应的 NativeBridge 方法
+function _getMaterialsByType(type) {
+  var NB = window.NativeBridge;
+  switch (type) {
+    case 'character': return NB_parse(NB.getCharacters(currentWorkId)) || [];
+    case 'setting':   return NB_parse(NB.getSettings(currentWorkId)) || [];
+    case 'location':  return NB_parse(NB.getLocations(currentWorkId)) || [];
+    case 'faction':   return NB_parse(NB.getFactions(currentWorkId)) || [];
+    case 'item':      return NB_parse(NB.getItems(currentWorkId)) || [];
+    case 'plotHook':  return NB_parse(NB.getPlotHooks(currentWorkId)) || [];
+    case 'reference': return NB_parse(NB.getReferences(currentWorkId)) || [];
+    case 'todo':      return NB_parse(NB.getTodos(currentWorkId)) || [];
+    default: return [];
+  }
+}
+function _createMaterialByType(type, name, desc) {
+  var NB = window.NativeBridge;
+  switch (type) {
+    case 'character': return NB_parse(NB.createCharacter(currentWorkId, name, '角色'));
+    case 'setting':   return NB_parse(NB.createSetting(currentWorkId, name, desc));
+    case 'location':  return NB_parse(NB.createLocation(currentWorkId, name, desc));
+    case 'faction':   return NB_parse(NB.createFaction(currentWorkId, name, desc));
+    case 'item':      return NB_parse(NB.createItem(currentWorkId, name, desc));
+    case 'plotHook':  return NB_parse(NB.createPlotHook(currentWorkId, name + (desc ? '\n' + desc : '')));
+    case 'reference': return NB_parse(NB.createReference(currentWorkId, name, desc));
+    case 'todo':      return NB_parse(NB.createTodo(currentWorkId, name, 3));
+    default: return null;
+  }
+}
+function _deleteMaterialByType(type, id) {
+  var NB = window.NativeBridge;
+  switch (type) {
+    case 'character': return NB_parse(NB.deleteCharacter(id));
+    case 'setting':   return NB_parse(NB.deleteSetting(id));
+    case 'location':  return NB_parse(NB.deleteLocation(id));
+    case 'faction':   return NB_parse(NB.deleteFaction(id));
+    case 'item':      return NB_parse(NB.deleteItem(id));
+    case 'plotHook':  return NB_parse(NB.deletePlotHook(id));
+    case 'reference': return NB_parse(NB.deleteReference(id));
+    case 'todo':      return NB_parse(NB.deleteTodo(id));
+    default: return null;
+  }
+}
 function renderMaterials(type) {
   if (type) currentMaterialType = type;
   var list = document.getElementById('materialList');
   if (!list) return;
   if (!currentWorkId) {
-    list.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--text-muted)"><div style="font-size:36px;margin-bottom:8px">⚠️</div><div style="font-size:13px">请先选择作品</div><div style="font-size:11px;margin-top:4px">从"我的作品"进入任一作品后再查看资料</div></div>';
+    list.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--text-muted)"><div style="font-size:36px;margin-bottom:8px">⚠️</div><div style="font-size:13px">请先选择作品</div><div style="font-size:11px;margin-top:4px">从“我的作品”进入任一作品后再查看资料</div></div>';
     return;
   }
   if (!NB_check()) return;
   var items = [];
   try {
-    items = NB_parse(window.NativeBridge.getNovelMaterials(currentWorkId, currentMaterialType)) || [];
+    items = _getMaterialsByType(currentMaterialType);
   } catch (e) {}
   if (items.length === 0) {
     list.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--text-muted)"><div style="font-size:36px;margin-bottom:8px">📁</div><div style="font-size:13px">暂无' + _materialLabel(currentMaterialType) + '资料</div><div style="font-size:11px;margin-top:4px">点击右上角 + 添加</div></div>';
@@ -4668,8 +4715,8 @@ function renderMaterials(type) {
   }
   var html = '';
   items.forEach(function(it) {
-    var name = it.name || it.title || '未命名';
-    var desc = it.description || it.content || it.summary || '';
+    var name = it.name || it.title || it.content || '未命名';
+    var desc = it.description || it.content || it.summary || it.role || it.leader || '';
     if (desc.length > 200) desc = desc.slice(0, 200) + '…';
     html += '<div style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:12px;padding:12px;margin-bottom:8px">' +
       '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">' +
@@ -4690,13 +4737,12 @@ function createNewMaterial() {
   if (!name || !name.trim()) return;
   var description = prompt('描述/内容（可留空）：', '') || '';
   if (!NB_check()) return;
-  var obj = { name: name.trim(), description: description.trim() };
   try {
-    var id = window.NativeBridge.createNovelMaterial(currentWorkId, currentMaterialType, JSON.stringify(obj));
-    if (id) {
+    var result = _createMaterialByType(currentMaterialType, name.trim(), description.trim());
+    if (result && result.success) {
       renderMaterials();
     } else {
-      alert('添加失败');
+      alert('添加失败' + (result && result.error ? ': ' + result.error : ''));
     }
   } catch (e) {
     alert('添加失败: ' + e.message);
@@ -4707,7 +4753,8 @@ function deleteMaterial(id) {
   if (!confirm('确认删除该资料？')) return;
   if (!NB_check()) return;
   try {
-    if (window.NativeBridge.deleteNovelMaterial(id, currentMaterialType)) {
+    var result = _deleteMaterialByType(currentMaterialType, id);
+    if (result && result.success) {
       renderMaterials();
     } else {
       alert('删除失败');
@@ -4735,16 +4782,16 @@ function renderStats() {
   if (!NB_check()) return;
   var stats = null;
   try {
-    stats = NB_parse(window.NativeBridge.getNovelStats(currentWorkId));
+    stats = NB_parse(window.NativeBridge.getWritingStats(currentWorkId));
   } catch (e) {}
   if (!stats) {
     if (elWord) elWord.textContent = '加载失败';
     return;
   }
   if (elWork) elWork.textContent = '1';
-  if (elWord) elWord.textContent = stats.totalWordCount || 0;
-  if (elChap) elChap.textContent = stats.chapterCount || 0;
-  if (elTomato) elTomato.textContent = (stats.tomatoPresetCount != null) ? stats.tomatoPresetCount : '-';
+  if (elWord) elWord.textContent = stats.totalWords || 0;
+  if (elChap) elChap.textContent = stats.totalChapters || 0;
+  if (elTomato) elTomato.textContent = '-';
   if (elDaily) {
     var daily = stats.dailyWordCounts;
     if (daily && daily.length > 0) {

@@ -365,6 +365,7 @@ body {
       </table>
       <div style="padding:8px 0;display:flex;gap:8px">
         <button class="btn btn-secondary" onclick="addRow()">+ 添加关系</button>
+        <button class="btn btn-secondary" onclick="loadFromNativeBridge()" style="color:#5e6ad2" title="从作品数据库加载角色和关系">☁ 从作品加载</button>
         <button class="btn btn-danger" onclick="clearData()">清空</button>
       </div>
     </div>
@@ -1074,6 +1075,78 @@ function escHtml(s) {
 
 // ===== Start =====
 window.onload = init;
+
+// ===== NativeBridge Integration =====
+function loadFromNativeBridge() {
+  if (typeof window.NativeBridge === 'undefined' || !window.NativeBridge) {
+    alert('NativeBridge 不可用，请在 App 中打开此页面');
+    return;
+  }
+  // 1. 获取作品列表让用户选择
+  let works = [];
+  try {
+    works = JSON.parse(window.NativeBridge.getNovelWorks()) || [];
+  } catch (e) {
+    alert('获取作品列表失败: ' + e.message);
+    return;
+  }
+  if (works.length === 0) {
+    alert('暂无作品，请先创建作品并添加角色');
+    return;
+  }
+  // 用户选择作品
+  let options = works.map((w, i) => (i + 1) + '. ' + (w.title || '未命名')).join('\n');
+  let choice = prompt('请选择作品序号：\n' + options, '1');
+  if (!choice) return;
+  let idx = parseInt(choice, 10) - 1;
+  if (isNaN(idx) || idx < 0 || idx >= works.length) { alert('无效选择'); return; }
+  let workId = works[idx].id;
+  let workTitle = works[idx].title || '未命名';
+
+  // 2. 加载角色
+  let chars = [];
+  try {
+    chars = JSON.parse(window.NativeBridge.getCharacters(workId)) || [];
+  } catch (e) {}
+
+  // 3. 加载关系
+  let rels = [];
+  try {
+    rels = JSON.parse(window.NativeBridge.getCharacterRelationships(workId)) || [];
+  } catch (e) {}
+
+  if (chars.length === 0 && rels.length === 0) {
+    alert('作品「' + workTitle + '」暂无角色和关系数据');
+    return;
+  }
+
+  // 清空现有数据并导入
+  characters.clear();
+  relations = [];
+
+  // 构建角色 name -> id 映射
+  let idToName = {};
+  chars.forEach(c => {
+    let name = c.name || '未命名';
+    characters.set(name, { avatar: null, bgColor: randomColor() });
+    idToName[c.id] = name;
+  });
+
+  // 导入关系
+  rels.forEach(r => {
+    let fromName = idToName[r.sourceCharacterId] || r.sourceCharacterId || '';
+    let toName = idToName[r.targetCharacterId] || r.targetCharacterId || '';
+    let relType = r.relationType || r.type || '';
+    if (fromName && toName) {
+      relations.push({ from: fromName, to: toName, type: relType, color: randomColor() });
+    }
+  });
+
+  renderTable();
+  updateAvatarSelect();
+  if (relations.length > 0) generateGraph();
+  document.getElementById('graphTitle').textContent = '角色关系图 — ' + workTitle + ' (' + chars.length + '角色, ' + rels.length + '关系)';
+}
 </script>
 </body>
 </html>
