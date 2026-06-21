@@ -553,10 +553,11 @@ class MainActivity : ComponentActivity() {
 
         // 初始化用户偏好管理器并直接检查初始化状态
         preferencesManager = UserPreferencesManager.getInstance(this)
-        showPreferencesGuide = !preferencesManager.isPreferencesInitialized()
+        // 跳过用户偏好引导页，直接标记为已初始化
+        showPreferencesGuide = false
         AppLogger.d(
                 TAG,
-                "初始化检查: 用户偏好已初始化=${!showPreferencesGuide}，将${if(showPreferencesGuide) "" else "不"}显示引导界面"
+                "初始化检查: 用户偏好引导已跳过，直接进入主界面"
         )
 
         // 初始化协议偏好管理器
@@ -614,16 +615,10 @@ class MainActivity : ComponentActivity() {
 
     // ======== 偏好监听器设置 ========
     private fun setupPreferencesListener() {
-        // 监听偏好变化
+        // 监听偏好变化（已跳过偏好引导页，此处仅保留监听以便后续按需使用）
         lifecycleScope.launch {
-            preferencesManager.getUserPreferencesFlow().collect { profile ->
-                // 只有当状态变化时才更新UI
-                val newValue = !profile.isInitialized
-                if (showPreferencesGuide != newValue) {
-                    AppLogger.d(TAG, "偏好变更: 从 $showPreferencesGuide 变为 $newValue")
-                    showPreferencesGuide = newValue
-                    setAppContent()
-                }
+            preferencesManager.getUserPreferencesFlow().collect { _ ->
+                // 偏好引导已跳过，无需更新 UI
             }
         }
     }
@@ -701,15 +696,12 @@ class MainActivity : ComponentActivity() {
                             // 处理待处理的分享文件
                             processPendingSharedFiles()
                             processPendingSharedText()
-                            val shortcutNavItem = if (!showPreferencesGuide) pendingShortcutNavItem else null
-                            val shortcutNavRequestId =
-                                if (!showPreferencesGuide) pendingShortcutRequestId else 0L
-                            val routeNavRequest = if (!showPreferencesGuide) pendingRouteId else null
-                            val routeNavArgs = if (!showPreferencesGuide) pendingRouteArgs else emptyMap()
-                            val routeNavRequestId =
-                                if (!showPreferencesGuide) pendingRouteRequestId else 0L
+                            val shortcutNavItem = pendingShortcutNavItem
+                            val shortcutNavRequestId = pendingShortcutRequestId
+                            val routeNavRequest = pendingRouteId
+                            val routeNavArgs = pendingRouteArgs
+                            val routeNavRequestId = pendingRouteRequestId
                             val initialNavItem = when {
-                                showPreferencesGuide -> NavItem.UserPreferencesGuide
                                 shortcutNavItem != null -> shortcutNavItem
                                 else -> currentMainNavItem
                             }

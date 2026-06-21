@@ -19,7 +19,8 @@ class AgreementPreferences(context: Context) {
 
     /** Check if the user has already accepted the agreement */
     fun isAgreementAccepted(): Boolean {
-        return prefs.getBoolean(KEY_AGREEMENT_ACCEPTED, false)
+        // 跳过用户协议引导页，默认已接受
+        return prefs.getBoolean(KEY_AGREEMENT_ACCEPTED, true)
     }
 
     /** Set the agreement as accepted and update the flow */
