@@ -7,13 +7,16 @@ import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.UUID
 
 /**
  * 网文写作 NativeBridge
  * 提供给 HTML 前端调用的 JavaScript 接口
+ *
+ * 所有写操作使用 runBlocking(Dispatchers.IO) 同步执行，
+ * 返回统一 JSON 格式：成功 {"success": true, "id": "xxx"} 或 {"success": true}，
+ * 失败 {"success": false, "error": "错误信息"}
  */
 class NovelNativeBridge(
     private val repository: NovelRepository,
@@ -39,33 +42,48 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun createWork(title: String, genre: String, description: String): String {
-        val work = NovelWork(
-            id = UUID.randomUUID().toString(),
-            title = title,
-            genre = genre,
-            description = description
-        )
-        scope.launch(Dispatchers.IO) {
-            repository.insertWork(work)
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val work = NovelWork(
+                    id = UUID.randomUUID().toString(),
+                    title = title,
+                    genre = genre,
+                    description = description
+                )
+                repository.insertWork(work)
+                gson.toJson(mapOf("success" to true, "id" to work.id))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return work.id
     }
 
     @JavascriptInterface
-    fun updateWork(workJson: String): Boolean {
-        val work = gson.fromJson(workJson, NovelWork::class.java)
-        scope.launch(Dispatchers.IO) {
-            repository.updateWork(work)
+    fun updateWork(workJson: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val work = gson.fromJson(workJson, NovelWork::class.java)
+                repository.updateWork(work)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     @JavascriptInterface
-    fun deleteWork(workId: String): Boolean {
-        scope.launch(Dispatchers.IO) {
-            repository.deleteWork(workId)
+    fun deleteWork(workId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                repository.deleteWork(workId)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     // ==================== 章节 ====================
@@ -85,16 +103,21 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun createChapter(workId: String, title: String, order: Int): String {
-        val chapter = Chapter(
-            id = UUID.randomUUID().toString(),
-            workId = workId,
-            title = title,
-            sortOrder = order
-        )
-        scope.launch(Dispatchers.IO) {
-            repository.insertChapter(chapter)
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val chapter = Chapter(
+                    id = UUID.randomUUID().toString(),
+                    workId = workId,
+                    title = title,
+                    sortOrder = order
+                )
+                repository.insertChapter(chapter)
+                gson.toJson(mapOf("success" to true, "id" to chapter.id))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return chapter.id
     }
 
     @JavascriptInterface
@@ -111,25 +134,48 @@ class NovelNativeBridge(
     }
 
     @JavascriptInterface
-    fun saveChapterContent(chapterId: String, content: String, wordCount: Int): Boolean {
-        scope.launch(Dispatchers.IO) {
-            repository.updateChapterContent(chapterId, content, wordCount)
+    fun saveChapterContent(chapterId: String, content: String, wordCount: Int): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                repository.updateChapterContent(chapterId, content, wordCount)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     @JavascriptInterface
-    fun deleteChapter(chapterId: String): Boolean {
-        scope.launch(Dispatchers.IO) {
-            repository.deleteChapter(chapterId)
+    fun deleteChapter(chapterId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                repository.deleteChapter(chapterId)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     @JavascriptInterface
-    fun reorderChapters(workId: String, chapterIdsJson: String): Boolean {
-        // 解析 chapterIdsJson 并更新排序
-        return true
+    fun reorderChapters(workId: String, chapterIdsJson: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val chapterIds = gson.fromJson(chapterIdsJson, Array<String>::class.java).toList()
+                chapterIds.forEachIndexed { index, chapterId ->
+                    val chapter = repository.getChapterById(chapterId)
+                    if (chapter != null) {
+                        repository.updateChapter(chapter.copy(sortOrder = index))
+                    }
+                }
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
+        }
     }
 
     // ==================== 资料 ====================
@@ -149,33 +195,48 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun createCharacter(workId: String, name: String, role: String): String {
-        val character = NovelCharacter(
-            id = UUID.randomUUID().toString(),
-            workId = workId,
-            name = name,
-            role = role
-        )
-        scope.launch(Dispatchers.IO) {
-            repository.insertCharacter(character)
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val character = NovelCharacter(
+                    id = UUID.randomUUID().toString(),
+                    workId = workId,
+                    name = name,
+                    role = role
+                )
+                repository.insertCharacter(character)
+                gson.toJson(mapOf("success" to true, "id" to character.id))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return character.id
     }
 
     @JavascriptInterface
-    fun updateCharacter(characterJson: String): Boolean {
-        val character = gson.fromJson(characterJson, NovelCharacter::class.java)
-        scope.launch(Dispatchers.IO) {
-            repository.updateCharacter(character)
+    fun updateCharacter(characterJson: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val character = gson.fromJson(characterJson, NovelCharacter::class.java)
+                repository.updateCharacter(character)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     @JavascriptInterface
-    fun deleteCharacter(characterId: String): Boolean {
-        scope.launch(Dispatchers.IO) {
-            repository.deleteCharacter(characterId)
+    fun deleteCharacter(characterId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                repository.deleteCharacter(characterId)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     // ==================== 设定 ====================
@@ -195,33 +256,48 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun createSetting(workId: String, name: String, content: String): String {
-        val setting = NovelSetting(
-            id = UUID.randomUUID().toString(),
-            workId = workId,
-            name = name,
-            content = content
-        )
-        scope.launch(Dispatchers.IO) {
-            repository.insertSetting(setting)
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val setting = NovelSetting(
+                    id = UUID.randomUUID().toString(),
+                    workId = workId,
+                    name = name,
+                    content = content
+                )
+                repository.insertSetting(setting)
+                gson.toJson(mapOf("success" to true, "id" to setting.id))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return setting.id
     }
 
     @JavascriptInterface
-    fun updateSetting(settingJson: String): Boolean {
-        val setting = gson.fromJson(settingJson, NovelSetting::class.java)
-        scope.launch(Dispatchers.IO) {
-            repository.updateSetting(setting)
+    fun updateSetting(settingJson: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val setting = gson.fromJson(settingJson, NovelSetting::class.java)
+                repository.updateSetting(setting)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     @JavascriptInterface
-    fun deleteSetting(settingId: String): Boolean {
-        scope.launch(Dispatchers.IO) {
-            repository.deleteSetting(settingId)
+    fun deleteSetting(settingId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                repository.deleteSetting(settingId)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     // ==================== 地点 ====================
@@ -241,33 +317,48 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun createLocation(workId: String, name: String, description: String): String {
-        val location = NovelLocation(
-            id = UUID.randomUUID().toString(),
-            workId = workId,
-            name = name,
-            description = description
-        )
-        scope.launch(Dispatchers.IO) {
-            repository.insertLocation(location)
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val location = NovelLocation(
+                    id = UUID.randomUUID().toString(),
+                    workId = workId,
+                    name = name,
+                    description = description
+                )
+                repository.insertLocation(location)
+                gson.toJson(mapOf("success" to true, "id" to location.id))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return location.id
     }
 
     @JavascriptInterface
-    fun updateLocation(locationJson: String): Boolean {
-        val location = gson.fromJson(locationJson, NovelLocation::class.java)
-        scope.launch(Dispatchers.IO) {
-            repository.updateLocation(location)
+    fun updateLocation(locationJson: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val location = gson.fromJson(locationJson, NovelLocation::class.java)
+                repository.updateLocation(location)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     @JavascriptInterface
-    fun deleteLocation(locationId: String): Boolean {
-        scope.launch(Dispatchers.IO) {
-            repository.deleteLocation(locationId)
+    fun deleteLocation(locationId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                repository.deleteLocation(locationId)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     // ==================== 势力 ====================
@@ -287,33 +378,48 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun createFaction(workId: String, name: String, leader: String): String {
-        val faction = NovelFaction(
-            id = UUID.randomUUID().toString(),
-            workId = workId,
-            name = name,
-            leader = leader
-        )
-        scope.launch(Dispatchers.IO) {
-            repository.insertFaction(faction)
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val faction = NovelFaction(
+                    id = UUID.randomUUID().toString(),
+                    workId = workId,
+                    name = name,
+                    leader = leader
+                )
+                repository.insertFaction(faction)
+                gson.toJson(mapOf("success" to true, "id" to faction.id))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return faction.id
     }
 
     @JavascriptInterface
-    fun updateFaction(factionJson: String): Boolean {
-        val faction = gson.fromJson(factionJson, NovelFaction::class.java)
-        scope.launch(Dispatchers.IO) {
-            repository.updateFaction(faction)
+    fun updateFaction(factionJson: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val faction = gson.fromJson(factionJson, NovelFaction::class.java)
+                repository.updateFaction(faction)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     @JavascriptInterface
-    fun deleteFaction(factionId: String): Boolean {
-        scope.launch(Dispatchers.IO) {
-            repository.deleteFaction(factionId)
+    fun deleteFaction(factionId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                repository.deleteFaction(factionId)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     // ==================== 道具 ====================
@@ -333,33 +439,48 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun createItem(workId: String, name: String, description: String): String {
-        val item = NovelItem(
-            id = UUID.randomUUID().toString(),
-            workId = workId,
-            name = name,
-            description = description
-        )
-        scope.launch(Dispatchers.IO) {
-            repository.insertItem(item)
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val item = NovelItem(
+                    id = UUID.randomUUID().toString(),
+                    workId = workId,
+                    name = name,
+                    description = description
+                )
+                repository.insertItem(item)
+                gson.toJson(mapOf("success" to true, "id" to item.id))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return item.id
     }
 
     @JavascriptInterface
-    fun updateItem(itemJson: String): Boolean {
-        val item = gson.fromJson(itemJson, NovelItem::class.java)
-        scope.launch(Dispatchers.IO) {
-            repository.updateItem(item)
+    fun updateItem(itemJson: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val item = gson.fromJson(itemJson, NovelItem::class.java)
+                repository.updateItem(item)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     @JavascriptInterface
-    fun deleteItem(itemId: String): Boolean {
-        scope.launch(Dispatchers.IO) {
-            repository.deleteItem(itemId)
+    fun deleteItem(itemId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                repository.deleteItem(itemId)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     // ==================== 伏笔 ====================
@@ -379,32 +500,47 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun createPlotHook(workId: String, content: String): String {
-        val hook = PlotHook(
-            id = UUID.randomUUID().toString(),
-            workId = workId,
-            content = content
-        )
-        scope.launch(Dispatchers.IO) {
-            repository.insertPlotHook(hook)
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val hook = PlotHook(
+                    id = UUID.randomUUID().toString(),
+                    workId = workId,
+                    content = content
+                )
+                repository.insertPlotHook(hook)
+                gson.toJson(mapOf("success" to true, "id" to hook.id))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return hook.id
     }
 
     @JavascriptInterface
-    fun updatePlotHook(hookJson: String): Boolean {
-        val hook = gson.fromJson(hookJson, PlotHook::class.java)
-        scope.launch(Dispatchers.IO) {
-            repository.updatePlotHook(hook)
+    fun updatePlotHook(hookJson: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val hook = gson.fromJson(hookJson, PlotHook::class.java)
+                repository.updatePlotHook(hook)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     @JavascriptInterface
-    fun deletePlotHook(hookId: String): Boolean {
-        scope.launch(Dispatchers.IO) {
-            repository.deletePlotHook(hookId)
+    fun deletePlotHook(hookId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                repository.deletePlotHook(hookId)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     // ==================== 参考资料 ====================
@@ -424,33 +560,48 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun createReference(workId: String, title: String, content: String): String {
-        val reference = ReferenceMaterial(
-            id = UUID.randomUUID().toString(),
-            workId = workId,
-            title = title,
-            content = content
-        )
-        scope.launch(Dispatchers.IO) {
-            repository.insertReference(reference)
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val reference = ReferenceMaterial(
+                    id = UUID.randomUUID().toString(),
+                    workId = workId,
+                    title = title,
+                    content = content
+                )
+                repository.insertReference(reference)
+                gson.toJson(mapOf("success" to true, "id" to reference.id))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return reference.id
     }
 
     @JavascriptInterface
-    fun updateReference(referenceJson: String): Boolean {
-        val reference = gson.fromJson(referenceJson, ReferenceMaterial::class.java)
-        scope.launch(Dispatchers.IO) {
-            repository.updateReference(reference)
+    fun updateReference(referenceJson: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val reference = gson.fromJson(referenceJson, ReferenceMaterial::class.java)
+                repository.updateReference(reference)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     @JavascriptInterface
-    fun deleteReference(referenceId: String): Boolean {
-        scope.launch(Dispatchers.IO) {
-            repository.deleteReference(referenceId)
+    fun deleteReference(referenceId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                repository.deleteReference(referenceId)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     // ==================== 写作待办 ====================
@@ -470,33 +621,48 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun createTodo(workId: String, content: String, priority: Int): String {
-        val todo = WritingTodo(
-            id = UUID.randomUUID().toString(),
-            workId = workId,
-            content = content,
-            priority = priority
-        )
-        scope.launch(Dispatchers.IO) {
-            repository.insertTodo(todo)
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val todo = WritingTodo(
+                    id = UUID.randomUUID().toString(),
+                    workId = workId,
+                    content = content,
+                    priority = priority
+                )
+                repository.insertTodo(todo)
+                gson.toJson(mapOf("success" to true, "id" to todo.id))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return todo.id
     }
 
     @JavascriptInterface
-    fun updateTodo(todoJson: String): Boolean {
-        val todo = gson.fromJson(todoJson, WritingTodo::class.java)
-        scope.launch(Dispatchers.IO) {
-            repository.updateTodo(todo)
+    fun updateTodo(todoJson: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val todo = gson.fromJson(todoJson, WritingTodo::class.java)
+                repository.updateTodo(todo)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     @JavascriptInterface
-    fun deleteTodo(todoId: String): Boolean {
-        scope.launch(Dispatchers.IO) {
-            repository.deleteTodo(todoId)
+    fun deleteTodo(todoId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                repository.deleteTodo(todoId)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     // ==================== 角色关系 ====================
@@ -516,34 +682,49 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun createCharacterRelationship(workId: String, sourceId: String, targetId: String, relationType: String): String {
-        val relationship = CharacterRelationship(
-            id = UUID.randomUUID().toString(),
-            workId = workId,
-            sourceCharacterId = sourceId,
-            targetCharacterId = targetId,
-            relationType = relationType
-        )
-        scope.launch(Dispatchers.IO) {
-            repository.insertCharacterRelationship(relationship)
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val relationship = CharacterRelationship(
+                    id = UUID.randomUUID().toString(),
+                    workId = workId,
+                    sourceCharacterId = sourceId,
+                    targetCharacterId = targetId,
+                    relationType = relationType
+                )
+                repository.insertCharacterRelationship(relationship)
+                gson.toJson(mapOf("success" to true, "id" to relationship.id))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return relationship.id
     }
 
     @JavascriptInterface
-    fun updateCharacterRelationship(relationshipJson: String): Boolean {
-        val relationship = gson.fromJson(relationshipJson, CharacterRelationship::class.java)
-        scope.launch(Dispatchers.IO) {
-            repository.updateCharacterRelationship(relationship)
+    fun updateCharacterRelationship(relationshipJson: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val relationship = gson.fromJson(relationshipJson, CharacterRelationship::class.java)
+                repository.updateCharacterRelationship(relationship)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     @JavascriptInterface
-    fun deleteCharacterRelationship(relationshipId: String): Boolean {
-        scope.launch(Dispatchers.IO) {
-            repository.deleteCharacterRelationship(relationshipId)
+    fun deleteCharacterRelationship(relationshipId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                repository.deleteCharacterRelationship(relationshipId)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     // ==================== 事件 ====================
@@ -563,33 +744,48 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun createNovelEvent(workId: String, title: String, description: String): String {
-        val event = NovelEvent(
-            id = UUID.randomUUID().toString(),
-            workId = workId,
-            title = title,
-            description = description
-        )
-        scope.launch(Dispatchers.IO) {
-            repository.insertNovelEvent(event)
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val event = NovelEvent(
+                    id = UUID.randomUUID().toString(),
+                    workId = workId,
+                    title = title,
+                    description = description
+                )
+                repository.insertNovelEvent(event)
+                gson.toJson(mapOf("success" to true, "id" to event.id))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return event.id
     }
 
     @JavascriptInterface
-    fun updateNovelEvent(eventJson: String): Boolean {
-        val event = gson.fromJson(eventJson, NovelEvent::class.java)
-        scope.launch(Dispatchers.IO) {
-            repository.updateNovelEvent(event)
+    fun updateNovelEvent(eventJson: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val event = gson.fromJson(eventJson, NovelEvent::class.java)
+                repository.updateNovelEvent(event)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     @JavascriptInterface
-    fun deleteNovelEvent(eventId: String): Boolean {
-        scope.launch(Dispatchers.IO) {
-            repository.deleteNovelEvent(eventId)
+    fun deleteNovelEvent(eventId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                repository.deleteNovelEvent(eventId)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     // ==================== 事件参与者 ====================
@@ -608,25 +804,35 @@ class NovelNativeBridge(
     }
 
     @JavascriptInterface
-    fun addEventParticipant(eventId: String, characterId: String, role: String): Boolean {
-        val participant = NovelEventParticipant(
-            id = UUID.randomUUID().toString(),
-            eventId = eventId,
-            characterId = characterId,
-            role = role
-        )
-        scope.launch(Dispatchers.IO) {
-            repository.insertNovelEventParticipant(participant)
+    fun addEventParticipant(eventId: String, characterId: String, role: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val participant = NovelEventParticipant(
+                    id = UUID.randomUUID().toString(),
+                    eventId = eventId,
+                    characterId = characterId,
+                    role = role
+                )
+                repository.insertNovelEventParticipant(participant)
+                gson.toJson(mapOf("success" to true, "id" to participant.id))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     @JavascriptInterface
-    fun removeEventParticipant(eventId: String, characterId: String): Boolean {
-        scope.launch(Dispatchers.IO) {
-            repository.deleteNovelEventParticipant(eventId, characterId)
+    fun removeEventParticipant(eventId: String, characterId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                repository.deleteNovelEventParticipant(eventId, characterId)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
         }
-        return true
     }
 
     // ==================== 番茄预设 ====================
