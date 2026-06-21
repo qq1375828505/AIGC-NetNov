@@ -1,5 +1,11 @@
 // 导入导出工具
 
+declare global {
+  interface Window {
+    NativeBridge: any;
+  }
+}
+
 export function registerTools() {
   // 通用导入（支持 TXT/Markdown/JSON）
   Tools.register("novelide:import_file", {
@@ -15,8 +21,8 @@ export function registerTools() {
     },
     execute: async (params: any) => {
       const { uri, fileName, workId } = params;
-      const result = await Tools.callNative("importFile", [uri, fileName, workId || ""]);
-      return { success: true, result: JSON.parse(result) };
+      const result = JSON.parse((window as any).NativeBridge.importFile(uri, fileName, workId || ""));
+      return { success: true, result };
     }
   });
 
@@ -32,8 +38,8 @@ export function registerTools() {
     },
     execute: async (params: any) => {
       const { workId } = params;
-      const result = await Tools.callNative("exportWorkTxt", [workId]);
-      return { success: true, result: JSON.parse(result) };
+      const result = JSON.parse((window as any).NativeBridge.exportWorkTxt(workId));
+      return { success: true, result };
     }
   });
 
@@ -49,8 +55,8 @@ export function registerTools() {
     },
     execute: async (params: any) => {
       const { workId } = params;
-      const result = await Tools.callNative("exportWorkMd", [workId]);
-      return { success: true, result: JSON.parse(result) };
+      const result = JSON.parse((window as any).NativeBridge.exportWorkMd(workId));
+      return { success: true, result };
     }
   });
 
@@ -66,8 +72,8 @@ export function registerTools() {
     },
     execute: async (params: any) => {
       const { workId } = params;
-      const result = await Tools.callNative("exportWorkJson", [workId]);
-      return { success: true, result: JSON.parse(result) };
+      const result = JSON.parse((window as any).NativeBridge.exportWorkJson(workId));
+      return { success: true, result };
     }
   });
 }

@@ -872,10 +872,40 @@ class NovelNativeBridge(
                 val chapters = repository.getChaptersByWorkId(workId).first()
                 val totalWords = chapters.sumOf { it.wordCount }
                 val totalChapters = chapters.size
+
+                // 按状态统计
+                val statusCounts = chapters.groupBy { it.status }.mapValues { it.value.size }
+
+                // 最近 7 天每日字数（基于 updatedAt 时间戳）
+                val now = System.currentTimeMillis()
+                val sevenDaysAgo = now - 7 * 24 * 60 * 60 * 1000L
+                val recentChapters = chapters.filter { it.updatedAt >= sevenDaysAgo }
+                val dailyStats = recentChapters.groupBy {
+                    val cal = java.util.Calendar.getInstance()
+                    cal.timeInMillis = it.updatedAt
+                    "${cal.get(java.util.Calendar.YEAR)}-${cal.get(java.util.Calendar.MONTH) + 1}-${cal.get(java.util.Calendar.DAY_OF_MONTH)}"
+                }.mapValues { entry -> entry.value.sumOf { it.wordCount } }
+
+                // 最近 7 天总字数
+                val recentWords = recentChapters.sumOf { it.wordCount }
+
+                // 平均章节字数
+                val avgChapterWords = if (totalChapters > 0) totalWords / totalChapters else 0
+
+                // 最长/最短章节
+                val longestChapter = chapters.maxByOrNull { it.wordCount }
+                val shortestChapter = chapters.filter { it.wordCount > 0 }.minByOrNull { it.wordCount }
+
                 val stats = mapOf(
                     "totalWords" to totalWords,
                     "totalChapters" to totalChapters,
-                    "workId" to workId
+                    "workId" to workId,
+                    "avgChapterWords" to avgChapterWords,
+                    "recentWords7d" to recentWords,
+                    "dailyStats" to dailyStats,
+                    "statusCounts" to statusCounts,
+                    "longestChapter" to longestChapter?.let { mapOf("id" to it.id, "title" to it.title, "wordCount" to it.wordCount) },
+                    "shortestChapter" to shortestChapter?.let { mapOf("id" to it.id, "title" to it.title, "wordCount" to it.wordCount) }
                 )
                 gson.toJson(stats)
             } catch (e: Exception) {
@@ -883,5 +913,358 @@ class NovelNativeBridge(
                 "{}"
             }
         }
+    }
+
+    // ==================== 卷 ====================
+
+    @JavascriptInterface
+    fun getVolumes(workId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val volumes = repository.getVolumesByWorkId(workId).first()
+                gson.toJson(volumes)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "[]"
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun createVolume(workId: String, title: String, sortOrder: Int): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val volume = NovelVolume(
+                    id = UUID.randomUUID().toString(),
+                    workId = workId,
+                    title = title,
+                    orderIndex = sortOrder
+                )
+                repository.insertVolume(volume)
+                gson.toJson(mapOf("success" to true, "id" to volume.id))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun updateVolume(volumeJson: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val volume = gson.fromJson(volumeJson, NovelVolume::class.java)
+                repository.updateVolume(volume)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun deleteVolume(volumeId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val volume = repository.getVolumeById(volumeId)
+                if (volume != null) {
+                    repository.deleteVolume(volume)
+                }
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
+        }
+    }
+
+    // ==================== 自定义资料夹 ====================
+
+    @JavascriptInterface
+    fun getCustomFolders(workId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val folders = repository.getCustomMaterialFoldersByWorkId(workId).first()
+                gson.toJson(folders)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "[]"
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun createCustomFolder(workId: String, name: String, icon: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val folder = CustomMaterialFolder(
+                    id = UUID.randomUUID().toString(),
+                    workId = workId,
+                    name = name,
+                    icon = icon
+                )
+                repository.insertCustomMaterialFolder(folder)
+                gson.toJson(mapOf("success" to true, "id" to folder.id))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun updateCustomFolder(folderJson: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val folder = gson.fromJson(folderJson, CustomMaterialFolder::class.java)
+                repository.updateCustomMaterialFolder(folder)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun deleteCustomFolder(folderId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                repository.deleteCustomMaterialFolder(folderId)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
+        }
+    }
+
+    // ==================== 自定义资料条目 ====================
+
+    @JavascriptInterface
+    fun getCustomItems(workId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val folders = repository.getCustomMaterialFoldersByWorkId(workId).first()
+                val allItems = mutableListOf<CustomMaterialItem>()
+                for (folder in folders) {
+                    allItems.addAll(repository.getCustomMaterialItemsByFolderId(folder.id).first())
+                }
+                gson.toJson(allItems)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "[]"
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun getItemsByFolder(folderId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val items = repository.getCustomMaterialItemsByFolderId(folderId).first()
+                gson.toJson(items)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "[]"
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun createCustomItem(workId: String, folderId: String, title: String, content: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val item = CustomMaterialItem(
+                    id = UUID.randomUUID().toString(),
+                    folderId = folderId,
+                    title = title,
+                    content = content
+                )
+                repository.insertCustomMaterialItem(item)
+                gson.toJson(mapOf("success" to true, "id" to item.id))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun updateCustomItem(itemJson: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val item = gson.fromJson(itemJson, CustomMaterialItem::class.java)
+                repository.updateCustomMaterialItem(item)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun deleteCustomItem(itemId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                repository.deleteCustomMaterialItem(itemId)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
+        }
+    }
+
+    // ==================== 写作技能 ====================
+
+    @JavascriptInterface
+    fun getWritingSkills(): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val skills = repository.getAllWritingSkills().first()
+                gson.toJson(skills)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "[]"
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun createWritingSkill(workId: String, name: String, description: String, promptTemplate: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val skill = WritingSkill(
+                    id = UUID.randomUUID().toString(),
+                    name = name,
+                    description = description,
+                    systemPrompt = promptTemplate
+                )
+                repository.insertWritingSkill(skill)
+                gson.toJson(mapOf("success" to true, "id" to skill.id))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun updateWritingSkill(skillJson: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val skill = gson.fromJson(skillJson, WritingSkill::class.java)
+                repository.updateWritingSkill(skill)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun deleteWritingSkill(skillId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val skill = repository.getWritingSkillById(skillId)
+                if (skill != null) {
+                    repository.deleteWritingSkill(skill)
+                }
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
+        }
+    }
+
+    // ==================== 设定提醒 ====================
+
+    @JavascriptInterface
+    fun getSettingReminders(workId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val reminders = repository.getSettingRemindersByWorkId(workId).first()
+                gson.toJson(reminders)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "[]"
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun createSettingReminder(workId: String, settingId: String, content: String, triggerType: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val reminder = SettingReminder(
+                    id = UUID.randomUUID().toString(),
+                    workId = workId,
+                    settingId = settingId,
+                    reminderText = content
+                )
+                repository.insertSettingReminder(reminder)
+                gson.toJson(mapOf("success" to true, "id" to reminder.id))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun updateSettingReminder(reminderJson: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val reminder = gson.fromJson(reminderJson, SettingReminder::class.java)
+                repository.updateSettingReminder(reminder)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun deleteSettingReminder(reminderId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val reminder = repository.getSettingReminderById(reminderId)
+                if (reminder != null) {
+                    repository.deleteSettingReminder(reminder)
+                }
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
+        }
+    }
+
+    // ==================== 导入导出 ====================
+
+    @JavascriptInterface
+    fun importFile(uri: String, fileName: String, workId: String): String {
+        return gson.toJson(mapOf("success" to false, "error" to "导入功能开发中，请在后续版本中使用"))
+    }
+
+    @JavascriptInterface
+    fun exportWorkTxt(workId: String): String {
+        return gson.toJson(mapOf("success" to false, "error" to "TXT 导出功能开发中"))
+    }
+
+    @JavascriptInterface
+    fun exportWorkMd(workId: String): String {
+        return gson.toJson(mapOf("success" to false, "error" to "Markdown 导出功能开发中"))
+    }
+
+    @JavascriptInterface
+    fun exportWorkJson(workId: String): String {
+        return gson.toJson(mapOf("success" to false, "error" to "JSON 导出功能开发中"))
     }
 }

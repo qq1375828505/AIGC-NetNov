@@ -1184,8 +1184,8 @@ function registerTools5() {
     },
     execute: async (params) => {
       const { uri, fileName, workId } = params;
-      const result = await Tools.callNative("importFile", [uri, fileName, workId || ""]);
-      return { success: true, result: JSON.parse(result) };
+      const result = JSON.parse(window.NativeBridge.importFile(uri, fileName, workId || ""));
+      return { success: true, result };
     }
   });
   Tools.register("novelide:export_work_txt", {
@@ -1199,8 +1199,8 @@ function registerTools5() {
     },
     execute: async (params) => {
       const { workId } = params;
-      const result = await Tools.callNative("exportWorkTxt", [workId]);
-      return { success: true, result: JSON.parse(result) };
+      const result = JSON.parse(window.NativeBridge.exportWorkTxt(workId));
+      return { success: true, result };
     }
   });
   Tools.register("novelide:export_work_md", {
@@ -1214,8 +1214,8 @@ function registerTools5() {
     },
     execute: async (params) => {
       const { workId } = params;
-      const result = await Tools.callNative("exportWorkMd", [workId]);
-      return { success: true, result: JSON.parse(result) };
+      const result = JSON.parse(window.NativeBridge.exportWorkMd(workId));
+      return { success: true, result };
     }
   });
   Tools.register("novelide:export_work_json", {
@@ -1229,8 +1229,8 @@ function registerTools5() {
     },
     execute: async (params) => {
       const { workId } = params;
-      const result = await Tools.callNative("exportWorkJson", [workId]);
-      return { success: true, result: JSON.parse(result) };
+      const result = JSON.parse(window.NativeBridge.exportWorkJson(workId));
+      return { success: true, result };
     }
   });
 }

@@ -2,6 +2,17 @@
 
 import { PROMPT_TEMPLATES } from "./prompt_templates.js";
 
+/** 封装 Tools.Chat.sendMessage 调用，统一处理错误 */
+async function callAi(systemPrompt: string, prompt: string): Promise<string> {
+  const fullMessage = `[系统指令] ${systemPrompt}\n\n[用户请求] ${prompt}`;
+  const result = await Tools.Chat.sendMessage(fullMessage);
+  if (result.success && result.data) {
+    return result.data.message;
+  } else {
+    throw new Error(result.error || "AI 调用失败");
+  }
+}
+
 export class NovelAIBridge {
   /**
    * 发送 AI 消息（带作品上下文）
@@ -26,15 +37,12 @@ export class NovelAIBridge {
     }
 
     // 构建完整消息
-    const fullMessage = context ? `${context}\n${message}` : message;
+    const prompt = context ? `${context}\n${message}` : message;
 
-    // 调用 AI
-    const result = await Tools.Chat({
-      messages: [{ role: "user", content: fullMessage }],
-      systemPrompt: "你是一个专业的网文写作助手，请根据上下文提供帮助。"
-    });
-
-    return result;
+    return callAi(
+      "你是一个专业的网文写作助手，请根据上下文提供帮助。",
+      prompt
+    );
   }
 
   /**
@@ -55,12 +63,7 @@ export class NovelAIBridge {
     }
 
     const prompt = PROMPT_TEMPLATES.continue_writing(content, context);
-    const result = await Tools.Chat({
-      messages: [{ role: "user", content: prompt }],
-      systemPrompt: "你是一个专业的网文写作助手。"
-    });
-
-    return result;
+    return callAi("你是一个专业的网文写作助手。", prompt);
   }
 
   /**
@@ -68,12 +71,7 @@ export class NovelAIBridge {
    */
   static async polishText(content: string): Promise<string> {
     const prompt = PROMPT_TEMPLATES.polish_text(content);
-    const result = await Tools.Chat({
-      messages: [{ role: "user", content: prompt }],
-      systemPrompt: "你是一个专业的文本润色助手。"
-    });
-
-    return result;
+    return callAi("你是一个专业的文本润色助手。", prompt);
   }
 
   /**
@@ -81,12 +79,7 @@ export class NovelAIBridge {
    */
   static async expandText(content: string): Promise<string> {
     const prompt = PROMPT_TEMPLATES.expand_text(content);
-    const result = await Tools.Chat({
-      messages: [{ role: "user", content: prompt }],
-      systemPrompt: "你是一个专业的文本扩写助手。"
-    });
-
-    return result;
+    return callAi("你是一个专业的文本扩写助手。", prompt);
   }
 
   /**
@@ -94,12 +87,7 @@ export class NovelAIBridge {
    */
   static async deaiFlavor(content: string): Promise<string> {
     const prompt = PROMPT_TEMPLATES.deai_flavor(content);
-    const result = await Tools.Chat({
-      messages: [{ role: "user", content: prompt }],
-      systemPrompt: "你是一个专业的文本改写助手。"
-    });
-
-    return result;
+    return callAi("你是一个专业的文本改写助手。", prompt);
   }
 
   /**
@@ -107,10 +95,7 @@ export class NovelAIBridge {
    */
   static async checkPleasure(content: string): Promise<any> {
     const prompt = PROMPT_TEMPLATES.check_pleasure(content);
-    const result = await Tools.Chat({
-      messages: [{ role: "user", content: prompt }],
-      systemPrompt: "你是一个网文爽点分析助手。"
-    });
+    const result = await callAi("你是一个网文爽点分析助手。", prompt);
 
     try {
       return JSON.parse(result);
@@ -124,10 +109,7 @@ export class NovelAIBridge {
    */
   static async detectWater(content: string): Promise<any> {
     const prompt = PROMPT_TEMPLATES.detect_water(content);
-    const result = await Tools.Chat({
-      messages: [{ role: "user", content: prompt }],
-      systemPrompt: "你是一个网文质量检测助手。"
-    });
+    const result = await callAi("你是一个网文质量检测助手。", prompt);
 
     try {
       return JSON.parse(result);
@@ -141,10 +123,7 @@ export class NovelAIBridge {
    */
   static async generateTitle(content: string, genre?: string): Promise<string[]> {
     const prompt = PROMPT_TEMPLATES.generate_title(content, genre);
-    const result = await Tools.Chat({
-      messages: [{ role: "user", content: prompt }],
-      systemPrompt: "你是一个爆款标题生成助手。"
-    });
+    const result = await callAi("你是一个爆款标题生成助手。", prompt);
 
     // 解析标题列表
     const titles = result.split("\n").filter(t => t.trim());
@@ -156,10 +135,7 @@ export class NovelAIBridge {
    */
   static async generateOutline(idea: string, genre?: string): Promise<any> {
     const prompt = PROMPT_TEMPLATES.generate_outline(idea, genre);
-    const result = await Tools.Chat({
-      messages: [{ role: "user", content: prompt }],
-      systemPrompt: "你是一个网文大纲生成助手。"
-    });
+    const result = await callAi("你是一个网文大纲生成助手。", prompt);
 
     try {
       return JSON.parse(result);
@@ -173,10 +149,7 @@ export class NovelAIBridge {
    */
   static async designCharacter(name: string, role: string, genre?: string): Promise<any> {
     const prompt = PROMPT_TEMPLATES.design_character(name, role, genre);
-    const result = await Tools.Chat({
-      messages: [{ role: "user", content: prompt }],
-      systemPrompt: "你是一个角色设计助手。"
-    });
+    const result = await callAi("你是一个角色设计助手。", prompt);
 
     try {
       return JSON.parse(result);
@@ -191,6 +164,16 @@ declare global {
   const Tools: {
     register(name: string, config: any): void;
     callNative(method: string, args: any[]): Promise<any>;
-    Chat(options: { messages: any[]; systemPrompt?: string }): Promise<string>;
+    Chat: {
+      sendMessage(message: string, chatId?: string, roleCardId?: string, senderName?: string, options?: any): Promise<{
+        success: boolean;
+        data?: { message: string; thinking?: string; chatId: string; messageId: string };
+        error?: string;
+      }>;
+      sendMessageStreaming(message: string, chatId?: string, roleCardId?: string, senderName?: string, options?: any): Promise<any>;
+      createNew(group?: string): Promise<any>;
+      findChat(params: any): Promise<any>;
+      listAll(): Promise<any>;
+    };
   };
 }
