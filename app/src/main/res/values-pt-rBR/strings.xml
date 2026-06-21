@@ -397,12 +397,73 @@
     <string name="avatar_fbx_camera_distance">Distância da câmera FBX (%1$s)</string>
     <string name="avatar_fbx_orbit_pivot_height">Altura central surround do FBX (%1$s)</string>
     <string name="avatar_supported_formats_title">Formatos suportados</string>
-    <string name="avatar_supported_formats_desc">- DragonBones: esqueleto .json + *_tex.json + *_tex.png\n- WebP: um ou mais arquivos .webp\n- MP4: um ou mais arquivos .mp4\n- MMD: modelo .pmx ou .pmd, ação .vmd opcional\n- glTF: .glb ou .gltf (se referenciado, .bin/texture e outros recursos são necessários)\n- FBX: .fbx (a transferência direta é limitada a recursos independentes)</string>
+    <string name="avatar_supported_formats_desc">- DragonBones: esqueleto .json + *_tex.json + *_tex.png
+- WebP: um ou mais arquivos .webp
+- MP4: um ou mais arquivos .mp4
+- MMD: modelo .pmx ou .pmd, ação .vmd opcional
+- glTF: .glb ou .gltf (se referenciado, .bin/texture e outros recursos são necessários)
+- FBX: .fbx (a transferência direta é limitada a recursos independentes)</string>
     <string name="avatar_import_methods_title">Método de importação</string>
     <string name="avatar_import_methods_desc">- Seleção direta de arquivo: .glb / .gltf / .mp4 / .fbx\n - Importação ZIP: DragonBones, WebP, MP4, MMD, glTF de vários arquivos ou pacote FBX com texturas/recursos externos</string>
     <string name="import_structure_guide_tap_to_expand">Guia de estrutura de importação (clique para expandir)</string>
     <string name="import_structure_guide_tap_to_collapse">Guia de estrutura de importação (clique para recolher)</string>
-    <string name="import_structure_guide_content">Esta é a estrutura de diretórios do “pacote de importação” (dentro do ZIP ou arquivo selecionado), não o armazenamento interno do aplicativo. \n\nDragonBones (.zip)\n my_dragonbones.zip\n any_folder_name/\n hero_ske.json\n hero_tex.json\n hero_tex.png\n Requisito: o prefixo do nome do arquivo ske/tex json/png é consistente. \n\nWebP (.zip)\n my_webp.zip\n any_folder_name/\n idle.webp\n talk.webp\n happy.webp\n Requisito: Contém pelo menos um arquivo .webp. \n\nMP4\n Caminho A (arquivo direto):\n avatar.mp4\n Caminho B (.zip):\n my_mp4.zip\n any_folder_name/\n idle.mp4\n talk.mp4\n happy.mp4\n Requisito: Contém pelo menos um arquivo .mp4. \n\nMMD (.zip)\n my_mmd.zip\n any_folder_name/\n character.pmx (ou .pmd)\n motions/idle.vmd (opcional)\n texturas/...\n Requisito: Mantenha os caminhos relativos das referências PMX/PMD inalterados. \n\nglTF\n Caminho A (arquivo direto):\n avatar.glb\n Caminho B (glTF de vários arquivos usando .zip):\n my_gltf.zip\n any_folder_name/\n avatar.gltf\n avatar.bin\n texturas/...\n Requisito: Mantenha o caminho relativo da referência .gltf inalterado. \n\nFBX\n Método A (arquivo direto, somente recursos independentes):\n avatar.fbx\n Método B (texturas/recursos externos, use .zip):\n my_fbx.zip\n any_folder_name/\n avatar.fbx\n texturas/...\n Requisito: Carregar diretamente .fbx Somente recursos incorporados são suportados; se o modelo fizer referência a texturas externas ou outros recursos, mantenha o caminho relativo e coloque-o em ZIP.</string>
+    <string name="import_structure_guide_content">Esta é a estrutura de diretórios do “pacote de importação” (dentro do ZIP ou arquivo selecionado), não o armazenamento interno do aplicativo. 
+
+DragonBones (.zip)
+ my_dragonbones.zip
+ any_folder_name/
+ hero_ske.json
+ hero_tex.json
+ hero_tex.png
+ Requisito: o prefixo do nome do arquivo ske/tex json/png é consistente. 
+
+WebP (.zip)
+ my_webp.zip
+ any_folder_name/
+ idle.webp
+ talk.webp
+ happy.webp
+ Requisito: Contém pelo menos um arquivo .webp. 
+
+MP4
+ Caminho A (arquivo direto):
+ avatar.mp4
+ Caminho B (.zip):
+ my_mp4.zip
+ any_folder_name/
+ idle.mp4
+ talk.mp4
+ happy.mp4
+ Requisito: Contém pelo menos um arquivo .mp4. 
+
+MMD (.zip)
+ my_mmd.zip
+ any_folder_name/
+ character.pmx (ou .pmd)
+ motions/idle.vmd (opcional)
+ texturas/...
+ Requisito: Mantenha os caminhos relativos das referências PMX/PMD inalterados. 
+
+glTF
+ Caminho A (arquivo direto):
+ avatar.glb
+ Caminho B (glTF de vários arquivos usando .zip):
+ my_gltf.zip
+ any_folder_name/
+ avatar.gltf
+ avatar.bin
+ texturas/...
+ Requisito: Mantenha o caminho relativo da referência .gltf inalterado. 
+
+FBX
+ Método A (arquivo direto, somente recursos independentes):
+ avatar.fbx
+ Método B (texturas/recursos externos, use .zip):
+ my_fbx.zip
+ any_folder_name/
+ avatar.fbx
+ texturas/...
+ Requisito: Carregar diretamente .fbx Somente recursos incorporados são suportados; se o modelo fizer referência a texturas externas ou outros recursos, mantenha o caminho relativo e coloque-o em ZIP.</string>
     <string name="enter">Digitar</string>
     <string name="about_avatar_formats">Este aplicativo suporta vários formatos de avatar, incluindo DragonBones. Abaixo estão as instruções para fazer e importar modelos.</string>
     <string name="dragon_bones_config">Configuração do DragonBones</string>
@@ -562,7 +623,11 @@
     <string name="one_click_config_info_text">Por favor, faça login ou registre-se primeiro. Após o login, o sistema obterá automaticamente a chave API.</string>
     <string name="one_click_config_getting_key">Obtendo chave de API...</string>
     <string name="token_info_title">Obtenha o token da API DeepSeek</string>
-    <string name="token_info_content">Você irá para o site oficial da API DeepSeek. Temos acesso integrado ao site oficial do DeepSeek porque acreditamos que é a API com melhor custo-benefício na China. Ele não só tem um desempenho poderoso, mas também vários descontos e cache de disco para reduzir os custos de uso. \n\nO acesso à API e as configurações de token não têm nada a ver com desenvolvedores de software. Não forneceremos nenhum serviço nesse sentido, nem receberemos quaisquer taxas. \n\nRecomenda-se cobrar apenas 1 yuan ao usar seu próprio token pela primeira vez, o que é suficiente.</string>
+    <string name="token_info_content">Você irá para o site oficial da API DeepSeek. Temos acesso integrado ao site oficial do DeepSeek porque acreditamos que é a API com melhor custo-benefício na China. Ele não só tem um desempenho poderoso, mas também vários descontos e cache de disco para reduzir os custos de uso. 
+
+O acesso à API e as configurações de token não têm nada a ver com desenvolvedores de software. Não forneceremos nenhum serviço nesse sentido, nem receberemos quaisquer taxas. 
+
+Recomenda-se cobrar apenas 1 yuan ao usar seu próprio token pela primeira vez, o que é suficiente.</string>
     <string name="token_info_cancel">Cancelar</string>
     <string name="token_info_confirm">Vá para pegar</string>
     <string name="free_usage_title">Confirme para usar recursos gratuitos</string>
@@ -793,8 +858,6 @@
     <string name="settings_reply_notification_desc">Enviar lembrete de notificação depois que a IA concluir a resposta</string>
     <string name="notification_ai_reply_title">Assistente de IA</string>
     <string name="notification_ai_reply_content">AI terminou de responder</string>
-    <string name="notification_permission_rationale">Para notificá-lo imediatamente após a IA concluir sua resposta, a permissão de notificação precisa ser concedida</string>
-    <string name="notification_permission_denied">Permissão de notificação negada, você não poderá receber lembretes de resposta de IA</string>
     <string name="settings_auto_accessibility">Conceder permissões de acessibilidade automaticamente</string>
     <string name="settings_auto_accessibility_desc">Após fechar, você precisa autorizar manualmente cada vez que abrir o software.</string>
     <string name="settings_section_permissions">Permissões e segurança</string>
@@ -940,7 +1003,13 @@
     <string name="agreement_title">Contrato do Usuário e Política de Privacidade</string>
     <string name="agreement_subtitle">Leia atentamente e concorde com os seguintes termos antes de usar.</string>
     <string name="agreement_human_readable_title">Versão humana do acordo (versão não legal)</string>
-    <string name="agreement_human_readable_content">Assim como você, não gostamos de acordos longos e enfadonhos. Simplificando:\n\nOperitAI é um software gratuito e de código aberto. Sua automação e outras funções são muito poderosas, certifique-se de usá-la apenas para aprendizado pessoal e assistência diária, e não para fins comerciais ou ilegais. \n\nVocê é responsável por todas as suas ações. Também não somos responsáveis ​​por extensões ou modificações no software que você mesmo adiciona. \n\nPrivacidade: seu processamento de voz é concluído localmente em seu telefone, o que é muito seguro. Os dados do chat de IA serão enviados diretamente para a empresa de IA e não iremos lidar com isso.</string>
+    <string name="agreement_human_readable_content">Assim como você, não gostamos de acordos longos e enfadonhos. Simplificando:
+
+OperitAI é um software gratuito e de código aberto. Sua automação e outras funções são muito poderosas, certifique-se de usá-la apenas para aprendizado pessoal e assistência diária, e não para fins comerciais ou ilegais. 
+
+Você é responsável por todas as suas ações. Também não somos responsáveis ​​por extensões ou modificações no software que você mesmo adiciona. 
+
+Privacidade: seu processamento de voz é concluído localmente em seu telefone, o que é muito seguro. Os dados do chat de IA serão enviados diretamente para a empresa de IA e não iremos lidar com isso.</string>
     <string name="agreement_serious_title">Versão estrita do acordo legal</string>
     <string name="agreement_serious_content">&lt;p&gt;Bem-vindo à OperatAI. Este software é modificado e distribuído sob os termos da Licença Pública Geral Menor GNU, versão 3 (LGPLv3). &lt;/p&gt;
         &lt;p&gt;&lt;b&gt;1. Nenhuma declaração de garantia&lt;/b&gt;&lt;br&gt;Este software é fornecido "no estado em que se encontra", sem garantia de qualquer tipo, expressa ou implícita, incluindo, entre outras, garantias de comercialização, adequação a uma finalidade específica ou não violação. TODOS OS RISCOS RELATIVOS À QUALIDADE E DESEMPENHO DO SOFTWARE ESTÃO COM VOCÊ. &lt;/p&gt;
@@ -1181,7 +1250,11 @@
     <string name="toast_open_termux_first">Por favor, inicie o Termux primeiro</string>
     <string name="toast_operation_failed">Falha na operação: %1$s</string>
     <string name="toast_skip_tuna_source">A configuração da fonte Tsinghua foi ignorada, você mesmo pode configurar a fonte no Termux mais tarde</string>
-    <string name="toast_skip_tuna_source_dialog">Você optou por ignorar a configuração da fonte Tsinghua. Para configuração manual subsequente, execute o seguinte comando no Termux:\n\ntermux-change-repo\n\nEm seguida, selecione a fonte Tsinghua ou outras fontes da lista.</string>
+    <string name="toast_skip_tuna_source_dialog">Você optou por ignorar a configuração da fonte Tsinghua. Para configuração manual subsequente, execute o seguinte comando no Termux:
+
+termux-change-repo
+
+Em seguida, selecione a fonte Tsinghua ou outras fontes da lista.</string>
     <string name="chat_history">Histórico de conversas</string>
     <string name="search_chat_history_hint">procurar</string>
     <string name="new_chat">Nova conversa</string>
@@ -1207,7 +1280,12 @@
     <string name="disabled">Fechado</string>
     <string name="termux_not_installed_message">Instale o aplicativo Termux primeiro</string>
     <string name="termux_manual_auth_title">Requer autorização manual</string>
-    <string name="termux_manual_auth_message">Não foi possível conceder permissão automaticamente ao Termux para executar comandos. Faça isso manualmente:\n\n1. Abra o Termux\n2. Mantenha a tela pressionada e selecione \'Mais\'\n3. Selecione \'Configurações\'\n4. Ative \'Permitir acesso a aplicativos externos\'</string>
+    <string name="termux_manual_auth_message">Não foi possível conceder permissão automaticamente ao Termux para executar comandos. Faça isso manualmente:
+
+1. Abra o Termux
+2. Mantenha a tela pressionada e selecione \'Mais\'
+3. Selecione \'Configurações\'
+4. Ative \'Permitir acesso a aplicativos externos\'</string>
     <string name="termux_storage_permission_message">As permissões de armazenamento Termux não podem ser concedidas automaticamente, verifique a seguinte configuração:\n\n1. Ambiente Shell: certifique-se de ter um Shell disponível (como ADB ou Root). Nota: Se estiver usando Shizuku, não inicie no modo Root. \n2. Versão Termux: certifique-se de que o Termux que você instala é a versão integrada do aplicativo ou a versão de depuração obtida em seu repositório oficial do GitHub.</string>
     <string name="termux_all_permissions_granted">Todas as permissões do Termux foram autorizadas com sucesso</string>
     <string name="termux_some_permissions_failed">Alguma autorização de permissão falhou, verifique o log ou configure-o manualmente</string>
@@ -1537,7 +1615,6 @@
     <string name="cannot_find_shizuku_app">Não foi possível encontrar o aplicativo Shizuku</string>
     <string name="cannot_launch_shizuku_app">Não é possível iniciar o aplicativo Shizuku</string>
     <string name="cannot_open_docs_link">Não foi possível abrir o link do documento</string>
-    <string name="plugin_loading_skipped">Carregamento do plug-in ignorado</string>
     <string name="press_back_again_to_exit">Pressione novamente para sair do aplicativo</string>
     <string name="return_code_copied">Código de retorno copiado!</string>
     <string name="cannot_find_termux_app">O aplicativo Termux não pode ser encontrado</string>
@@ -1617,10 +1694,18 @@
     <string name="recognition_error">Erro de reconhecimento: %s</string>
     <string name="start_recognition_error">Comece a reconhecer o erro: %s</string>
     <string name="stop_recognition_error">Erro de parada de reconhecimento: %s</string>
-    <string name="speech_usage_steps">1. Selecione o mecanismo de fala\n2. Clique no botão iniciar gravação\n3. Fale claramente\n4. Clique para parar a gravação\n5. Aguarde o resultado da transcrição</string>
+    <string name="speech_usage_steps">1. Selecione o mecanismo de fala
+2. Clique no botão iniciar gravação
+3. Fale claramente
+4. Clique para parar a gravação
+5. Aguarde o resultado da transcrição</string>
     <string name="speech_engine_note">NOTA: Diferentes mecanismos de fala podem ter precisão e idiomas suportados diferentes</string>
     <string name="usage_instructions">Instruções de uso</string>
-    <string name="speech_recognition_instructions">1. Selecione o mecanismo de reconhecimento (Android nativo/Sherpa-ncnn/Whisper offline)\n2. Selecione o idioma de reconhecimento (chinês/inglês, etc.)\n3. Clique no botão Iniciar gravação\n4. Clique no botão Parar depois de terminar de falar\n5. Veja os resultados do reconhecimento</string>
+    <string name="speech_recognition_instructions">1. Selecione o mecanismo de reconhecimento (Android nativo/Sherpa-ncnn/Whisper offline)
+2. Selecione o idioma de reconhecimento (chinês/inglês, etc.)
+3. Clique no botão Iniciar gravação
+4. Clique no botão Parar depois de terminar de falar
+5. Veja os resultados do reconhecimento</string>
     <string name="activity_monitor">Monitoramento de atividades</string>
     <string name="smart_build">Construção inteligente</string>
     <string name="target_app">Alvo: %1$s</string>
@@ -1785,7 +1870,12 @@
     <string name="tts_debug_service_type">Tipo de serviço: %s</string>
     <string name="tts_debug_params">Parâmetros de solicitação: text=\'%1$s\', velocidade de fala=%2$sx, pitch=%3$sx</string>
     <string name="tts_debug_params_with_service">Parâmetros de solicitação: text=\'%1$s\', velocidade de fala=%2$sx, pitch=%3$sx\nTipo de serviço: %4$s</string>
-    <string name="tts_usage_instructions_content">1. Insira o texto a ser convertido em fala na caixa de entrada\n2. Ajuste as configurações de velocidade e tom da fala\n3. Clique no botão "Reproduzir voz" para começar a jogar\n4. Clique no botão "Parar de jogar" para parar de jogar\n5. Se ocorrer um erro, veja a mensagem de erro detalhada e as informações de depuração\n6. Use o botão "Limpar mensagem de erro" para limpar a exibição de erro</string>
+    <string name="tts_usage_instructions_content">1. Insira o texto a ser convertido em fala na caixa de entrada
+2. Ajuste as configurações de velocidade e tom da fala
+3. Clique no botão "Reproduzir voz" para começar a jogar
+4. Clique no botão "Parar de jogar" para parar de jogar
+5. Se ocorrer um erro, veja a mensagem de erro detalhada e as informações de depuração
+6. Use o botão "Limpar mensagem de erro" para limpar a exibição de erro</string>
     <string name="tool_speech_recognition">reconhecimento de fala</string>
     <string name="tool_speech_recognition_desc">Converta fala em texto, suporta vários mecanismos e idiomas</string>
     <string name="tool_permission_manager">Gerenciamento de permissões de aplicativos</string>
@@ -2305,7 +2395,11 @@ Agora é possível usar o modo AutoGLM na interface de diálogo.</string>
     <string name="speech_services_http_headers_placeholder">{\"Tipo de conteúdo\": \"aplicativo/json\"}</string>
     <string name="speech_services_http_headers_error">Formato JSON inválido</string>
     <string name="speech_services_http_response_pipeline">pipeline de processamento de resposta</string>
-    <string name="speech_services_http_response_pipeline_placeholder">[\n { "type": "parse_json" },\n { "type": "pick", "path": "audio_uri" },\n { "type": "http_get" }\n]</string>
+    <string name="speech_services_http_response_pipeline_placeholder">[
+ { "type": "parse_json" },
+ { "type": "pick", "path": "audio_uri" },
+ { "type": "http_get" }
+]</string>
     <string name="speech_services_http_response_pipeline_hint">Deixe em branco ou [] para tratar diretamente o corpo da resposta como áudio. Suporta parse_json, pick, parse_json_string, http_get, http_request_from_object, base64_decode.</string>
     <string name="speech_services_http_response_pipeline_error">Matriz JSON do pipeline de processamento de resposta inválida</string>
     <string name="speech_services_http_method">Método HTTP</string>
@@ -2933,7 +3027,12 @@ Agora é possível usar o modo AutoGLM na interface de diálogo.</string>
     <string name="layout_adjustment_preview_title">Visualização de redução de IA</string>
     <string name="layout_adjustment_preview_desc">O exemplo abaixo mostra o espaçamento entre linhas e os efeitos de kerning do AI Markdown salvos atualmente.</string>
     <string name="layout_adjustment_preview_plain_text">Esta é uma visualização normal do texto. Você pode observar a distância entre as palavras e as mudanças de densidade entre cada linha.</string>
-    <string name="layout_adjustment_preview_markdown">Esta é a primeira visualização do Markdown na resposta da IA, usada para observar o espaçamento atual entre linhas e caracteres. \n\nEsta é a segunda visualização do Markdown na resposta da IA, usada para continuar a observar o layout geral de vários parágrafos de texto e listas. \n\n- Item um da lista AI Markdown\n- Item dois da lista AI Markdown</string>
+    <string name="layout_adjustment_preview_markdown">Esta é a primeira visualização do Markdown na resposta da IA, usada para observar o espaçamento atual entre linhas e caracteres. 
+
+Esta é a segunda visualização do Markdown na resposta da IA, usada para continuar a observar o layout geral de vários parágrafos de texto e listas. 
+
+- Item um da lista AI Markdown
+- Item dois da lista AI Markdown</string>
     <string name="current_value">valor atual</string>
     <string name="closer_to_edge">perto da borda</string>
     <string name="farther_from_edge">fique longe da borda</string>
@@ -3543,7 +3642,13 @@ Agora é possível usar o modo AutoGLM na interface de diálogo.</string>
     <string name="appearance_prompt_placeholder">Por exemplo: cabelo comprido, olhos roxos, colete suéter...</string>
     <string name="appearance_prompt_tip">Dica: Use palavras-chave em inglês para descrever características físicas. Separe várias palavras-chave com vírgulas.</string>
     <string name="feature_explanation">Descrição da função</string>
-    <string name="waifu_mode_explanation">• Modo normal: as respostas de IA são enviadas todas de uma vez\n• Modo Waifu: as respostas de IA são divididas por frases, cada frase tem um balão independente\n• Atraso inteligente: calcula o tempo de atraso com base no comprimento da frase\n• Limpeza automática: remove rótulos de status, exibe apenas texto simples\n• Funções opcionais: remover pontuação no final das frases, editar o prompt do modo Waifu, ativar emoticons\n• Cenários aplicáveis: simular um ritmo de conversa mais natural\n• Observação: este modo pode não ser bem adaptado à ferramenta chamadas</string>
+    <string name="waifu_mode_explanation">• Modo normal: as respostas de IA são enviadas todas de uma vez
+• Modo Waifu: as respostas de IA são divididas por frases, cada frase tem um balão independente
+• Atraso inteligente: calcula o tempo de atraso com base no comprimento da frase
+• Limpeza automática: remove rótulos de status, exibe apenas texto simples
+• Funções opcionais: remover pontuação no final das frases, editar o prompt do modo Waifu, ativar emoticons
+• Cenários aplicáveis: simular um ritmo de conversa mais natural
+• Observação: este modo pode não ser bem adaptado à ferramenta chamadas</string>
     <string name="settings_saved_message">Configurações salvas</string>
     <string name="settings_section_account">conta</string>
     <string name="github_account_not_logged_in">Não logado</string>
@@ -3941,7 +4046,14 @@ Agora é possível usar o modo AutoGLM na interface de diálogo.</string>
     <string name="external_http_chat_health_example">Exemplo de verificação de integridade</string>
     <string name="external_http_chat_intent_title">Instruções de chamada de intenção</string>
     <string name="external_http_chat_intent_desc">A entrada de transmissão ainda é mantida, adequada para integração de aplicativos nativos, Tasker ou depuração adb</string>
-    <string name="external_http_chat_intent_overview">A semântica dos parâmetros HTTP e Intent é consistente, apenas a entrada é diferente. \n\nAção de solicitação: %1$s\nAção de retorno padrão: %2$s\n\nExtras comumente usados: mensagem, request_id, grupo, create_new_chat, chat_id, create_if_none, show_floating, return_tool_status, inicial_mode, auto_exit_after_ms, stop_after, resposta_ação, resposta_package\n\nDepois que o processamento for concluído, sucesso, chat_id, ai_response, erro será retornado através de broadcast; se você deseja apenas retornar ao aplicativo especificado, defina respond_package.</string>
+    <string name="external_http_chat_intent_overview">A semântica dos parâmetros HTTP e Intent é consistente, apenas a entrada é diferente. 
+
+Ação de solicitação: %1$s
+Ação de retorno padrão: %2$s
+
+Extras comumente usados: mensagem, request_id, grupo, create_new_chat, chat_id, create_if_none, show_floating, return_tool_status, inicial_mode, auto_exit_after_ms, stop_after, resposta_ação, resposta_package
+
+Depois que o processamento for concluído, sucesso, chat_id, ai_response, erro será retornado através de broadcast; se você deseja apenas retornar ao aplicativo especificado, defina respond_package.</string>
     <string name="external_http_chat_copy_example">Exemplo de cópia</string>
     <string name="external_http_chat_example_copied">Exemplo de comando copiado</string>
     <string name="external_http_chat_service_enabled">O serviço está ativado</string>
@@ -4117,7 +4229,13 @@ Agora é possível usar o modo AutoGLM na interface de diálogo.</string>
     <string name="default_assistant_guide_step3_detail2">• Se for bem-sucedido, você deverá ver a interface do assistente de voz do Operit</string>
     <string name="default_assistant_guide_step3_detail3">• Você pode tentar falar ou digitar para interagir com o assistente</string>
     <string name="default_assistant_guide_troubleshooting_title">Está com algum problema?</string>
-    <string name="default_assistant_guide_troubleshooting_content">Se você não encontrar o Operit na lista, verifique se:\n\n• O aplicativo está instalado corretamente e não foi desativado\n• As permissões necessárias (microfone, janela flutuante etc.) foram concedidas\n• Tente reiniciar o dispositivo e configurá-lo novamente\n\n Alguns sistemas de personalização podem restringir aplicativos de terceiros como assistente padrão. Nesse caso, você ainda pode usar o Operit por meio da função de janela flutuante dentro do aplicativo.</string>
+    <string name="default_assistant_guide_troubleshooting_content">Se você não encontrar o Operit na lista, verifique se:
+
+• O aplicativo está instalado corretamente e não foi desativado
+• As permissões necessárias (microfone, janela flutuante etc.) foram concedidas
+• Tente reiniciar o dispositivo e configurá-lo novamente
+
+ Alguns sistemas de personalização podem restringir aplicativos de terceiros como assistente padrão. Nesse caso, você ainda pode usar o Operit por meio da função de janela flutuante dentro do aplicativo.</string>
     <string name="voice_interaction_service_name">Assistente Operat AI</string>
     <string name="voice_interaction_service_summary">Serviço de assistente de voz inteligente</string>
     <string name="tool_permissions_title">Permissões de ferramentas</string>
@@ -4635,7 +4753,11 @@ Agora é possível usar o modo AutoGLM na interface de diálogo.</string>
     <string name="backup_delete_skipped_locked">\n%1$d bate-papos bloqueados ignorados</string>
     <string name="backup_open_file_failed">Não foi possível abrir o arquivo</string>
     <string name="backup_import_file_empty">O arquivo importado está vazio</string>
-    <string name="backup_memory_import_result_success">Importado com sucesso para a configuração "%1$s":\n- Novas memórias: %2$d\n- Memórias atualizadas: %3$d\n- Ignorar memórias: %4$d\n- Novos links: %5$d</string>
+    <string name="backup_memory_import_result_success">Importado com sucesso para a configuração "%1$s":
+- Novas memórias: %2$d
+- Memórias atualizadas: %3$d
+- Ignorar memórias: %4$d
+- Novos links: %5$d</string>
     <string name="backup_memory_export_result_success">%2$d memórias e %3$d links da configuração \'%1$s\' foram exportados com sucesso para:\n%4$s</string>
     <string name="backup_model_config_import_result_success">Configurações de modelo importadas com sucesso:\n- Novas configurações: %1$d\n- Configurações atualizadas: %2$d%3$s</string>
     <string name="backup_model_config_import_result_skipped">\n- Ignorando configurações inválidas: %1$d</string>
@@ -5859,7 +5981,13 @@ Agora é possível usar o modo AutoGLM na interface de diálogo.</string>
     <string name="mnn_model_dir_missing">O diretório do modelo não existe: %1$s\nFaça download do modelo primeiro</string>
     <string name="mnn_file_status">Status do arquivo:</string>
     <string name="mnn_init_failed">Falha na inicialização do modelo</string>
-    <string name="mnn_connection_success">Conexão do modelo MNN LLM bem-sucedida! \n\nModelo: %1$s\nDiretório: %2$s\nTamanho total: %3$s\n\n%4$s</string>
+    <string name="mnn_connection_success">Conexão do modelo MNN LLM bem-sucedida! 
+
+Modelo: %1$s
+Diretório: %2$s
+Tamanho total: %3$s
+
+%4$s</string>
     <string name="apk_unnamed_function">(função sem nome)</string>
     <string name="apk_unknown_error">erro desconhecido</string>
     <string name="apk_extract_failed">Falha na descompactação do APK: %1$s</string>
@@ -5912,7 +6040,11 @@ Agora é possível usar o modo AutoGLM na interface de diálogo.</string>
     <string name="apk_keystore_path_info">Caminho do armazenamento de chaves: %1$s</string>
     <string name="apk_signer_not_exist">O arquivo do assinante não existe: %1$s</string>
     <string name="apk_signing_aborted">Assinatura abortada</string>
-    <string name="apk_signing_info">Assinando APK...\nAPK: %1$s\nKeystore: %2$s\nAlias ​​da chave: %3$s\nSigner: %4$s</string>
+    <string name="apk_signing_info">Assinando APK...
+APK: %1$s
+Keystore: %2$s
+Alias ​​da chave: %3$s
+Signer: %4$s</string>
     <string name="apk_use_builtin_keystore">Use o keystore de depuração integrado</string>
     <string name="apk_zip_align_failed">Falha no alinhamento do ZIP: %1$s</string>
     <string name="apk_zip_align_path">Caminho de alinhamento ZIP: %1$s</string>
@@ -6105,7 +6237,13 @@ Agora é possível usar o modo AutoGLM na interface de diálogo.</string>
     <string name="task_context_current_task">Tarefa atual: %1$s</string>
     <string name="task_context_dependency_results">Depende dos resultados da tarefa:</string>
     <string name="task_context_task_result">- Resultado da tarefa %1$s: %2$s</string>
-    <string name="task_instruction_with_context">\n%1$s\n\nRealize as seguintes tarefas específicas com base nas informações contextuais acima:\n%2$s\n\nConcentre-se em concluir esta subtarefa específica e suas respostas serão usadas como parte do plano geral.</string>
+    <string name="task_instruction_with_context">
+%1$s
+
+Realize as seguintes tarefas específicas com base nas informações contextuais acima:
+%2$s
+
+Concentre-se em concluir esta subtarefa específica e suas respostas serão usadas como parte do plano geral.</string>
     <string name="task_summary_key_results">Resultados de execução de cada subtarefa principal:</string>
     <string name="tool_permission_operation">%1$s operações</string>
     <string name="message_image_capture_failed">Falha na captura de imagem: %1$s</string>

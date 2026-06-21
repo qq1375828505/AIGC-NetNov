@@ -993,8 +993,6 @@ For your first token usage, we recommend starting with a small amount as it\'s u
     <string name="settings_reply_notification_desc">Send notification when AI completes a reply</string>
     <string name="notification_ai_reply_title">AI Assistant</string>
     <string name="notification_ai_reply_content">AI has completed the reply</string>
-    <string name="notification_permission_rationale">Notification permission is needed to notify you when AI completes a reply</string>
-    <string name="notification_permission_denied">Notification permission denied, you will not receive AI reply notifications</string>
     <string name="settings_auto_accessibility">Auto-grant Accessibility Permission</string>
     <string name="settings_auto_accessibility_desc">When disabled, manual authorization is required each time the app is opened</string>
     
@@ -1724,7 +1722,6 @@ Then select Tuna or another mirror from the list.</string>
     <string name="cannot_find_shizuku_app">Cannot find Shizuku app</string>
     <string name="cannot_launch_shizuku_app">Cannot launch Shizuku app</string>
     <string name="cannot_open_docs_link">Cannot open documentation link</string>
-    <string name="plugin_loading_skipped">Plugin loading skipped</string>
     <string name="press_back_again_to_exit">Press back again to exit</string>
     <string name="return_code_copied">Return code copied!</string>
     <string name="cannot_find_termux_app">Cannot find Termux app</string>

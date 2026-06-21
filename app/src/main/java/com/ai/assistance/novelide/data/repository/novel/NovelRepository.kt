@@ -144,7 +144,9 @@ class NovelRepository(private val dao: NovelDao) {
 
     suspend fun updateTomatoPreset(preset: TomatoPreset) = dao.updateTomatoPreset(preset.copy(updatedAt = System.currentTimeMillis()))
 
-    suspend fun deleteTomatoPreset(presetId: String) = dao.deleteTomatoPreset(dao.getTomatoPresetById(presetId) ?: return)
+    suspend fun deleteTomatoPreset(presetId: String) {
+        dao.getTomatoPresetById(presetId)?.let { dao.deleteTomatoPreset(it) }
+    }
 
     suspend fun getTomatoPresetCount(): Int = dao.getTomatoPresetCount()
 
@@ -157,7 +159,9 @@ class NovelRepository(private val dao: NovelDao) {
 
     suspend fun updateTomatoAgent(agent: TomatoAgent) = dao.updateTomatoAgent(agent.copy(updatedAt = System.currentTimeMillis()))
 
-    suspend fun deleteTomatoAgent(agentId: String) = dao.deleteTomatoAgent(dao.getTomatoAgentById(agentId) ?: return)
+    suspend fun deleteTomatoAgent(agentId: String) {
+        dao.getTomatoAgentById(agentId)?.let { dao.deleteTomatoAgent(it) }
+    }
 
     // ==================== 写作技能 ====================
     fun getEnabledWritingSkills(): Flow<List<WritingSkill>> = dao.getEnabledWritingSkills()

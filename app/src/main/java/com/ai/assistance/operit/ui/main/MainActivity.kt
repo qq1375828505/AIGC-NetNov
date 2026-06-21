@@ -1,6 +1,5 @@
 package com.ai.assistance.operit.ui.main
 
-import android.Manifest
 import android.app.ActivityManager
 import android.content.Context
 import android.content.pm.PackageManager
@@ -13,8 +12,6 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
@@ -24,23 +21,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.ai.assistance.operit.R
 import com.ai.assistance.operit.api.chat.AIForegroundService
 import com.ai.assistance.operit.core.tools.AIToolHandler
-import com.ai.assistance.operit.data.preferences.UserPreferencesManager
 import com.ai.assistance.operit.data.updates.UpdateManager
 import com.ai.assistance.operit.data.updates.UpdateStatus
 import com.ai.assistance.operit.ui.common.NavItem
-import com.ai.assistance.operit.ui.features.startup.screens.PluginLoadingScreenWithState
 import com.ai.assistance.operit.ui.features.startup.screens.PluginLoadingState
 import com.ai.assistance.operit.ui.features.startup.screens.LocalPluginLoadingState
 import com.ai.assistance.operit.ui.features.startup.screens.PluginLoadingStateRegistry
@@ -51,7 +39,6 @@ import com.ai.assistance.operit.util.LocaleUtils
 import java.util.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import com.ai.assistance.operit.data.mcp.MCPRepository
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.ui.res.stringResource
@@ -74,10 +61,8 @@ class MainActivity : ComponentActivity() {
 
     // ======== 工具和管理器 ========
     private lateinit var toolHandler: AIToolHandler
-    private lateinit var preferencesManager: UserPreferencesManager
     private var updateCheckPerformed = false
     private lateinit var anrMonitor: AnrMonitor
-    private lateinit var mcpRepository: MCPRepository
 
     // ======== MCP插件状态 ========
     private val pluginLoadingState = PluginLoadingState()
@@ -104,18 +89,6 @@ class MainActivity : ComponentActivity() {
     private var pendingRouteId: String? = null
     private var pendingRouteArgs: Map<String, Any?> = emptyMap()
     private var pendingRouteRequestId: Long = 0L
-
-    // 通知权限请求启动器
-    private val notificationPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            AppLogger.d(TAG, "通知权限已授予")
-        } else {
-            AppLogger.d(TAG, "通知权限被拒绝")
-            Toast.makeText(this, getString(R.string.notification_permission_denied), Toast.LENGTH_LONG).show()
-        }
-    }
 
     private fun processPendingSharedText() {
         if (pendingSharedFileUris != null) {
@@ -177,50 +150,33 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // ── 核心初始化 ──
         lastOrientation = resources.configuration.orientation
-        AppLogger.d(TAG, "onCreate: Android SDK version: ${Build.VERSION.SDK_INT}")
-
-        // Set window background to solid color to prevent system theme leaking through
         window.setBackgroundDrawableResource(android.R.color.black)
-
-        // Handle the intent that started the activity
         handleIntent(intent)
         restoreRuntimeTaskViewVisibilityIfNeeded()
-
-        // 语言设置已在Application中初始化，这里无需重复
-
         initializeComponents()
         anrMonitor.start()
-        setupPreferencesListener()
         configureDisplaySettings()
 
-        // 设置上下文以便获取插件元数据
+        // ── 插件加载准备 ──
         pluginLoadingState.setAppContext(this)
         PluginLoadingStateRegistry.bind(pluginLoadingState, lifecycleScope)
 
-        // 设置初始界面 - 显示加载占位符
-        setAppContent()
+        // ── UI 渲染 ──
         processPendingGitHubAuth()
-
-        // 初始化并设置更新管理器
         setupUpdateManager()
-
-        // 只在首次创建时执行检查（非配置变更）
-        if (savedInstanceState == null) {
-            // 进行必要的初始化
-            lifecycleScope.launch {
-                checkNotificationPermission()
-                startPluginLoading()
-                initialChecksDone = true
-                setAppContent()
-            }
-        } else {
-            // 配置变更时不重新检查，直接显示主界面
-            initialChecksDone = true
-        }
-
-        // 设置双击返回退出
         setupBackPressHandler()
+
+        if (savedInstanceState == null) {
+            startPluginLoading()
+            initialChecksDone = true
+            setAppContent()
+        } else {
+            initialChecksDone = true
+            setAppContent()
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -387,8 +343,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    // ======== 设置初始占位内容 ========
-
     // ======== 启动插件加载 ========
     private fun startPluginLoading() {
         // 显示插件加载界面
@@ -510,52 +464,7 @@ class MainActivity : ComponentActivity() {
         // 初始化工具处理器（工具注册已在Application中完成）
         toolHandler = AIToolHandler.getInstance(this)
 
-        // 初始化MCP仓库
-        mcpRepository = MCPRepository(this)
-
         anrMonitor = AnrMonitor(this, lifecycleScope)
-
-        // 初始化用户偏好管理器
-        preferencesManager = UserPreferencesManager.getInstance(this)
-
-    }
-
-    // ======== 检查通知权限 ========
-    private fun checkNotificationPermission() {
-        // Android 13 (API 33) 及以上需要请求通知权限
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val permission = Manifest.permission.POST_NOTIFICATIONS
-            when {
-                ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED -> {
-                    AppLogger.d(TAG, "通知权限已授予")
-                }
-                shouldShowRequestPermissionRationale(permission) -> {
-                    // 用户之前拒绝过，显示说明并再次请求
-                    AppLogger.d(TAG, "需要显示通知权限说明")
-                    Toast.makeText(
-                        this,
-                        getString(R.string.notification_permission_rationale),
-                        Toast.LENGTH_LONG
-                    ).show()
-                    notificationPermissionLauncher.launch(permission)
-                }
-                else -> {
-                    // 直接请求权限
-                    AppLogger.d(TAG, "请求通知权限")
-                    notificationPermissionLauncher.launch(permission)
-                }
-            }
-        } else {
-            // Android 13 以下不需要运行时通知权限
-            AppLogger.d(TAG, "Android 版本 < 13，无需请求通知权限")
-        }
-    }
-
-    // ======== 偏好监听器设置 ========
-    private fun setupPreferencesListener() {
-        lifecycleScope.launch {
-            preferencesManager.getUserPreferencesFlow().collect { /* 偏好变化时按需处理 */ }
-        }
     }
 
     // ======== 显示与性能配置 ========
@@ -649,11 +558,6 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                     }
-                    // 插件加载界面 (带有淡出效果) - 始终在最上层
-                    PluginLoadingScreenWithState(
-                            loadingState = pluginLoadingState,
-                            modifier = Modifier.zIndex(10f) // 确保加载界面在最上层
-                    )
                 }
 
                 // 方向改变时显示对话框

@@ -374,7 +374,6 @@
     <string name="download_success">Descarga exitosa: %1$s</string>
     <string name="download_start">Descarga iniciada: %1$s</string>
     <string name="deploy_date">Implementación: %1$s</string>
-    <string name="plugin_loading_skipped">Carga de plugins omitida</string>
     <string name="press_back_again_to_exit">Presione atrás nuevamente para salir</string>
     <string name="return_code_copied">¡Código de retorno copiado!</string>
 
@@ -447,7 +446,11 @@
     <string name="recognition_error">Error de reconocimiento: %s</string>
     <string name="start_recognition_error">Error al iniciar reconocimiento: %s</string>
     <string name="stop_recognition_error">Error al detener reconocimiento: %s</string>
-    <string name="speech_usage_steps">1. Seleccionar motor de voz\n2. Hacer clic en el botón de iniciar grabación\n3. Hablar claramente\n4. Hacer clic en detener grabación\n5. Esperar los resultados de transcripción</string>
+    <string name="speech_usage_steps">1. Seleccionar motor de voz
+2. Hacer clic en el botón de iniciar grabación
+3. Hablar claramente
+4. Hacer clic en detener grabación
+5. Esperar los resultados de transcripción</string>
     <string name="speech_engine_note">Nota: Diferentes motores de voz pueden tener diferente precisión e idiomas soportados</string>
     
     <!-- Free Usage -->
@@ -476,7 +479,13 @@
     <!-- Agreement Screen -->
     <string name="agreement_subtitle">Por favor lea cuidadosamente y acepte los siguientes términos antes de usar.</string>
     <string name="agreement_human_readable_title">Acuerdo en lenguaje simple (versión no legal)</string>
-    <string name="agreement_human_readable_content">Al igual que usted, no nos gustan los acuerdos largos y aburridos. En pocas palabras:\n\nOperitAI es un software gratuito y de código abierto. Sus funciones de automatización y otras son muy potentes, por favor úselo solo para aprendizaje personal y asistencia diaria, no para ningún uso comercial o irregular.\n\nUsted es responsable de todas sus acciones. No somos responsables de las extensiones que agregue o modificaciones al software.\n\nEn cuanto a la privacidad: Su procesamiento de voz se completa localmente en su teléfono, es muy seguro. Los datos de chat de IA se envían directamente a las empresas de IA, nosotros no los manejamos.</string>
+    <string name="agreement_human_readable_content">Al igual que usted, no nos gustan los acuerdos largos y aburridos. En pocas palabras:
+
+OperitAI es un software gratuito y de código abierto. Sus funciones de automatización y otras son muy potentes, por favor úselo solo para aprendizaje personal y asistencia diaria, no para ningún uso comercial o irregular.
+
+Usted es responsable de todas sus acciones. No somos responsables de las extensiones que agregue o modificaciones al software.
+
+En cuanto a la privacidad: Su procesamiento de voz se completa localmente en su teléfono, es muy seguro. Los datos de chat de IA se envían directamente a las empresas de IA, nosotros no los manejamos.</string>
     <string name="agreement_serious_title">Acuerdo legal riguroso</string>
     <string name="agreement_serious_content"><![CDATA[
         <p>Bienvenido a OperitAI. Este software se modifica y distribuye bajo los términos de la Licencia Pública General Menor de GNU versión 3 (LGPLv3).</p>
@@ -1324,7 +1333,12 @@
     <string name="layout_adjustment_preview_title">Vista previa de AI Markdown</string>
     <string name="layout_adjustment_preview_desc">El ejemplo de abajo refleja el interlineado y el espaciado entre letras guardados para AI Markdown.</string>
     <string name="layout_adjustment_preview_plain_text">Esta es una vista previa de texto normal. Puedes observar la separación entre letras y la densidad entre líneas.</string>
-    <string name="layout_adjustment_preview_markdown">Este es el primer párrafo Markdown de vista previa de una respuesta de IA, para observar el interlineado y el espaciado entre letras actuales.\n\nEste es el segundo párrafo Markdown de vista previa de una respuesta de IA, para seguir observando la composición general de múltiples párrafos y listas.\n\n- Elemento de lista AI Markdown uno\n- Elemento de lista AI Markdown dos</string>
+    <string name="layout_adjustment_preview_markdown">Este es el primer párrafo Markdown de vista previa de una respuesta de IA, para observar el interlineado y el espaciado entre letras actuales.
+
+Este es el segundo párrafo Markdown de vista previa de una respuesta de IA, para seguir observando la composición general de múltiples párrafos y listas.
+
+- Elemento de lista AI Markdown uno
+- Elemento de lista AI Markdown dos</string>
     <string name="current_value">Valor Actual</string>
     <string name="closer_to_edge">Más Cerca del Borde</string>
     <string name="farther_from_edge">Más Lejos del Borde</string>
@@ -1845,7 +1859,11 @@
     <string name="one_click_config_info_text">Primero inicie sesión o regístrese. Después de iniciar sesión, el sistema obtendrá automáticamente la clave API.</string>
     <string name="one_click_config_getting_key">Obteniendo clave API...</string>
     <string name="token_info_title">Obtener Token de API de DeepSeek</string>
-    <string name="token_info_content">Será redirigido al sitio web oficial de la API de DeepSeek. Incorporamos el acceso al sitio oficial de DeepSeek porque consideramos que es la API más rentable para uso doméstico, no solo por su potente rendimiento, sino también por sus diversos descuentos y caché en disco que reducen los costos de uso.\n\nEl acceso a la API y la configuración del Token no están relacionados con el desarrollador del software. No proporcionaremos ningún servicio al respecto ni cobraremos ninguna tarifa.\n\nPara la primera vez que use su propio token, se recomienda recargar solo 1 yuan, que es más que suficiente.</string>
+    <string name="token_info_content">Será redirigido al sitio web oficial de la API de DeepSeek. Incorporamos el acceso al sitio oficial de DeepSeek porque consideramos que es la API más rentable para uso doméstico, no solo por su potente rendimiento, sino también por sus diversos descuentos y caché en disco que reducen los costos de uso.
+
+El acceso a la API y la configuración del Token no están relacionados con el desarrollador del software. No proporcionaremos ningún servicio al respecto ni cobraremos ninguna tarifa.
+
+Para la primera vez que use su propio token, se recomienda recargar solo 1 yuan, que es más que suficiente.</string>
     <string name="token_info_cancel">Cancelar</string>
     <string name="token_info_confirm">Ir a obtener</string>
     <string name="free_usage_message_1">No abuses tanto, o realmente quebraremos qwq</string>
@@ -2044,7 +2062,11 @@
     <string name="toast_open_termux_first">Inicie Termux primero</string>
     <string name="toast_operation_failed">Operación fallida: %1$s</string>
     <string name="toast_skip_tuna_source">Se ha omitido la configuración del repositorio de Tsinghua. Puede configurarlo manualmente en Termux más tarde</string>
-    <string name="toast_skip_tuna_source_dialog">Ha optado por omitir la configuración del repositorio de Tsinghua. Si desea configurarlo manualmente más tarde, ejecute el siguiente comando en Termux:\n\ntermux-change-repo\n\nLuego seleccione el repositorio de Tsinghua u otro de la lista.</string>
+    <string name="toast_skip_tuna_source_dialog">Ha optado por omitir la configuración del repositorio de Tsinghua. Si desea configurarlo manualmente más tarde, ejecute el siguiente comando en Termux:
+
+termux-change-repo
+
+Luego seleccione el repositorio de Tsinghua u otro de la lista.</string>
     <string name="chat_history">Historial de conversaciones</string>
     <string name="search_chat_history_hint">Buscar</string>
     <string name="new_chat">Nueva conversación</string>
@@ -2070,7 +2092,12 @@
     <string name="disabled">Desactivado</string>
     <string name="termux_not_installed_message">Instale la aplicación Termux primero</string>
     <string name="termux_manual_auth_title">Autorización manual requerida</string>
-    <string name="termux_manual_auth_message">No se pudo otorgar automáticamente el permiso para ejecutar comandos en Termux. Realice los siguientes pasos manualmente:\n\n1. Abra Termux\n2. Mantenga presionada la pantalla y seleccione \'Más\'\n3. Seleccione \'Ajustes\'\n4. Active \'Permitir acceso desde aplicaciones externas\'</string>
+    <string name="termux_manual_auth_message">No se pudo otorgar automáticamente el permiso para ejecutar comandos en Termux. Realice los siguientes pasos manualmente:
+
+1. Abra Termux
+2. Mantenga presionada la pantalla y seleccione \'Más\'
+3. Seleccione \'Ajustes\'
+4. Active \'Permitir acceso desde aplicaciones externas\'</string>
     <string name="termux_storage_permission_message">No se pudo otorgar automáticamente el permiso de almacenamiento de Termux. Verifique la siguiente configuración:\n\n1. Entorno Shell: asegúrese de tener un shell disponible (como ADB o Root). Nota: si usa Shizuku, no lo inicie en modo Root.\n2. Versión de Termux: asegúrese de que la versión instalada sea la integrada en la aplicación o la versión Debug obtenida de su repositorio oficial de GitHub.</string>
     <string name="termux_all_permissions_granted">Todos los permisos de Termux se han otorgado correctamente</string>
     <string name="termux_some_permissions_failed">Algunos permisos no se pudieron otorgar. Consulte el registro o configúrelos manualmente</string>
@@ -2187,8 +2214,6 @@
     <string name="settings_enable_summary_by_message_count_desc">Activa el resumen cuando la cantidad de mensajes nuevos alcanza el umbral</string>
     <string name="settings_summary_message_count_threshold">Umbral de número de mensajes</string>
     <string name="settings_summary_message_count_threshold_subtitle">Cantidad de mensajes nuevos para activar el resumen (1-20 mensajes)</string>
-    <string name="notification_permission_rationale">Para notificarle oportunamente cuando la IA complete su respuesta, es necesario otorgar el permiso de notificación</string>
-    <string name="notification_permission_denied">Permiso de notificación denegado, no podrá recibir avisos de respuesta de la IA</string>
     <string name="settings_section_external_calls">Llamadas externas</string>
     <string name="settings_total_tokens_breakdown">Entrada: %1$d (caché: %2$d) / Salida: %3$d</string>
     <string name="settings_cached_tokens">(caché: %1$d)</string>
@@ -2307,12 +2332,73 @@
     <string name="avatar_fbx_camera_distance">Distancia de cámara FBX (%1$s)</string>
     <string name="avatar_fbx_orbit_pivot_height">Altura del pivote de órbita FBX (%1$s)</string>
     <string name="avatar_supported_formats_title">Formatos compatibles</string>
-    <string name="avatar_supported_formats_desc">- DragonBones: esqueleto .json + *_tex.json + *_tex.png\n- WebP: uno o más archivos .webp\n- MP4: uno o más archivos .mp4\n- MMD: modelo .pmx o .pmd, opcionalmente animación .vmd\n- glTF: .glb o .gltf (si hay referencias, también se necesitan recursos .bin/texturas)\n- FBX: .fbx (carga directa solo para recursos autocontenidos)</string>
+    <string name="avatar_supported_formats_desc">- DragonBones: esqueleto .json + *_tex.json + *_tex.png
+- WebP: uno o más archivos .webp
+- MP4: uno o más archivos .mp4
+- MMD: modelo .pmx o .pmd, opcionalmente animación .vmd
+- glTF: .glb o .gltf (si hay referencias, también se necesitan recursos .bin/texturas)
+- FBX: .fbx (carga directa solo para recursos autocontenidos)</string>
     <string name="avatar_import_methods_title">Métodos de importación</string>
     <string name="avatar_import_methods_desc">- Seleccionar archivo directamente: .glb / .gltf / .mp4 / .fbx\n- Importación ZIP: DragonBones, WebP, MP4, MMD, glTF de múltiples archivos, o paquete FBX con texturas/recursos externos</string>
     <string name="import_structure_guide_tap_to_expand">Guía de estructura de importación (tocar para expandir)</string>
     <string name="import_structure_guide_tap_to_collapse">Guía de estructura de importación (tocar para colapsar)</string>
-    <string name="import_structure_guide_content">Esta es la estructura de directorios del "paquete de importación" (ZIP o archivo seleccionado internamente), no el almacenamiento interno de la aplicación.\n\nDragonBones (.zip)\n  my_dragonbones.zip\n    any_folder_name/\n      hero_ske.json\n      hero_tex.json\n      hero_tex.png\n  Requisito: los nombres de archivo ske/tex json/png deben tener el mismo prefijo.\n\nWebP (.zip)\n  my_webp.zip\n    any_folder_name/\n      idle.webp\n      talking.webp\n      happy.webp\n  Requisito: al menos un archivo .webp.\n\nMP4\n  Método A (archivo directo):\n    avatar.mp4\n  Método B (.zip):\n    my_mp4.zip\n      any_folder_name/\n        idle.mp4\n        talking.mp4\n        happy.mp4\n  Requisito: al menos un archivo .mp4.\n\nMMD (.zip)\n  my_mmd.zip\n    any_folder_name/\n      character.pmx (o .pmd)\n      motions/idle.vmd (opcional)\n      textures/...\n  Requisito: mantener las rutas relativas referenciadas por PMX/PMD.\n\nglTF\n  Método A (archivo directo):\n    avatar.glb\n  Método B (glTF de múltiples archivos usando .zip):\n    my_gltf.zip\n      any_folder_name/\n        avatar.gltf\n        avatar.bin\n        textures/...\n  Requisito: mantener las rutas relativas referenciadas por .gltf.\n\nFBX\n  Método A (archivo directo, solo recursos autocontenidos):\n    avatar.fbx\n  Método B (texturas/recursos externos usar .zip):\n    my_fbx.zip\n      any_folder_name/\n        avatar.fbx\n        textures/...\n  Requisito: la carga directa de .fbx solo admite recursos incrustados; si el modelo referencia texturas externas u otros recursos, mantenga las rutas relativas y colóquelos en un ZIP.</string>
+    <string name="import_structure_guide_content">Esta es la estructura de directorios del "paquete de importación" (ZIP o archivo seleccionado internamente), no el almacenamiento interno de la aplicación.
+
+DragonBones (.zip)
+  my_dragonbones.zip
+    any_folder_name/
+      hero_ske.json
+      hero_tex.json
+      hero_tex.png
+  Requisito: los nombres de archivo ske/tex json/png deben tener el mismo prefijo.
+
+WebP (.zip)
+  my_webp.zip
+    any_folder_name/
+      idle.webp
+      talking.webp
+      happy.webp
+  Requisito: al menos un archivo .webp.
+
+MP4
+  Método A (archivo directo):
+    avatar.mp4
+  Método B (.zip):
+    my_mp4.zip
+      any_folder_name/
+        idle.mp4
+        talking.mp4
+        happy.mp4
+  Requisito: al menos un archivo .mp4.
+
+MMD (.zip)
+  my_mmd.zip
+    any_folder_name/
+      character.pmx (o .pmd)
+      motions/idle.vmd (opcional)
+      textures/...
+  Requisito: mantener las rutas relativas referenciadas por PMX/PMD.
+
+glTF
+  Método A (archivo directo):
+    avatar.glb
+  Método B (glTF de múltiples archivos usando .zip):
+    my_gltf.zip
+      any_folder_name/
+        avatar.gltf
+        avatar.bin
+        textures/...
+  Requisito: mantener las rutas relativas referenciadas por .gltf.
+
+FBX
+  Método A (archivo directo, solo recursos autocontenidos):
+    avatar.fbx
+  Método B (texturas/recursos externos usar .zip):
+    my_fbx.zip
+      any_folder_name/
+        avatar.fbx
+        textures/...
+  Requisito: la carga directa de .fbx solo admite recursos incrustados; si el modelo referencia texturas externas u otros recursos, mantenga las rutas relativas y colóquelos en un ZIP.</string>
     <string name="about_avatar_formats">Esta aplicación admite múltiples formatos de avatar virtual, incluido DragonBones. A continuación se presentan instrucciones para crear e importar modelos.</string>
     <string name="making_models_desc_general">    · Puede utilizar varias herramientas para crear su modelo de avatar virtual.\n    · Para DragonBones, se recomienda usar el nuevo editor en línea, o el editor fuera de línea v5.6.3 anterior.</string>
     <string name="exporting_files_desc_general">    · Siga la guía de exportación para el formato que haya elegido.\n    · Para DragonBones, al exportar datos, seleccione JSON como tipo y versión 5.5 (actualmente no se admite el runtime 6.0).\n    · Los archivos principales exportados son: *_ske.json, *_tex.json, *_tex.png.</string>
@@ -2594,7 +2680,11 @@
     <string name="streaming_rendering">Renderizado en streaming (Streaming)</string>
     <string name="copy_text">Copiar texto</string>
     <string name="no_text_to_copy">No hay texto para copiar</string>
-    <string name="speech_recognition_instructions">1. Seleccione el motor de reconocimiento (Android nativo/Sherpa-ncnn/Whisper offline)\n2. Seleccione el idioma de reconocimiento (chino/inglés, etc.)\n3. Toque el botón de inicio de grabación\n4. Toque el botón de detener al terminar de hablar\n5. Vea el resultado del reconocimiento</string>
+    <string name="speech_recognition_instructions">1. Seleccione el motor de reconocimiento (Android nativo/Sherpa-ncnn/Whisper offline)
+2. Seleccione el idioma de reconocimiento (chino/inglés, etc.)
+3. Toque el botón de inicio de grabación
+4. Toque el botón de detener al terminar de hablar
+5. Vea el resultado del reconocimiento</string>
     <string name="activity_monitor">Monitor de actividad</string>
     <string name="smart_build">Compilación inteligente</string>
     <string name="target_app">Objetivo: %1$s</string>
@@ -2652,7 +2742,12 @@
     <string name="tts_debug_service_type">Tipo de servicio: %s</string>
     <string name="tts_debug_params">Parámetros de solicitud: texto=\'%1$s\', velocidad=%2$sx, tono=%3$sx</string>
     <string name="tts_debug_params_with_service">Parámetros de solicitud: texto=\'%1$s\', velocidad=%2$sx, tono=%3$sx\nTipo de servicio: %4$s</string>
-    <string name="tts_usage_instructions_content">1. Ingrese el texto a convertir en voz en el cuadro de entrada\n2. Ajuste la velocidad y el tono\n3. Haga clic en «Reproducir voz» para iniciar la reproducción\n4. Haga clic en «Detener reproducción» para detener\n5. Si ocurre un error, consulte los detalles del error y la información de depuración\n6. Use el botón «Limpiar mensaje de error» para borrar la visualización de errores</string>
+    <string name="tts_usage_instructions_content">1. Ingrese el texto a convertir en voz en el cuadro de entrada
+2. Ajuste la velocidad y el tono
+3. Haga clic en «Reproducir voz» para iniciar la reproducción
+4. Haga clic en «Detener reproducción» para detener
+5. Si ocurre un error, consulte los detalles del error y la información de depuración
+6. Use el botón «Limpiar mensaje de error» para borrar la visualización de errores</string>
     <string name="tool_default_assistant_guide">Configuración del asistente predeterminado</string>
     <string name="tool_default_assistant_guide_desc">Establecer el flotante de voz de Operit como asistente predeterminado del sistema</string>
     <string name="tool_terminal_auto_config_under_construction">La función de configuración automática del terminal está siendo reestructurada...</string>
@@ -3074,7 +3169,11 @@ Ahora puede usar el modo AutoGLM en la interfaz de conversación.</string>
     <string name="speech_services_http_headers_placeholder">{\"Content-Type\": \"application/json\"}</string>
     <string name="speech_services_http_headers_error">Formato JSON no válido</string>
     <string name="speech_services_http_response_pipeline">Pipeline de procesamiento de respuesta</string>
-    <string name="speech_services_http_response_pipeline_placeholder">[\n  { "type": "parse_json" },\n  { "type": "pick", "path": "audio_uri" },\n  { "type": "http_get" }\n]</string>
+    <string name="speech_services_http_response_pipeline_placeholder">[
+  { "type": "parse_json" },
+  { "type": "pick", "path": "audio_uri" },
+  { "type": "http_get" }
+]</string>
     <string name="speech_services_http_response_pipeline_hint">Dejar vacío o [] para tratar el cuerpo de la respuesta directamente como audio. Soporta parse_json, pick, parse_json_string, http_get, http_request_from_object, base64_decode.</string>
     <string name="speech_services_http_response_pipeline_error">Array JSON de pipeline de procesamiento de respuesta no válido</string>
     <string name="speech_services_http_method">Método HTTP</string>
@@ -3816,7 +3915,13 @@ Ahora puede usar el modo AutoGLM en la interfaz de conversación.</string>
     <string name="appearance_prompt_placeholder">Por ejemplo: long hair, purple eyes, sweater vest...</string>
     <string name="appearance_prompt_tip">Consejo: usa palabras clave en inglés para describir la apariencia, separadas por comas</string>
     <string name="feature_explanation">Explicación de la función</string>
-    <string name="waifu_mode_explanation">• Modo normal: la respuesta de la IA se envía completa de una vez\n• Modo Waifu: la respuesta de la IA se divide en oraciones, cada una en una burbuja independiente\n• Retardo inteligente: calcula el retardo según la longitud de la oración\n• Limpieza automática: elimina etiquetas de estado, solo muestra texto plano\n• Funciones opcionales: eliminar puntuación al final, editar prompt de Waifu, activar emoticonos\n• Escenario de uso: simular un ritmo de conversación más natural\n• Nota: este modo puede no adaptarse bien a las llamadas de herramientas</string>
+    <string name="waifu_mode_explanation">• Modo normal: la respuesta de la IA se envía completa de una vez
+• Modo Waifu: la respuesta de la IA se divide en oraciones, cada una en una burbuja independiente
+• Retardo inteligente: calcula el retardo según la longitud de la oración
+• Limpieza automática: elimina etiquetas de estado, solo muestra texto plano
+• Funciones opcionales: eliminar puntuación al final, editar prompt de Waifu, activar emoticonos
+• Escenario de uso: simular un ritmo de conversación más natural
+• Nota: este modo puede no adaptarse bien a las llamadas de herramientas</string>
     <string name="settings_saved_message">Configuración guardada</string>
     <string name="settings_section_account">Cuenta</string>
 
@@ -4480,7 +4585,13 @@ Ahora puede usar el modo AutoGLM en la interfaz de conversación.</string>
     <string name="default_assistant_guide_step3_detail2">• Si tiene éxito, debería ver la interfaz del asistente de voz de Operit.</string>
     <string name="default_assistant_guide_step3_detail3">• Puede intentar hablar o escribir texto para interactuar con el asistente.</string>
     <string name="default_assistant_guide_troubleshooting_title">¿Problemas?</string>
-    <string name="default_assistant_guide_troubleshooting_content">Si no encuentra Operit en la lista, asegúrese de que:\n\n• La aplicación esté instalada correctamente y no esté deshabilitada.\n• Se hayan concedido los permisos necesarios (micrófono, ventana flotante, etc.).\n• Intente reiniciar el dispositivo y configurarlo de nuevo.\n\nAlgunos sistemas personalizados pueden restringir aplicaciones de terceros como asistente predeterminado. En ese caso, aún puede usar Operit mediante la función de ventana flotante dentro de la aplicación.</string>
+    <string name="default_assistant_guide_troubleshooting_content">Si no encuentra Operit en la lista, asegúrese de que:
+
+• La aplicación esté instalada correctamente y no esté deshabilitada.
+• Se hayan concedido los permisos necesarios (micrófono, ventana flotante, etc.).
+• Intente reiniciar el dispositivo y configurarlo de nuevo.
+
+Algunos sistemas personalizados pueden restringir aplicaciones de terceros como asistente predeterminado. En ese caso, aún puede usar Operit mediante la función de ventana flotante dentro de la aplicación.</string>
     <string name="voice_interaction_service_name">Asistente Operit AI</string>
     <string name="voice_interaction_service_summary">Servicio de asistente de voz inteligente</string>
     <string name="tool_permissions_title">Permisos de herramientas</string>
@@ -4770,7 +4881,14 @@ Ahora puede usar el modo AutoGLM en la interfaz de conversación.</string>
     <string name="external_http_chat_health_example">Ejemplo de verificación de salud</string>
     <string name="external_http_chat_intent_title">Instrucciones de llamada mediante Intent</string>
     <string name="external_http_chat_intent_desc">La entrada por broadcast aún se conserva, adecuada para integración con aplicaciones locales, Tasker o depuración con adb</string>
-    <string name="external_http_chat_intent_overview">Los parámetros de HTTP e Intent son semánticamente equivalentes, solo cambia la entrada.\n\nAction de solicitud: %1$s\nAction de retorno predeterminada: %2$s\n\nExtras comunes: message, request_id, group, create_new_chat, chat_id, create_if_none, show_floating, return_tool_status, initial_mode, auto_exit_after_ms, stop_after, reply_action, reply_package\n\nUna vez procesado, se retransmitirá mediante broadcast success, chat_id, ai_response, error; si solo desea que se devuelva a una aplicación específica, configure reply_package.</string>
+    <string name="external_http_chat_intent_overview">Los parámetros de HTTP e Intent son semánticamente equivalentes, solo cambia la entrada.
+
+Action de solicitud: %1$s
+Action de retorno predeterminada: %2$s
+
+Extras comunes: message, request_id, group, create_new_chat, chat_id, create_if_none, show_floating, return_tool_status, initial_mode, auto_exit_after_ms, stop_after, reply_action, reply_package
+
+Una vez procesado, se retransmitirá mediante broadcast success, chat_id, ai_response, error; si solo desea que se devuelva a una aplicación específica, configure reply_package.</string>
     <string name="external_http_chat_copy_example">Copiar ejemplo</string>
     <string name="external_http_chat_example_copied">Comando de ejemplo copiado</string>
     <string name="external_http_chat_service_enabled">Servicio habilitado</string>
@@ -5092,7 +5210,11 @@ Ahora puede usar el modo AutoGLM en la interfaz de conversación.</string>
     <string name="backup_delete_skipped_locked">\nse omitieron %1$d chats bloqueados</string>
     <string name="backup_open_file_failed">no se pudo abrir el archivo</string>
     <string name="backup_import_file_empty">el archivo importado está vacío</string>
-    <string name="backup_memory_import_result_success">importación a la configuración «%1$s» exitosa:\n- nuevos recuerdos: %2$d\n- recuerdos actualizados: %3$d\n- recuerdos omitidos: %4$d\n- nuevos enlaces: %5$d</string>
+    <string name="backup_memory_import_result_success">importación a la configuración «%1$s» exitosa:
+- nuevos recuerdos: %2$d
+- recuerdos actualizados: %3$d
+- recuerdos omitidos: %4$d
+- nuevos enlaces: %5$d</string>
     <string name="backup_memory_export_result_success">exportación exitosa de %2$d recuerdos y %3$d enlaces desde la configuración «%1$s» a:\n%4$s</string>
     <string name="backup_model_config_import_result_success">importación de configuración del modelo exitosa:\n- nuevas configuraciones: %1$d\n- configuraciones actualizadas: %2$d%3$s</string>
     <string name="backup_model_config_import_result_skipped">\n- configuraciones inválidas omitidas: %1$d</string>
@@ -6279,7 +6401,13 @@ Ahora puede usar el modo AutoGLM en la interfaz de conversación.</string>
     <string name="mnn_model_dir_missing">El directorio del modelo no existe: %1$s\nDescargue el modelo primero</string>
     <string name="mnn_file_status">Estado del archivo:</string>
     <string name="mnn_init_failed">Error al inicializar el modelo</string>
-    <string name="mnn_connection_success">¡Conexión con el modelo MNN LLM exitosa!\n\nModelo: %1$s\nDirectorio: %2$s\nTamaño total: %3$s\n\n%4$s</string>
+    <string name="mnn_connection_success">¡Conexión con el modelo MNN LLM exitosa!
+
+Modelo: %1$s
+Directorio: %2$s
+Tamaño total: %3$s
+
+%4$s</string>
     <string name="apk_unnamed_function">(Función sin nombre)</string>
     <string name="apk_unknown_error">Error desconocido</string>
     <string name="apk_extract_failed">Error al extraer APK: %1$s</string>
@@ -6332,7 +6460,11 @@ Ahora puede usar el modo AutoGLM en la interfaz de conversación.</string>
     <string name="apk_keystore_path_info">Ruta del almacén de claves: %1$s</string>
     <string name="apk_signer_not_exist">El archivo del firmador no existe: %1$s</string>
     <string name="apk_signing_aborted">Firma cancelada</string>
-    <string name="apk_signing_info">Firmando APK...\nAPK: %1$s\nAlmacén de claves: %2$s\nAlias de clave: %3$s\nFirmador: %4$s</string>
+    <string name="apk_signing_info">Firmando APK...
+APK: %1$s
+Almacén de claves: %2$s
+Alias de clave: %3$s
+Firmador: %4$s</string>
     <string name="apk_use_builtin_keystore">Usar almacén de claves de depuración integrado</string>
     <string name="apk_zip_align_failed">Error de alineación ZIP: %1$s</string>
     <string name="apk_zip_align_path">Ruta de alineación ZIP: %1$s</string>
@@ -6773,7 +6905,13 @@ Ahora puede usar el modo AutoGLM en la interfaz de conversación.</string>
     <string name="task_context_current_task">Tarea actual: %1$s</string>
     <string name="task_context_dependency_results">Resultados de tareas dependientes:</string>
     <string name="task_context_task_result">- Resultado de la tarea %1$s: %2$s</string>
-    <string name="task_instruction_with_context">\n%1$s\n\nSegún la información de contexto anterior, ejecute la siguiente tarea específica:\n%2$s\n\nConcéntrese en completar esta subtarea particular; su respuesta será parte del plan general.</string>
+    <string name="task_instruction_with_context">
+%1$s
+
+Según la información de contexto anterior, ejecute la siguiente tarea específica:
+%2$s
+
+Concéntrese en completar esta subtarea particular; su respuesta será parte del plan general.</string>
     <string name="task_summary_key_results">Resultados de las subtareas clave:</string>
     <string name="tool_permission_operation">Operación %1$s</string>
     <string name="message_image_capture_failed">Error al capturar la imagen: %1$s</string>

@@ -406,12 +406,73 @@
     <string name="avatar_fbx_camera_distance">FBX Jarak Kamera (%1$s)</string>
     <string name="avatar_fbx_orbit_pivot_height">FBX Ketinggian Pivot Orbit (%1$s)</string>
     <string name="avatar_supported_formats_title">Format yang Disokong</string>
-    <string name="avatar_supported_formats_desc">- DragonBones: Rangka .json + *_tex.json + *_tex.png\n- WebP: Satu atau lebih fail .webp\n- MP4: Satu atau lebih fail .mp4\n- MMD: Model .pmx atau .pmd, pilihan .vmd untuk animasi\n- glTF: .glb atau .gltf (dan .bin/tekstur dsb. jika dirujuk)\n- FBX: .fbx (hanya sumber terbenam untuk muat naik langsung)</string>
+    <string name="avatar_supported_formats_desc">- DragonBones: Rangka .json + *_tex.json + *_tex.png
+- WebP: Satu atau lebih fail .webp
+- MP4: Satu atau lebih fail .mp4
+- MMD: Model .pmx atau .pmd, pilihan .vmd untuk animasi
+- glTF: .glb atau .gltf (dan .bin/tekstur dsb. jika dirujuk)
+- FBX: .fbx (hanya sumber terbenam untuk muat naik langsung)</string>
     <string name="avatar_import_methods_title">Kaedah Import</string>
     <string name="avatar_import_methods_desc">- Pilih fail terus: .glb / .gltf / .mp4 / .fbx\n- Import ZIP: DragonBones, WebP, MP4, MMD, glTF berbilang fail, atau pakej FBX dengan tekstur/sumber luaran</string>
     <string name="import_structure_guide_tap_to_expand">Panduan Struktur Import (Ketik untuk kembangkan)</string>
     <string name="import_structure_guide_tap_to_collapse">Panduan Struktur Import (Ketik untuk tutup)</string>
-    <string name="import_structure_guide_content">Ini adalah struktur direktori untuk "pakej import" (ZIP atau dalam fail yang dipilih), bukan storan dalaman aplikasi.\n\nDragonBones (.zip)\n  my_dragonbones.zip\n    any_folder_name/\n      hero_ske.json\n      hero_tex.json\n      hero_tex.png\n  Keperluan: Awalan nama fail ske/tex json/png mesti sama.\n\nWebP (.zip)\n  my_webp.zip\n    any_folder_name/\n      idle.webp\n      talking.webp\n      happy.webp\n  Keperluan: Mesti mengandungi sekurang-kurangnya satu fail .webp.\n\nMP4\n  Kaedah A (fail terus):\n    avatar.mp4\n  Kaedah B (.zip):\n    my_mp4.zip\n      any_folder_name/\n        idle.mp4\n        talking.mp4\n        happy.mp4\n  Keperluan: Mesti mengandungi sekurang-kurangnya satu fail .mp4.\n\nMMD (.zip)\n  my_mmd.zip\n    any_folder_name/\n      character.pmx (atau .pmd)\n      motions/idle.vmd (pilihan)\n      textures/...\n  Keperluan: Kekalkan laluan relatif yang dirujuk oleh PMX/PMD.\n\nglTF\n  Kaedah A (fail terus):\n    avatar.glb\n  Kaedah B (glTF berbilang fail guna .zip):\n    my_gltf.zip\n      any_folder_name/\n        avatar.gltf\n        avatar.bin\n        textures/...\n  Keperluan: Kekalkan laluan relatif yang dirujuk oleh .gltf.\n\nFBX\n  Kaedah A (fail terus, hanya sumber terbenam):\n    avatar.fbx\n  Kaedah B (guna .zip untuk tekstur/sumber luaran):\n    my_fbx.zip\n      any_folder_name/\n        avatar.fbx\n        textures/...\n  Keperluan: Muat naik langsung .fbx hanya menyokong sumber terbenam; jika model merujuk tekstur luaran atau sumber lain, kekalkan laluan relatif dan masukkan ke dalam ZIP.</string>
+    <string name="import_structure_guide_content">Ini adalah struktur direktori untuk "pakej import" (ZIP atau dalam fail yang dipilih), bukan storan dalaman aplikasi.
+
+DragonBones (.zip)
+  my_dragonbones.zip
+    any_folder_name/
+      hero_ske.json
+      hero_tex.json
+      hero_tex.png
+  Keperluan: Awalan nama fail ske/tex json/png mesti sama.
+
+WebP (.zip)
+  my_webp.zip
+    any_folder_name/
+      idle.webp
+      talking.webp
+      happy.webp
+  Keperluan: Mesti mengandungi sekurang-kurangnya satu fail .webp.
+
+MP4
+  Kaedah A (fail terus):
+    avatar.mp4
+  Kaedah B (.zip):
+    my_mp4.zip
+      any_folder_name/
+        idle.mp4
+        talking.mp4
+        happy.mp4
+  Keperluan: Mesti mengandungi sekurang-kurangnya satu fail .mp4.
+
+MMD (.zip)
+  my_mmd.zip
+    any_folder_name/
+      character.pmx (atau .pmd)
+      motions/idle.vmd (pilihan)
+      textures/...
+  Keperluan: Kekalkan laluan relatif yang dirujuk oleh PMX/PMD.
+
+glTF
+  Kaedah A (fail terus):
+    avatar.glb
+  Kaedah B (glTF berbilang fail guna .zip):
+    my_gltf.zip
+      any_folder_name/
+        avatar.gltf
+        avatar.bin
+        textures/...
+  Keperluan: Kekalkan laluan relatif yang dirujuk oleh .gltf.
+
+FBX
+  Kaedah A (fail terus, hanya sumber terbenam):
+    avatar.fbx
+  Kaedah B (guna .zip untuk tekstur/sumber luaran):
+    my_fbx.zip
+      any_folder_name/
+        avatar.fbx
+        textures/...
+  Keperluan: Muat naik langsung .fbx hanya menyokong sumber terbenam; jika model merujuk tekstur luaran atau sumber lain, kekalkan laluan relatif dan masukkan ke dalam ZIP.</string>
     <string name="enter">Masuk</string>
     <string name="about_avatar_formats">Aplikasi ini menyokong pelbagai format avatar maya, termasuk DragonBones. Berikut adalah penerangan untuk membuat dan mengimport model.</string>
     <string name="dragon_bones_config">Konfigurasi DragonBones</string>
@@ -575,7 +636,11 @@
     <string name="one_click_config_info_text">Sila log masuk atau daftar dahulu, sistem akan mendapatkan kunci API secara automatik selepas log masuk</string>
     <string name="one_click_config_getting_key">Mendapatkan kunci API...</string>
     <string name="token_info_title">Dapatkan DeepSeek API Token</string>
-    <string name="token_info_content">Anda akan dihantar ke laman web rasmi DeepSeek API. Kami menyediakan akses ke laman web rasmi DeepSeek kerana kami percaya ia adalah API yang paling berpatutan untuk digunakan di negara ini, bukan sahaja berprestasi tinggi, tetapi juga menawarkan pelbagai diskaun dan cache cakera untuk mengurangkan kos penggunaan.\n\nAkses API dan penetapan Token tidak berkaitan dengan pembangun perisian, kami tidak menyediakan sebarang perkhidmatan dalam hal ini, dan tidak akan memperoleh sebarang bayaran.\n\nUntuk penggunaan pertama dengan token sendiri, disyorkan untuk hanya menambah nilai RM1, yang sudah cukup untuk digunakan sepenuhnya.</string>
+    <string name="token_info_content">Anda akan dihantar ke laman web rasmi DeepSeek API. Kami menyediakan akses ke laman web rasmi DeepSeek kerana kami percaya ia adalah API yang paling berpatutan untuk digunakan di negara ini, bukan sahaja berprestasi tinggi, tetapi juga menawarkan pelbagai diskaun dan cache cakera untuk mengurangkan kos penggunaan.
+
+Akses API dan penetapan Token tidak berkaitan dengan pembangun perisian, kami tidak menyediakan sebarang perkhidmatan dalam hal ini, dan tidak akan memperoleh sebarang bayaran.
+
+Untuk penggunaan pertama dengan token sendiri, disyorkan untuk hanya menambah nilai RM1, yang sudah cukup untuk digunakan sepenuhnya.</string>
     <string name="token_info_cancel">Batal</string>
     <string name="token_info_confirm">Pergi Dapatkan</string>
     <string name="free_usage_title">Sahkan Penggunaan Sumber Percuma</string>
@@ -730,8 +795,6 @@
     <string name="settings_reply_notification_desc">Hantar pemberitahuan apabila AI selesai membalas</string>
     <string name="notification_ai_reply_title">Pembantu AI</string>
     <string name="notification_ai_reply_content">AI telah selesai membalas</string>
-    <string name="notification_permission_rationale">Untuk memberitahu anda segera selepas AI selesai membalas, kebenaran pemberitahuan diperlukan</string>
-    <string name="notification_permission_denied">Kebenaran pemberitahuan ditolak, anda tidak akan menerima peringatan balasan AI</string>
     <string name="settings_auto_accessibility">Berikan kebenaran aksesibiliti secara automatik</string>
     <string name="settings_auto_accessibility_desc">Selepas ditutup, perlu diberi kuasa secara manual setiap kali perisian dibuka</string>
     <string name="settings_section_permissions">Kebenaran &amp; Keselamatan</string>
@@ -1322,7 +1385,11 @@
     <string name="toast_open_termux_first">Sila mulakan Termux terlebih dahulu</string>
     <string name="toast_operation_failed">Operasi gagal: %1$s</string>
     <string name="toast_skip_tuna_source">Konfigurasi sumber Tsinghua telah dilangkau, anda boleh mengkonfigurasi sumber sendiri dalam Termux kemudian</string>
-    <string name="toast_skip_tuna_source_dialog">Anda telah memilih untuk melangkau konfigurasi sumber Tsinghua. Jika perlu mengkonfigurasi secara manual kemudian, sila jalankan arahan berikut dalam Termux:\n\ntermux-change-repo\n\nKemudian pilih sumber Tsinghua atau sumber lain dari senarai.</string>
+    <string name="toast_skip_tuna_source_dialog">Anda telah memilih untuk melangkau konfigurasi sumber Tsinghua. Jika perlu mengkonfigurasi secara manual kemudian, sila jalankan arahan berikut dalam Termux:
+
+termux-change-repo
+
+Kemudian pilih sumber Tsinghua atau sumber lain dari senarai.</string>
     <string name="chat_history">Sejarah Perbualan</string>
     <string name="search_chat_history_hint">Cari</string>
     <string name="new_chat">Perbualan Baharu</string>
@@ -1349,7 +1416,12 @@
     <string name="disabled">Dimatikan</string>
     <string name="termux_not_installed_message">Sila pasang aplikasi Termux terlebih dahulu</string>
     <string name="termux_manual_auth_title">Pengesahan Manual Diperlukan</string>
-    <string name="termux_manual_auth_message">Tidak dapat memberikan kebenaran menjalankan arahan Termux secara automatik, sila lakukan secara manual:\n\n1. Buka Termux\n2. Tekan dan tahan skrin, pilih \'Lagi\'\n3. Pilih \'Tetapan\'\n4. Dayakan \'Benarkan Akses Aplikasi Luaran\'</string>
+    <string name="termux_manual_auth_message">Tidak dapat memberikan kebenaran menjalankan arahan Termux secara automatik, sila lakukan secara manual:
+
+1. Buka Termux
+2. Tekan dan tahan skrin, pilih \'Lagi\'
+3. Pilih \'Tetapan\'
+4. Dayakan \'Benarkan Akses Aplikasi Luaran\'</string>
     <string name="termux_storage_permission_message">Tidak dapat memberikan kebenaran storan Termux secara automatik, sila semak konfigurasi berikut:\n\n1. Persekitaran Shell: Pastikan anda mempunyai Shell yang berfungsi (seperti ADB atau Root). Perhatian: Jika menggunakan Shizuku, jangan mulakan dalam mod Root.\n2. Versi Termux: Pastikan Termux yang dipasang adalah versi terbina dalam aplikasi, atau versi Debug yang diperoleh dari repositori GitHub rasminya.</string>
     <string name="termux_all_permissions_granted">Semua kebenaran Termux berjaya diberikan</string>
     <string name="termux_some_permissions_failed">Sebahagian kebenaran gagal diberikan, sila lihat log atau tetapkan secara manual</string>
@@ -1567,7 +1639,6 @@
     <string name="cannot_find_shizuku_app">Tidak dapat mencari aplikasi Shizuku</string>
     <string name="cannot_launch_shizuku_app">Tidak dapat melancarkan aplikasi Shizuku</string>
     <string name="cannot_open_docs_link">Tidak dapat membuka pautan dokumentasi</string>
-    <string name="plugin_loading_skipped">Pemuatan pemalam telah dilangkau</string>
     <string name="press_back_again_to_exit">Tekan sekali lagi untuk keluar aplikasi</string>
     <string name="return_code_copied">Kod pulangan telah disalin!</string>
     <string name="cannot_find_termux_app">Tidak dapat mencari aplikasi Termux</string>
@@ -1690,10 +1761,18 @@
     <string name="recognition_error">Ralat pengecaman: %s</string>
     <string name="start_recognition_error">Ralat mula pengecaman: %s</string>
     <string name="stop_recognition_error">Ralat henti pengecaman: %s</string>
-    <string name="speech_usage_steps">1. Pilih enjin pertuturan\n2. Klik butang mula rakaman\n3. Bercakap dengan jelas\n4. Klik hentikan rakaman\n5. Tunggu hasil transkripsi</string>
+    <string name="speech_usage_steps">1. Pilih enjin pertuturan
+2. Klik butang mula rakaman
+3. Bercakap dengan jelas
+4. Klik hentikan rakaman
+5. Tunggu hasil transkripsi</string>
     <string name="speech_engine_note">Nota: Enjin pertuturan berbeza mungkin mempunyai ketepatan dan sokongan bahasa yang berbeza</string>
     <string name="usage_instructions">Arahan penggunaan</string>
-    <string name="speech_recognition_instructions">1. Pilih enjin pengecaman (Android asli/Sherpa-ncnn/Whisper luar talian)\n2. Pilih bahasa pengecaman (Cina/Inggeris dll.)\n3. Klik butang mula rakaman\n4. Klik butang henti selepas selesai bercakap\n5. Lihat keputusan pengecaman</string>
+    <string name="speech_recognition_instructions">1. Pilih enjin pengecaman (Android asli/Sherpa-ncnn/Whisper luar talian)
+2. Pilih bahasa pengecaman (Cina/Inggeris dll.)
+3. Klik butang mula rakaman
+4. Klik butang henti selepas selesai bercakap
+5. Lihat keputusan pengecaman</string>
     <string name="activity_monitor">Pemantau Activity</string>
     <string name="smart_build">Binaan Pintar</string>
     <string name="target_app">Sasaran: %1$s</string>
@@ -1780,7 +1859,13 @@
     <string name="agreement_title">Perjanjian Pengguna dan Dasar Privasi</string>
     <string name="agreement_subtitle">Sila baca dan setujui terma-terma berikut sebelum menggunakan.</string>
     <string name="agreement_human_readable_title">Versi Perjanjian Mudah Faham (Bukan versi undang-undang)</string>
-    <string name="agreement_human_readable_content">Kami seperti anda, tidak suka perjanjian yang panjang dan membosankan. Secara ringkasnya:\n\nOperitAI adalah perisian sumber terbuka percuma. Fungsi automasinya sangat berkuasa, sila gunakan hanya untuk pembelajaran peribadi dan bantuan harian, jangan gunakan untuk sebarang tujuan komersial atau yang melanggar peraturan.\n\nAnda bertanggungjawab sepenuhnya terhadap semua tindakan anda. Kami juga tidak bertanggungjawab terhadap sebarang sambungan yang anda tambah atau pengubahsuaian perisian yang anda lakukan.\n\nMengenai privasi: Pemprosesan suara anda dilakukan sepenuhnya di peranti tempatan, sangat selamat. Data perbualan AI akan dihantar terus ke syarikat AI, kami tidak mengendalikannya.</string>
+    <string name="agreement_human_readable_content">Kami seperti anda, tidak suka perjanjian yang panjang dan membosankan. Secara ringkasnya:
+
+OperitAI adalah perisian sumber terbuka percuma. Fungsi automasinya sangat berkuasa, sila gunakan hanya untuk pembelajaran peribadi dan bantuan harian, jangan gunakan untuk sebarang tujuan komersial atau yang melanggar peraturan.
+
+Anda bertanggungjawab sepenuhnya terhadap semua tindakan anda. Kami juga tidak bertanggungjawab terhadap sebarang sambungan yang anda tambah atau pengubahsuaian perisian yang anda lakukan.
+
+Mengenai privasi: Pemprosesan suara anda dilakukan sepenuhnya di peranti tempatan, sangat selamat. Data perbualan AI akan dihantar terus ke syarikat AI, kami tidak mengendalikannya.</string>
     <string name="agreement_serious_title">Perjanjian Undang-Undang Versi Ketat</string>
     <string name="agreement_serious_content">
         &lt;p&gt;Selamat menggunakan OperitAI. Perisian ini diubahsuai dan diedarkan di bawah terma Lesen Awam Am Kurang GNU Edisi Ketiga (LGPLv3).&lt;/p&gt;
@@ -1914,7 +1999,12 @@
     <string name="tts_debug_service_type">Jenis Perkhidmatan: %s</string>
     <string name="tts_debug_params">Parameter Permintaan: teks=\'%1$s\', kadar=%2$sx, nada=%3$sx</string>
     <string name="tts_debug_params_with_service">Parameter Permintaan: teks=\'%1$s\', kadar=%2$sx, nada=%3$sx\nJenis Perkhidmatan: %4$s</string>
-    <string name="tts_usage_instructions_content">1. Masukkan teks untuk ditukar kepada pertuturan dalam kotak input\n2. Laraskan tetapan kadar pertuturan dan nada suara\n3. Klik butang "Main Pertuturan" untuk mula main\n4. Klik butang "Hentikan Main" untuk berhenti main\n5. Jika ralat berlaku, semak butiran ralat dan maklumat nyahpepijat\n6. Gunakan butang "Kosongkan Mesej Ralat" untuk membersihkan paparan ralat</string>
+    <string name="tts_usage_instructions_content">1. Masukkan teks untuk ditukar kepada pertuturan dalam kotak input
+2. Laraskan tetapan kadar pertuturan dan nada suara
+3. Klik butang "Main Pertuturan" untuk mula main
+4. Klik butang "Hentikan Main" untuk berhenti main
+5. Jika ralat berlaku, semak butiran ralat dan maklumat nyahpepijat
+6. Gunakan butang "Kosongkan Mesej Ralat" untuk membersihkan paparan ralat</string>
     <string name="tool_speech_recognition">Pengecaman Pertuturan</string>
     <string name="tool_speech_recognition_desc">Tukar pertuturan kepada teks, menyokong pelbagai enjin dan bahasa</string>
     <string name="tool_permission_manager">Pengurus Kebenaran Aplikasi</string>
@@ -2369,7 +2459,11 @@
     <string name="speech_services_http_headers_placeholder">{\"Content-Type\": \"application/json\"}</string>
     <string name="speech_services_http_headers_error">Format JSON tidak sah</string>
     <string name="speech_services_http_response_pipeline">Saluran Paip Pemprosesan Respons</string>
-    <string name="speech_services_http_response_pipeline_placeholder">[\n  { "type": "parse_json" },\n  { "type": "pick", "path": "audio_uri" },\n  { "type": "http_get" }\n]</string>
+    <string name="speech_services_http_response_pipeline_placeholder">[
+  { "type": "parse_json" },
+  { "type": "pick", "path": "audio_uri" },
+  { "type": "http_get" }
+]</string>
     <string name="speech_services_http_response_pipeline_hint">Biarkan kosong atau [] untuk terus menggunakan badan respons sebagai audio. Menyokong parse_json, pick, parse_json_string, http_get, http_request_from_object, base64_decode.</string>
     <string name="speech_services_http_response_pipeline_error">Tatasusunan JSON saluran paip pemprosesan respons tidak sah</string>
     <string name="speech_services_http_method">Kaedah HTTP</string>
@@ -3279,7 +3373,14 @@ Kini anda boleh menggunakan mod AutoGLM di antara muka perbualan.</string>
 
     <string name="layout_adjustment_preview_desc">Contoh di bawah akan memaparkan kesan jarak baris, jarak aksara dan jarak perenggan AI Markdown yang telah disimpan. Ruang kosong antara tiga perenggan pertama akan mencerminkan tetapan jarak perenggan secara langsung.</string>
     <string name="layout_adjustment_preview_plain_text">Ini adalah pratonton teks biasa. Anda boleh memerhatikan jarak antara aksara, serta perubahan ketumpatan antara setiap baris.</string>
-    <string name="layout_adjustment_preview_markdown">Pratonton perenggan pertama: untuk memerhatikan jarak baris dan jarak aksara teks utama.\n\nPratonton perenggan kedua: perenggan ini khusus untuk memerhatikan ruang kosong antara perenggan.\n\nPratonton perenggan ketiga: jika anda melaraskan jarak perenggan, jarak antara sini dan perenggan sebelumnya akan berubah serta-merta.\n\n- Item senarai AI Markdown satu\n- Item senarai AI Markdown dua</string>
+    <string name="layout_adjustment_preview_markdown">Pratonton perenggan pertama: untuk memerhatikan jarak baris dan jarak aksara teks utama.
+
+Pratonton perenggan kedua: perenggan ini khusus untuk memerhatikan ruang kosong antara perenggan.
+
+Pratonton perenggan ketiga: jika anda melaraskan jarak perenggan, jarak antara sini dan perenggan sebelumnya akan berubah serta-merta.
+
+- Item senarai AI Markdown satu
+- Item senarai AI Markdown dua</string>
     <string name="current_value">Nilai semasa</string>
     <string name="closer_to_edge">Lebih dekat ke tepi</string>
     <string name="farther_from_edge">Lebih jauh dari tepi</string>
@@ -3831,7 +3932,13 @@ Kini anda boleh menggunakan mod AutoGLM di antara muka perbualan.</string>
     <string name="appearance_prompt_placeholder">Contoh: long hair, purple eyes, sweater vest...</string>
     <string name="appearance_prompt_tip">Petunjuk: Gunakan kata kunci Bahasa Inggeris untuk menerangkan ciri rupa fizikal, pisahkan pelbagai kata kunci dengan koma</string>
     <string name="feature_explanation">Penjelasan ciri</string>
-    <string name="waifu_mode_explanation">• Mod biasa: Balasan AI dihantar sekali gus\n• Mod Waifu: Balasan AI dibahagikan mengikut ayat, setiap ayat dalam gelembung berasingan\n• Kelewatan pintar: Masa kelewatan dikira berdasarkan panjang ayat\n• Pembersihan automatik: Alih keluar label status, hanya paparkan teks tulen\n• Ciri pilihan: Alih keluar tanda baca hujung ayat, edit kata kunci petunjuk Waifu, dayakan stiker emosi\n• Senario sesuai: Meniru rentak perbualan yang lebih semula jadi\n• Perhatian: Mod ini mungkin kurang sesuai untuk penyesuaian panggilan alat</string>
+    <string name="waifu_mode_explanation">• Mod biasa: Balasan AI dihantar sekali gus
+• Mod Waifu: Balasan AI dibahagikan mengikut ayat, setiap ayat dalam gelembung berasingan
+• Kelewatan pintar: Masa kelewatan dikira berdasarkan panjang ayat
+• Pembersihan automatik: Alih keluar label status, hanya paparkan teks tulen
+• Ciri pilihan: Alih keluar tanda baca hujung ayat, edit kata kunci petunjuk Waifu, dayakan stiker emosi
+• Senario sesuai: Meniru rentak perbualan yang lebih semula jadi
+• Perhatian: Mod ini mungkin kurang sesuai untuk penyesuaian panggilan alat</string>
     <string name="settings_saved_message">Tetapan telah disimpan</string>
     <string name="settings_section_account">Akaun</string>
     <string name="github_account_not_logged_in">Belum log masuk</string>
@@ -4315,7 +4422,14 @@ Kini anda boleh menggunakan mod AutoGLM di antara muka perbualan.</string>
     <string name="external_http_chat_health_example">Contoh pemeriksaan kesihatan</string>
     <string name="external_http_chat_intent_title">Penjelasan Panggilan Intent</string>
     <string name="external_http_chat_intent_desc">Kemasukan siaran masih dikekalkan, sesuai untuk integrasi App tempatan, Tasker atau penyahpepijat adb</string>
-    <string name="external_http_chat_intent_overview">HTTP dan Intent mempunyai semantik parameter yang sama, hanya kemasukan yang berbeza.\n\nTindakan Permintaan: %1$s\nTindakan Pemulangan Lalai: %2$s\n\nExtras biasa: message, request_id, group, create_new_chat, chat_id, create_if_none, show_floating, return_tool_status, initial_mode, auto_exit_after_ms, stop_after, reply_action, reply_package\n\nSelepas pemprosesan selesai, ia akan dipulangkan melalui siaran: success, chat_id, ai_response, error; jika anda hanya mahu memulangkan kepada App tertentu, tetapkan reply_package.</string>
+    <string name="external_http_chat_intent_overview">HTTP dan Intent mempunyai semantik parameter yang sama, hanya kemasukan yang berbeza.
+
+Tindakan Permintaan: %1$s
+Tindakan Pemulangan Lalai: %2$s
+
+Extras biasa: message, request_id, group, create_new_chat, chat_id, create_if_none, show_floating, return_tool_status, initial_mode, auto_exit_after_ms, stop_after, reply_action, reply_package
+
+Selepas pemprosesan selesai, ia akan dipulangkan melalui siaran: success, chat_id, ai_response, error; jika anda hanya mahu memulangkan kepada App tertentu, tetapkan reply_package.</string>
     <string name="external_http_chat_copy_example">Salin contoh</string>
     <string name="external_http_chat_example_copied">Contoh arahan telah disalin</string>
     <string name="external_http_chat_service_enabled">Perkhidmatan telah diaktifkan</string>
@@ -4389,7 +4503,13 @@ Kini anda boleh menggunakan mod AutoGLM di antara muka perbualan.</string>
     <string name="default_assistant_guide_step3_detail2">• Jika berjaya, anda sepatutnya melihat antara muka pembantu suara Operit</string>
     <string name="default_assistant_guide_step3_detail3">• Anda boleh cuba bercakap atau menaip teks untuk berinteraksi dengan pembantu</string>
     <string name="default_assistant_guide_troubleshooting_title">Menghadapi masalah?</string>
-    <string name="default_assistant_guide_troubleshooting_content">Jika Operit tidak ditemui dalam senarai, pastikan:\n\n• Aplikasi telah dipasang dengan betul dan tidak dilumpuhkan\n• Keizinan yang diperlukan telah diberikan (mikrofon, tetingkap terapung, dll.)\n• Cuba tetapkan semula selepas menghidupkan semula peranti\n\nSesetengah sistem tersuai mungkin menghadkan aplikasi pihak ketiga sebagai pembantu lalai. Jika berlaku, anda masih boleh menggunakan Operit melalui fungsi tetingkap terapung dalam aplikasi.</string>
+    <string name="default_assistant_guide_troubleshooting_content">Jika Operit tidak ditemui dalam senarai, pastikan:
+
+• Aplikasi telah dipasang dengan betul dan tidak dilumpuhkan
+• Keizinan yang diperlukan telah diberikan (mikrofon, tetingkap terapung, dll.)
+• Cuba tetapkan semula selepas menghidupkan semula peranti
+
+Sesetengah sistem tersuai mungkin menghadkan aplikasi pihak ketiga sebagai pembantu lalai. Jika berlaku, anda masih boleh menggunakan Operit melalui fungsi tetingkap terapung dalam aplikasi.</string>
     <string name="voice_interaction_service_name">Pembantu AI Operit</string>
     <string name="voice_interaction_service_summary">Perkhidmatan pembantu suara pintar</string>
     <string name="tool_permissions_title">Keizinan Alat</string>
@@ -4938,7 +5058,11 @@ Kini anda boleh menggunakan mod AutoGLM di antara muka perbualan.</string>
     <string name="backup_delete_skipped_locked">\nTelah melangkau %1$d sembang terkunci</string>
     <string name="backup_open_file_failed">Tidak dapat membuka fail</string>
     <string name="backup_import_file_empty">Fail import kosong</string>
-    <string name="backup_memory_import_result_success">Import ke konfigurasi "%1$s" berjaya:\n- Memori baharu: %2$d\n- Memori dikemas kini: %3$d\n- Memori dilangkau: %4$d\n- Pautan baharu: %5$d</string>
+    <string name="backup_memory_import_result_success">Import ke konfigurasi "%1$s" berjaya:
+- Memori baharu: %2$d
+- Memori dikemas kini: %3$d
+- Memori dilangkau: %4$d
+- Pautan baharu: %5$d</string>
     <string name="backup_memory_export_result_success">Berjaya mengeksport %2$d memori dan %3$d pautan dari konfigurasi "%1$s" ke:\n%4$s</string>
     <string name="backup_model_config_import_result_success">Berjaya mengimport konfigurasi model:\n- Konfigurasi baharu: %1$d\n- Konfigurasi dikemas kini: %2$d%3$s</string>
     <string name="backup_model_config_import_result_skipped">\n- Konfigurasi tidak sah dilangkau: %1$d</string>
@@ -6124,7 +6248,11 @@ Kini anda boleh menggunakan mod AutoGLM di antara muka perbualan.</string>
     <string name="apk_keystore_path_info">Laluan stor kunci: %1$s</string>
     <string name="apk_signer_not_exist">Fail penandatangan tidak wujud: %1$s</string>
     <string name="apk_signing_aborted">Penandatangan telah dibatalkan</string>
-    <string name="apk_signing_info">Menandatangani APK...\nAPK: %1$s\nStor kunci: %2$s\nAlias kunci: %3$s\nPenandatangan: %4$s</string>
+    <string name="apk_signing_info">Menandatangani APK...
+APK: %1$s
+Stor kunci: %2$s
+Alias kunci: %3$s
+Penandatangan: %4$s</string>
     <string name="apk_use_builtin_keystore">Gunakan stor kunci penyahpepijatan terbina dalam</string>
     <string name="apk_zip_align_failed">Penyelarasan ZIP gagal: %1$s</string>
     <string name="apk_zip_align_path">Laluan penyelarasan ZIP: %1$s</string>
@@ -6357,7 +6485,13 @@ Kini anda boleh menggunakan mod AutoGLM di antara muka perbualan.</string>
     <string name="mnn_model_dir_missing">Direktori model tidak wujud: %1$s\nSila muat turun model terlebih dahulu</string>
     <string name="mnn_file_status">Status fail:</string>
     <string name="mnn_init_failed">Inisialisasi model gagal</string>
-    <string name="mnn_connection_success">Sambungan model MNN LLM berjaya!\n\nModel: %1$s\nDirektori: %2$s\nJumlah saiz: %3$s\n\n%4$s</string>
+    <string name="mnn_connection_success">Sambungan model MNN LLM berjaya!
+
+Model: %1$s
+Direktori: %2$s
+Jumlah saiz: %3$s
+
+%4$s</string>
     <string name="apk_unnamed_function">(Fungsi tanpa nama)</string>
     <string name="apk_unknown_error">Ralat tidak diketahui</string>
     <string name="apk_extract_failed">Pengekstrakan APK gagal: %1$s</string>
@@ -6445,7 +6579,13 @@ Kini anda boleh menggunakan mod AutoGLM di antara muka perbualan.</string>
     <string name="task_context_current_task">Tugasan semasa: %1$s</string>
     <string name="task_context_dependency_results">Keputusan tugasan bergantung:</string>
     <string name="task_context_task_result">- Keputusan tugasan %1$s: %2$s</string>
-    <string name="task_instruction_with_context">\n%1$s\n\nSila laksanakan tugasan khusus berikut berdasarkan maklumat konteks di atas:\n%2$s\n\nSila fokuskan pada menyelesaikan subtugasan khusus ini, jawapan anda akan menjadi sebahagian daripada keseluruhan rancangan.</string>
+    <string name="task_instruction_with_context">
+%1$s
+
+Sila laksanakan tugasan khusus berikut berdasarkan maklumat konteks di atas:
+%2$s
+
+Sila fokuskan pada menyelesaikan subtugasan khusus ini, jawapan anda akan menjadi sebahagian daripada keseluruhan rancangan.</string>
     <string name="task_summary_key_results">Keputusan pelaksanaan subtugasan utama:</string>
     <string name="tool_permission_operation">Operasi %1$s</string>
     <string name="message_image_capture_failed">Tangkapan imej gagal: %1$s</string>

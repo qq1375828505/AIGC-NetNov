@@ -959,8 +959,6 @@ API的访问和Token的设置与软件开发者无关，我们不会提供这方
     <string name="settings_reply_notification_desc">AI完成回复后发送通知提醒</string>
     <string name="notification_ai_reply_title">AI助手</string>
     <string name="notification_ai_reply_content">AI已完成回复</string>
-    <string name="notification_permission_rationale">为了在AI完成回复后及时通知您，需要授予通知权限</string>
-    <string name="notification_permission_denied">通知权限被拒绝，您将无法收到AI回复提醒</string>
     <string name="settings_auto_accessibility">自动授予无障碍权限</string>
     <string name="settings_auto_accessibility_desc">关闭后需每次打开软件手动授权</string>
     
@@ -1862,7 +1860,6 @@ termux-change-repo
     <string name="cannot_find_shizuku_app">无法找到Shizuku应用</string>
     <string name="cannot_launch_shizuku_app">无法启动Shizuku应用</string>
     <string name="cannot_open_docs_link">无法打开文档链接</string>
-    <string name="plugin_loading_skipped">已跳过插件加载</string>
     <string name="press_back_again_to_exit">再按一次退出应用</string>
     <string name="return_code_copied">返回码已复制！</string>
     <string name="cannot_find_termux_app">无法找到Termux应用</string>
