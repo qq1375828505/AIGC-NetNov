@@ -75,6 +75,7 @@ node_modules/
 
 # Build outputs
 dist/
+!examples/**/dist/
 
 # OS files
 .DS_Store
