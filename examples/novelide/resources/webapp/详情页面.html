@@ -186,5 +186,25 @@ h1{color:#e6edf3;font-size:28px;margin-bottom:8px;letter-spacing:-0.5px}
 
 </div>
 <div class="sub" style="margin-top:32px;color:#8b949e">最终 5 屏 · ArtifactDetail · SkillDetail · CustomEmojiManagement · ContextSummarySettings · UserPreferencesGuide</div>
+
+<!--
+  ╔══════════════════════════════════════════════════════╗
+  ║  详情页面.html — NativeBridge 集成说明               ║
+  ╠══════════════════════════════════════════════════════╣
+  ║  本页为设计原型展示页，包含 Artifact 详情、          ║
+  ║  Skill 详情、自定义表情、上下文摘要设置               ║
+  ║  和用户偏好引导的 UI 设计。                         ║
+  ║                                                      ║
+  ║  当前 NovelNativeBridge.kt 不包含这些页面的 API。   ║
+  ║  各子模块对应的原生能力：                             ║
+  ║    - Artifact 详情 → Operit Artifact Manager       ║
+  ║    - Skill 详情 → Operit Skill Registry            ║
+  ║    - 自定义表情 → Emoji Manager                    ║
+  ║    - 上下文摘要 → Context Summary Engine           ║
+  ║    - 用户偏好 → User Preference Store              ║
+  ║                                                      ║
+  ║  以上功能需要通过 Operit 主桥接层实现。              ║
+  ╚══════════════════════════════════════════════════════╝
+-->
 </body>
 </html>

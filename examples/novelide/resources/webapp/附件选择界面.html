@@ -193,6 +193,19 @@ body{background:#0d1117;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',
 </div>
 
 <script>
+/**
+ * 附件选择界面 — NativeBridge 集成说明
+ *
+ * 此页面为聊天附件选择器，涉及以下原生能力：
+ *   - 图片选择: 需要 Android Intent 调起相册
+ *   - 拍照: 需要调用 Camera API
+ *   - 文件选择: 需要 Android File Picker
+ *   - 音频: 需要录音权限
+ *
+ * 这些功能需要在 Operit 主桥接层实现，NovelNativeBridge.kt 不包含这些 API。
+ * 未来可通过 window.OperitBridge 或类似的桥接接口调用。
+ */
+
 function toggleAttachPanel() {
   const panel = document.getElementById('attachPanel');
   const btn = document.querySelector('.attach-btn');
@@ -201,6 +214,22 @@ function toggleAttachPanel() {
 }
 
 function selectAttach(name) {
+  // 通过 NativeBridge 调起对应原生功能
+  try {
+    if (window.NativeBridge) {
+      const actionMap = {
+        '图片': 'pickImage', '拍照': 'takePhoto', '文件': 'pickFile',
+        '音频': 'recordAudio', '位置': 'getLocation', '名片': 'pickContact',
+        '扫一扫': 'scanQR', '笔记': 'openNote'
+      };
+      const action = actionMap[name];
+      if (action && typeof window.NativeBridge[action] === 'function') {
+        const result = window.NativeBridge[action]();
+        console.log('[附件] 原生返回:', result);
+      }
+    }
+  } catch(e) { console.warn('[附件] NativeBridge 调用失败:', e); }
+
   const input = document.querySelector('.input-box');
   input.value = `[已选择: ${name}]`;
   toggleAttachPanel();

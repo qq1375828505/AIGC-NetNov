@@ -239,5 +239,24 @@ READ_ONLY=false</textarea></div>
 
 </div>
 <div class="sub" style="margin-top:32px;color:#8b949e">包管理模块（8屏） · 更多屏幕见 settings-detail.html + other-missing.html</div>
+
+<!--
+  ╔══════════════════════════════════════════════════════╗
+  ║  插件市场.html — NativeBridge 集成说明               ║
+  ╠══════════════════════════════════════════════════════╣
+  ║  本页为设计原型展示页，包含包管理、市场、             ║
+  ║  Artifact、Skill、MCP 等模块的 UI 设计。             ║
+  ║                                                      ║
+  ║  当前 NovelNativeBridge.kt 不包含插件管理 API。       ║
+  ║  各子模块对应的原生能力：                             ║
+  ║    - 包管理 → Operit PackageManager API            ║
+  ║    - 市场 → Operit Market API                       ║
+  ║    - Artifact → Operit Artifact Manager            ║
+  ║    - Skill → Operit Skill Registry                 ║
+  ║    - MCP → MCP Service Manager (stdio/HTTP/WS)    ║
+  ║                                                      ║
+  ║  以上功能需要通过 Operit 主桥接层实现。              ║
+  ╚══════════════════════════════════════════════════════╝
+-->
 </body>
 </html>

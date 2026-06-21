@@ -311,5 +311,23 @@ h1{color:#e6edf3;font-size:28px;margin-bottom:8px;letter-spacing:-0.5px}
 
 </div>
 <div class="sub" style="margin-top:32px;color:#8b949e">浏览器 & 欢迎页模块 · 浏览器 · 欢迎页 · 启动加载 · 权限 · 更新 · 错误页 · 桌面小部件</div>
+
+<!--
+  ╔══════════════════════════════════════════════════════╗
+  ║  浏览器.html — NativeBridge 集成说明                 ║
+  ╠══════════════════════════════════════════════════════╣
+  ║  本页为设计原型展示页，包含浏览器、欢迎页、启动加载、 ║
+  ║  权限请求、更新页面、错误页面和桌面小部件的 UI 设计。 ║
+  ║                                                      ║
+  ║  当前 NovelNativeBridge.kt 不包含浏览器相关 API。     ║
+  ║  各子模块对应的原生能力：                             ║
+  ║    - 浏览器 → WebView / Custom Tabs API            ║
+  ║    - 权限请求 → Android Permission Request         ║
+  ║    - 更新 → App Update Manager                     ║
+  ║    - 桌面小部件 → Android AppWidget                ║
+  ║                                                      ║
+  ║  以上功能需要在 Operit 主桥接层实现。               ║
+  ╚══════════════════════════════════════════════════════╝
+-->
 </body>
 </html>

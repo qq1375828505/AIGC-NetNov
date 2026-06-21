@@ -288,5 +288,28 @@ h1{color:#e6edf3;font-size:28px;margin-bottom:8px;letter-spacing:-0.5px}
 
 </div>
 <div class="sub" style="margin-top:32px;color:#8b949e">工具箱模块 · 文件管理 · Logcat · Shell · SQL · 语音 · 权限管理 · FFmpeg · UI调试</div>
+
+<!--
+  ╔══════════════════════════════════════════════════════╗
+  ║  工具箱.html — NativeBridge 集成说明                 ║
+  ╠══════════════════════════════════════════════════════╣
+  ║  本页为设计原型展示页，包含多个手机框体展示工具箱的   ║
+  ║  各个子模块 UI 设计。                                 ║
+  ║                                                      ║
+  ║  当前 NovelNativeBridge.kt 不包含工具箱相关 API。     ║
+  ║  各子模块对应的原生能力：                             ║
+  ║    - 文件管理 → Android File API / Storage Access    ║
+  ║    - SQL 查看器 → Room/SQLite 数据库直连               ║
+  ║    - Logcat → Android Logcat API                    ║
+  ║    - Shell → Terminal Emulator (Termux-like)        ║
+  ║    - 语音转文字 → ASR API                          ║
+  ║    - 文字转语音 → TTS API                          ║
+  ║    - FFmpeg → FFmpeg CLI wrapper                    ║
+  ║    - UI 调试 → Accessibility Service                ║
+  ║    - 权限管理 → Android Permission API             ║
+  ║                                                      ║
+  ║  以上功能需要在 Operit 主桥接层实现。               ║
+  ╚══════════════════════════════════════════════════════╝
+-->
 </body>
 </html>

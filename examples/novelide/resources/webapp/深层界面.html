@@ -243,5 +243,27 @@ h1{color:#e6edf3;font-size:28px;margin-bottom:8px;letter-spacing:-0.5px}
 
 </div>
 <div class="sub" style="margin-top:32px;color:#8b949e">深层剩余界面（9屏）· 主题标签 · 开源许可 · AutoGLM · 进程限制 · HTML打包 · 提示词 · 语音 · 角色卡 · 记忆库</div>
+
+<!--
+  ╔══════════════════════════════════════════════════════╗
+  ║  深层界面.html — NativeBridge 集成说明               ║
+  ╠══════════════════════════════════════════════════════╣
+  ║  本页为设计原型展示页，包含主题设置、开源许可、       ║
+  ║  AutoGLM、HTML 打包、提示词、语音配置、               ║
+  ║  角色卡生成和记忆库等深层设置的 UI 设计。             ║
+  ║                                                      ║
+  ║  部分功能有 NativeBridge API 支持：                  ║
+  ║    - 记忆库 → 未来可扩展 NativeBridge.getMemories() ║
+  ║    - 角色卡生成 → 复用 getCharacters() API          ║
+  ║                                                      ║
+  ║  其余功能需要原生支持：                             ║
+  ║    - 主题设置 → Android Theme Engine               ║
+  ║    - AutoGLM → GLM Model Manager                  ║
+  ║    - HTML 打包 → HTML Export Service              ║
+  ║    - 语音配置 → ASR/TTS Config                     ║
+  ║                                                      ║
+  ║  以上功能需要通过 Operit 主桥接层实现。              ║
+  ╚══════════════════════════════════════════════════════╝
+-->
 </body>
 </html>

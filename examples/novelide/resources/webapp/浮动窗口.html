@@ -234,5 +234,24 @@ h1{color:#e6edf3;font-size:28px;margin-bottom:8px;letter-spacing:-0.5px}
 
 </div>
 <div class="sub" style="margin-top:32px;color:#8b949e">浮动窗口系统 · 悬浮球 · 浮动聊天 · 全屏模式 · 屏幕 OCR · 浮动主题 · 语音朗读</div>
+
+<!--
+  ╔══════════════════════════════════════════════════════╗
+  ║  浮动窗口.html — NativeBridge 集成说明               ║
+  ╠══════════════════════════════════════════════════════╣
+  ║  本页为设计原型展示页，包含浮动窗口、悬浮球、       ║
+  ║  全屏模式、屏幕 OCR 等功能的 UI 设计。             ║
+  ║                                                      ║
+  ║  当前 NovelNativeBridge.kt 不包含浮动窗口 API。     ║
+  ║  各子模块对应的原生能力：                             ║
+  ║    - 悬浮球 → Android Overlay Service              ║
+  ║    - 浮动聊天 → Floating Window Manager           ║
+  ║    - 全屏模式 → Immersive Mode API               ║
+  ║    - 屏幕 OCR → MLKit / Accessibility Service    ║
+  ║    - TTS 朗读 → Android TTS Engine               ║
+  ║                                                      ║
+  ║  以上功能需要通过 Operit 主桥接层实现。              ║
+  ╚══════════════════════════════════════════════════════╝
+-->
 </body>
 </html>

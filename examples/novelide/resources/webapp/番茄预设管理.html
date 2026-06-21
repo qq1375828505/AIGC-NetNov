@@ -451,174 +451,16 @@
         </div>
         
         <!-- 筛选栏 -->
-        <div class="filter-bar">
-            <div class="filter-chip active" onclick="filterPresets('all')">全部 (25)</div>
-            <div class="filter-chip" onclick="filterPresets('S')">S级 (5)</div>
-            <div class="filter-chip" onclick="filterPresets('A')">A级 (10)</div>
-            <div class="filter-chip" onclick="filterPresets('B')">B级 (10)</div>
-            <div class="filter-chip" onclick="filterPresets('男频')">男频</div>
-            <div class="filter-chip" onclick="filterPresets('女频')">女频</div>
-            <div class="filter-chip" onclick="filterPresets('系统')">系统</div>
+        <div class="filter-bar" id="filterBar">
+            <div class="filter-chip active" onclick="filterPresets('all')">全部</div>
+            <div class="filter-chip" onclick="filterPresets('S')">S级</div>
+            <div class="filter-chip" onclick="filterPresets('A')">A级</div>
+            <div class="filter-chip" onclick="filterPresets('B')">B级</div>
         </div>
         
-        <!-- 预设列表 -->
+        <!-- 预设列表（由 JS 动态渲染） -->
         <div class="preset-list" id="presetList">
-            <!-- S级预设 -->
-            <div class="preset-card active" data-level="S" data-tags="男频,女频,无限流,规则怪谈">
-                <div class="preset-header">
-                    <span class="preset-name">规则怪谈·发疯破局流</span>
-                    <span class="preset-level s-level">S级</span>
-                </div>
-                <div class="preset-desc">
-                    主角能看见隐藏规则，靠发疯创死NPC通关副本
-                </div>
-                <div class="preset-tags">
-                    <span class="preset-tag">男频</span>
-                    <span class="preset-tag">女频</span>
-                    <span class="preset-tag">无限流</span>
-                    <span class="preset-tag">规则怪谈</span>
-                </div>
-                <div class="preset-formula">
-                    <strong>核心公式：</strong>死亡游戏/诡异副本 + 主角能看见隐藏规则/修改规则 + 乐子人心态创死NPC + 单元剧+主线暗线
-                </div>
-                <div class="preset-shortcuts">
-                    <button class="shortcut-btn">📋 生成本章规则</button>
-                    <button class="shortcut-btn">👻 添加诡异NPC</button>
-                    <button class="shortcut-btn">🔄 生成反转点</button>
-                </div>
-                <button class="use-preset-btn">✅ 当前使用</button>
-            </div>
-            
-            <div class="preset-card" data-level="S" data-tags="男频,系统,都市,爽文">
-                <div class="preset-header">
-                    <span class="preset-name">县城振兴·全民分红系统</span>
-                    <span class="preset-level s-level">S级</span>
-                </div>
-                <div class="preset-desc">
-                    绑定故土振兴系统，带动全村/全县逆袭，爽点从个人炫富变成集体致富
-                </div>
-                <div class="preset-tags">
-                    <span class="preset-tag">男频</span>
-                    <span class="preset-tag">系统</span>
-                    <span class="preset-tag">都市</span>
-                </div>
-                <div class="preset-formula">
-                    <strong>核心公式：</strong>重生/穿越回贫困县城 + 绑定故土振兴系统 + 全民分红机制 + 基建/农业/工业落地
-                </div>
-                <div class="preset-shortcuts">
-                    <button class="shortcut-btn">👥 生成村民反应</button>
-                    <button class="shortcut-btn">💰 计算收入</button>
-                </div>
-                <button class="use-preset-btn" onclick="usePreset(this)">🔄 切换使用</button>
-            </div>
-            
-            <div class="preset-card" data-level="S" data-tags="男频,修仙,系统,搞笑">
-                <div class="preset-header">
-                    <span class="preset-name">修仙职场化·KPI考核系统</span>
-                    <span class="preset-level s-level">S级</span>
-                </div>
-                <div class="preset-desc">
-                    把宗门变成互联网公司，修炼变成打工人KPI，渡劫变成晋升答辩
-                </div>
-                <div class="preset-tags">
-                    <span class="preset-tag">男频</span>
-                    <span class="preset-tag">修仙</span>
-                    <span class="preset-tag">系统</span>
-                </div>
-                <div class="preset-formula">
-                    <strong>核心公式：</strong>现代社畜穿越修仙界 + 绑定职场修仙系统 + 摸鱼/划水/甩锅涨修为 + 打脸卷王弟子
-                </div>
-                <div class="preset-shortcuts">
-                    <button class="shortcut-btn">📊 生成宗门会议</button>
-                    <button class="shortcut-btn">🐟 生成摸鱼情节</button>
-                </div>
-                <button class="use-preset-btn" onclick="usePreset(this)">🔄 切换使用</button>
-            </div>
-            
-            <div class="preset-card" data-level="S" data-tags="女频,无CP,重生,搞钱">
-                <div class="preset-header">
-                    <span class="preset-name">无CP大女主搞钱流</span>
-                    <span class="preset-level s-level">S级</span>
-                </div>
-                <div class="preset-desc">
-                    彻底告别恋爱脑，男人都是工具人，主线只有搞钱和复仇
-                </div>
-                <div class="preset-tags">
-                    <span class="preset-tag">女频</span>
-                    <span class="preset-tag">无CP</span>
-                    <span class="preset-tag">重生</span>
-                </div>
-                <div class="preset-formula">
-                    <strong>核心公式：</strong>重生/穿书 + 开局手撕渣男贱女 + 利用先知优势搞钱 + 建立商业帝国
-                </div>
-                <div class="preset-shortcuts">
-                    <button class="shortcut-btn">💡 生成赚钱点子</button>
-                    <button class="shortcut-btn">👋 生成打脸情节</button>
-                </div>
-                <button class="use-preset-btn" onclick="usePreset(this)">🔄 切换使用</button>
-            </div>
-            
-            <div class="preset-card" data-level="S" data-tags="男频,女频,系统,爽文,搞笑">
-                <div class="preset-header">
-                    <span class="preset-name">情绪发疯系统</span>
-                    <span class="preset-level s-level">S级</span>
-                </div>
-                <div class="preset-desc">
-                    与其内耗自己，不如创死别人，系统奖励主角发疯行为
-                </div>
-                <div class="preset-tags">
-                    <span class="preset-tag">男频</span>
-                    <span class="preset-tag">女频</span>
-                    <span class="preset-tag">系统</span>
-                </div>
-                <div class="preset-formula">
-                    <strong>核心公式：</strong>社畜/学生被欺负 + 绑定发疯系统 + 怼人/摆烂/掀桌子获得奖励 + 所有人都怕我
-                </div>
-                <div class="preset-shortcuts">
-                    <button class="shortcut-btn">🤪 生成发疯名场面</button>
-                    <button class="shortcut-btn">😱 生成社死反转</button>
-                </div>
-                <button class="use-preset-btn" onclick="usePreset(this)">🔄 切换使用</button>
-            </div>
-            
-            <!-- A级预设示例 -->
-            <div class="preset-card" data-level="A" data-tags="男频,都市,脑洞">
-                <div class="preset-header">
-                    <span class="preset-name">长生家族·千年底蕴流</span>
-                    <span class="preset-level a-level">A级</span>
-                </div>
-                <div class="preset-desc">
-                    整个家族传承千年，底蕴深不可测，主角身份层层揭秘
-                </div>
-                <div class="preset-tags">
-                    <span class="preset-tag">男频</span>
-                    <span class="preset-tag">都市</span>
-                    <span class="preset-tag">脑洞</span>
-                </div>
-                <div class="preset-formula">
-                    <strong>核心公式：</strong>现代普通青年 + 突然曝光家族身份 + 层层揭秘家族实力 + 打脸各方势力
-                </div>
-                <button class="use-preset-btn" onclick="usePreset(this)">🔄 切换使用</button>
-            </div>
-            
-            <div class="preset-card" data-level="A" data-tags="男频,玄幻,系统,反派">
-                <div class="preset-header">
-                    <span class="preset-name">天命大反派·背景编辑系统</span>
-                    <span class="preset-level a-level">A级</span>
-                </div>
-                <div class="preset-desc">
-                    穿越成小说反派，能编辑自己和他人的背景设定，收割天命之子
-                </div>
-                <div class="preset-tags">
-                    <span class="preset-tag">男频</span>
-                    <span class="preset-tag">玄幻</span>
-                    <span class="preset-tag">系统</span>
-                </div>
-                <div class="preset-formula">
-                    <strong>核心公式：</strong>穿越成即将被主角打脸的反派 + 绑定背景编辑系统 + 不断升级背景 + 收割天命之子
-                </div>
-                <button class="use-preset-btn" onclick="usePreset(this)">🔄 切换使用</button>
-            </div>
+            <div style="text-align:center;padding:40px;color:#999;">加载中...</div>
         </div>
         
         <!-- Agent管理 -->
@@ -698,72 +540,243 @@
     </div>
     
     <script>
-        // 筛选预设
-        function filterPresets(filter) {
-            const chips = document.querySelectorAll('.filter-chip');
-            chips.forEach(chip => chip.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            const cards = document.querySelectorAll('.preset-card');
-            cards.forEach(card => {
-                if (filter === 'all') {
-                    card.style.display = 'block';
-                } else {
-                    const level = card.dataset.level;
-                    const tags = card.dataset.tags;
-                    
-                    if (level === filter || tags.includes(filter)) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                }
-            });
+    /**
+     * 番茄预设管理页面 — NativeBridge 集成
+     *
+     * 可用 API:
+     *   window.NativeBridge.getTomatoPresets()        → JSON 数组
+     *   window.NativeBridge.getTomatoPresetById(id)   → JSON 对象
+     *
+     * TomatoPreset 字段:
+     *   id, name, category, description, workMinutes, breakMinutes,
+     *   icon, systemPrompt, tags (逗号分隔字符串), isBuiltin,
+     *   createdAt, updatedAt
+     *
+     * 注意: NovelNativeBridge.kt 目前仅提供读取 API，
+     *       创建/更新/删除预设需要在 Kotlin 端扩展后才能调用。
+     */
+
+    /* ========== 状态 ========== */
+    let allPresets = [];          // 从 NativeBridge 获取的全部预设
+    let currentFilter = 'all';   // 当前筛选条件
+    let activePresetId = null;   // 当前激活的预设 ID
+
+    /* ========== NativeBridge 安全调用 ========== */
+    function callBridge(method, ...args) {
+        try {
+            if (window.NativeBridge && typeof window.NativeBridge[method] === 'function') {
+                return JSON.parse(window.NativeBridge[method](...args));
+            }
+        } catch (e) {
+            console.warn('[番茄预设] NativeBridge 调用失败:', method, e);
         }
-        
-        // 使用预设
-        function usePreset(btn) {
-            const card = btn.closest('.preset-card');
-            const presetName = card.querySelector('.preset-name').textContent;
-            
-            // 移除所有active状态
-            document.querySelectorAll('.preset-card').forEach(c => {
-                c.classList.remove('active');
-                const btn = c.querySelector('.use-preset-btn');
-                btn.textContent = '🔄 切换使用';
-                btn.onclick = function() { usePreset(this); };
-            });
-            
-            // 添加active状态
-            card.classList.add('active');
-            btn.textContent = '✅ 当前使用';
-            btn.onclick = null;
-            
-            // 更新当前预设显示
-            document.querySelector('.current-preset-name').textContent = presetName;
-            document.querySelector('.current-preset-desc').textContent = card.querySelector('.preset-desc').textContent;
-            
-            alert('已切换到预设：' + presetName);
+        return null;
+    }
+
+    /* ========== 初始化 ========== */
+    function init() {
+        const presets = callBridge('getTomatoPresets');
+        if (Array.isArray(presets) && presets.length > 0) {
+            allPresets = presets;
+            activePresetId = allPresets[0].id; // 默认第一个为激活
+            renderAll();
+        } else {
+            // NativeBridge 不可用时使用内置示例数据
+            loadFallbackData();
         }
-        
-        // 搜索功能
-        document.querySelector('.search-btn').addEventListener('click', function() {
-            const keyword = prompt('请输入搜索关键词：');
-            if (keyword) {
-                const cards = document.querySelectorAll('.preset-card');
-                cards.forEach(card => {
-                    const name = card.querySelector('.preset-name').textContent;
-                    const desc = card.querySelector('.preset-desc').textContent;
-                    const tags = card.dataset.tags;
-                    
-                    if (name.includes(keyword) || desc.includes(keyword) || tags.includes(keyword)) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
+    }
+
+    /** 内置示例数据（回退用） */
+    function loadFallbackData() {
+        allPresets = [
+            { id:'fp1', name:'规则怪谈·发疯破局流', category:'S', description:'主角能看见隐藏规则，靠发疯创死NPC通关副本。首章留存60%+，男女通吃。',
+              workMinutes:25, breakMinutes:5, icon:'👻', systemPrompt:'',
+              tags:'男频,女频,无限流,规则怪谈', isBuiltin:true },
+            { id:'fp2', name:'县城振兴·全民分红系统', category:'S', description:'绑定故土振兴系统，带动全村/全县逆袭，爽点从个人炫富变成集体致富',
+              workMinutes:25, breakMinutes:5, icon:'💰', systemPrompt:'',
+              tags:'男频,系统,都市,爽文', isBuiltin:true },
+            { id:'fp3', name:'修仙职场化·KPI考核系统', category:'S', description:'把宗门变成互联网公司，修炼变成打工人KPI，渡劫变成晋升答辩',
+              workMinutes:25, breakMinutes:5, icon:'📊', systemPrompt:'',
+              tags:'男频,修仙,系统,搞笑', isBuiltin:true },
+            { id:'fp4', name:'无CP大女主搞钱流', category:'S', description:'彻底告别恋爱脑，男人都是工具人，主线只有搞钱和复仇',
+              workMinutes:25, breakMinutes:5, icon:'💎', systemPrompt:'',
+              tags:'女频,无CP,重生,搞钱', isBuiltin:true },
+            { id:'fp5', name:'情绪发疯系统', category:'S', description:'与其内耗自己，不如创死别人，系统奖励主角发疯行为',
+              workMinutes:25, breakMinutes:5, icon:'🤪', systemPrompt:'',
+              tags:'男频,女频,系统,爽文,搞笑', isBuiltin:true },
+            { id:'fp6', name:'长生家族·千年底蕴流', category:'A', description:'整个家族传承千年，底蕴深不可测，主角身份层层揭秘',
+              workMinutes:25, breakMinutes:5, icon:'🏰', systemPrompt:'',
+              tags:'男频,都市,脑洞', isBuiltin:true },
+            { id:'fp7', name:'天命大反派·背景编辑系统', category:'A', description:'穿越成小说反派，能编辑自己和他人的背景设定，收割天命之子',
+              workMinutes:25, breakMinutes:5, icon:'😈', systemPrompt:'',
+              tags:'男频,玄幻,系统,反派', isBuiltin:true }
+        ];
+        activePresetId = allPresets[0].id;
+        renderAll();
+    }
+
+    /* ========== 渲染 ========== */
+    function renderAll() {
+        renderStats();
+        renderFilterBar();
+        renderPresets();
+        renderCurrentPreset();
+    }
+
+    function renderStats() {
+        const sCount = allPresets.filter(p => (p.category||'').toUpperCase() === 'S').length;
+        const aCount = allPresets.filter(p => (p.category||'').toUpperCase() === 'A').length;
+        const bCount = allPresets.filter(p => (p.category||'').toUpperCase() === 'B').length;
+        document.querySelector('.stat-number.s-level').textContent = sCount;
+        document.querySelector('.stat-number.a-level').textContent = aCount;
+        document.querySelector('.stat-number.b-level').textContent = bCount;
+    }
+
+    function renderFilterBar() {
+        const bar = document.getElementById('filterBar');
+        const all = allPresets.length;
+        const sCount = allPresets.filter(p => (p.category||'').toUpperCase() === 'S').length;
+        const aCount = allPresets.filter(p => (p.category||'').toUpperCase() === 'A').length;
+        const bCount = allPresets.filter(p => (p.category||'').toUpperCase() === 'B').length;
+        // 收集所有不重复 tag
+        const tagSet = new Set();
+        allPresets.forEach(p => { if(p.tags) p.tags.split(',').forEach(t => tagSet.add(t.trim())); });
+
+        let html = `<div class="filter-chip ${currentFilter==='all'?'active':''}" onclick="filterPresets('all')">全部 (${all})</div>`;
+        html += `<div class="filter-chip ${currentFilter==='S'?'active':''}" onclick="filterPresets('S')">S级 (${sCount})</div>`;
+        html += `<div class="filter-chip ${currentFilter==='A'?'active':''}" onclick="filterPresets('A')">A级 (${aCount})</div>`;
+        html += `<div class="filter-chip ${currentFilter==='B'?'active':''}" onclick="filterPresets('B')">B级 (${bCount})</div>`;
+        tagSet.forEach(tag => {
+            html += `<div class="filter-chip ${currentFilter===tag?'active':''}" onclick="filterPresets('${tag}')">${tag}</div>`;
+        });
+        bar.innerHTML = html;
+    }
+
+    function renderCurrentPreset() {
+        const preset = allPresets.find(p => p.id === activePresetId);
+        if (!preset) return;
+        document.querySelector('.current-preset-name').textContent = preset.name;
+        document.querySelector('.current-preset-desc').textContent = preset.description || '暂无描述';
+    }
+
+    function levelClass(cat) {
+        const c = (cat||'').toUpperCase();
+        if (c === 'S') return 's-level';
+        if (c === 'A') return 'a-level';
+        return 'b-level';
+    }
+
+    function renderPresets() {
+        const container = document.getElementById('presetList');
+        const filtered = allPresets.filter(p => {
+            if (currentFilter === 'all') return true;
+            if (['S','A','B'].includes(currentFilter.toUpperCase())) {
+                return (p.category||'').toUpperCase() === currentFilter.toUpperCase();
+            }
+            // tag 筛选
+            return (p.tags||'').includes(currentFilter);
+        });
+
+        if (filtered.length === 0) {
+            container.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">没有匹配的预设</div>';
+            return;
+        }
+
+        container.innerHTML = filtered.map(p => {
+            const isActive = p.id === activePresetId;
+            const tagHtml = (p.tags||'').split(',').filter(Boolean).map(t =>
+                `<span class="preset-tag">${t.trim()}</span>`).join('');
+            const shortcutHtml = p.systemPrompt
+                ? `<div class="preset-formula"><strong>系统提示词：</strong>${p.systemPrompt.substring(0,120)}${p.systemPrompt.length>120?'...':''}</div>`
+                : '';
+            return `
+            <div class="preset-card ${isActive?'active':''}" data-id="${p.id}" data-level="${p.category||''}" data-tags="${p.tags||''}">
+                <div class="preset-header">
+                    <span class="preset-name">${p.icon||''} ${p.name}</span>
+                    <span class="preset-level ${levelClass(p.category)}">${p.category||'B'}级</span>
+                </div>
+                <div class="preset-desc">${p.description||''}</div>
+                <div class="preset-tags">${tagHtml}</div>
+                ${shortcutHtml}
+                <div style="font-size:12px;color:#888;margin-bottom:8px">
+                    ⏱ 工作 ${p.workMinutes||25} 分钟 · 休息 ${p.breakMinutes||5} 分钟
+                </div>
+                <button class="use-preset-btn" onclick="usePresetById('${p.id}', this)">
+                    ${isActive ? '✅ 当前使用' : '🔄 切换使用'}
+                </button>
+            </div>`;
+        }).join('');
+    }
+
+    /* ========== 交互 ========== */
+    function filterPresets(filter) {
+        currentFilter = filter;
+        renderFilterBar();
+        renderPresets();
+    }
+
+    /** 切换预设 */
+    function usePresetById(presetId, btn) {
+        if (presetId === activePresetId) return;
+        activePresetId = presetId;
+        renderCurrentPreset();
+        renderPresets();
+
+        // 通知原生端（如果存在回调接口）
+        try {
+            if (window.NativeBridge && typeof window.NativeBridge.onPresetSelected === 'function') {
+                window.NativeBridge.onPresetSelected(presetId);
+            }
+        } catch(e) { console.warn('[番茄预设] 通知原生端失败:', e); }
+
+        const preset = allPresets.find(p => p.id === presetId);
+        if (preset) console.log('[番茄预设] 已切换到:', preset.name);
+    }
+
+    /* ========== 搜索 ========== */
+    document.querySelector('.search-btn').addEventListener('click', function() {
+        const keyword = prompt('请输入搜索关键词：');
+        if (!keyword) return;
+        const container = document.getElementById('presetList');
+        const cards = container.querySelectorAll('.preset-card');
+        let found = 0;
+        cards.forEach(card => {
+            const name = card.querySelector('.preset-name').textContent;
+            const desc = card.querySelector('.preset-desc').textContent;
+            const tags = card.dataset.tags || '';
+            if (name.includes(keyword) || desc.includes(keyword) || tags.includes(keyword)) {
+                card.style.display = 'block'; found++;
+            } else {
+                card.style.display = 'none';
             }
         });
+        if (found === 0) container.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">未找到匹配预设</div>';
+    });
+
+    /* ========== Agent 开关交互 ========== */
+    document.querySelectorAll('.agent-toggle').forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            this.classList.toggle('on');
+            if (!this.classList.contains('on')) {
+                this.style.background = '#ccc';
+            } else {
+                this.style.background = '#667eea';
+            }
+        });
+    });
+
+    /* ========== 底部导航跳转 ========== */
+    document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const text = this.querySelector('span:last-child').textContent;
+            const pageMap = { '写作':'网文写作.html', '小说':'index.html', '预设':'番茄预设管理.html', 'Agent':'智能体板块.html', '设置':'设置.html' };
+            const page = pageMap[text];
+            if (page) window.location.href = page;
+        });
+    });
+
+    /* ========== 启动 ========== */
+    document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
