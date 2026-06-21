@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Fic-IDE - 工具箱遗漏</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d1117;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;padding:40px 20px;min-height:100vh}
+h1{color:#e6edf3;font-size:28px;margin-bottom:8px;letter-spacing:-0.5px}
+.sub{color:#8b949e;font-size:14px;margin-bottom:40px;text-align:center}
+.grid{display:flex;flex-wrap:wrap;gap:32px;justify-content:center;max-width:1400px}
+.phone{width:400px;height:844px;background:#1c2128;border-radius:44px;border:2px solid #30363d;overflow:hidden;position:relative;box-shadow:0 25px 50px -12px rgba(0,0,0,.5)}
+.phone-inner{height:100%;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#30363d transparent}
+.phone-inner::-webkit-scrollbar{width:4px}
+.phone-inner::-webkit-scrollbar-thumb{background:#30363d;border-radius:2px}
+.status-bar{display:flex;justify-content:space-between;padding:12px 24px 8px;color:#e6edf3;font-size:12px;font-weight:600}
+.top-bar{display:flex;align-items:center;padding:4px 16px;gap:8px;position:sticky;top:0;background:#1c2128;z-index:10}
+.top-bar .back-btn{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#e6edf3;font-size:20px}
+.top-bar .title{flex:1;color:#e6edf3;font-size:16px;font-weight:600}
+.top-bar .actions{display:flex;gap:4px}
+.top-bar .actions span{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#e6edf3;font-size:18px}
+.content{padding:12px 16px}
+.code-block{background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:12px;font-family:'Cascadia Code','Fira Code',monospace;font-size:12px;line-height:1.6;color:#e6edf3;overflow-x:auto;margin-bottom:8px}
+.code-line .ln{color:#484f58;text-align:right;width:24px;display:inline-block;user-select:none}
+.setting-row{display:flex;align-items:center;padding:12px 16px;gap:12px;border-bottom:1px solid #21262d;cursor:pointer}
+.setting-row:hover{background:#2d333b}
+.setting-row .s-info{flex:1}
+.setting-row .s-title{color:#e6edf3;font-size:13px;font-weight:500}
+.setting-row .s-desc{color:#8b949e;font-size:11px;margin-top:2px}
+.setting-row .s-chevron{color:#8b949e;font-size:12px}
+.card{background:#21262d;border-radius:12px;padding:16px;margin-bottom:10px;border:1px solid #30363d}
+.card-title{color:#e6edf3;font-size:14px;font-weight:600;margin-bottom:4px}
+.card-desc{color:#8b949e;font-size:12px;line-height:1.5}
+.tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:8px;font-weight:500}
+.tag-blue{background:#58a6ff33;color:#58a6ff}
+.tag-green{background:#3fb95033;color:#3fb950}
+.tag-purple{background:#dda0dd33;color:#dda0dd}
+.btn{padding:10px 24px;border-radius:10px;border:none;font-size:13px;font-weight:500;cursor:pointer;display:inline-block}
+.btn-primary{background:#1f6feb;color:#fff}
+.tab-bar{display:flex;gap:2px;padding:0 12px;border-bottom:1px solid #30363d;overflow-x:auto}
+.tab{padding:8px 14px;color:#8b949e;font-size:12px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.tab.active{color:#58a6ff;border-color:#58a6ff}
+@media(max-width:860px){.phone{width:380px}}
+</style>
+</head>
+<body>
+<h1>🔧 工具箱遗漏工具</h1>
+<div class="sub">Toolbox Missing — UI 调试器 · FFmpeg · Markdown · 工具测试 · 终端 · 自动化</div>
+<div class="grid">
+
+<!-- 1: UI 调试器 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="top-bar"><div class="back-btn">←</div><div class="title">🐛 UI 调试器</div><div class="actions"><span>⟳</span></div></div>
+<div class="content">
+<div class="card"><div style="display:flex;gap:8px;margin-bottom:8px"><button class="btn btn-primary" style="padding:6px 14px;font-size:11px">选取元素</button><button class="btn btn-primary" style="padding:6px 14px;font-size:11px;background:#21262d;color:#e6edf3;border:1px solid #30363d">网格叠加</button></div>
+<div class="code-block" style="max-height:380px;overflow-y:auto">
+<div class="code-line"><span class="ln">1</span> <span style="color:#7ee787">◉ </span><span style="color:#58a6ff">Card</span><span style="color:#8b949e">@42a1b3</span></div>
+<div class="code-line"><span class="ln">2</span>   ├─ <span style="color:#58a6ff">Row</span><span style="color:#8b949e"> [w=360, h=72]</span></div>
+<div class="code-line"><span class="ln">3</span>   │  ├─ <span style="color:#ff6b9d">Icon</span><span style="color:#8b949e"> @42a1c0 [48×48]</span></div>
+<div class="code-line"><span class="ln">4</span>   │  ├─ <span style="color:#ff6b9d">Column</span><span style="color:#8b949e"> [flex:1]</span></div>
+<div class="code-line"><span class="ln">5</span>   │  │  ├─ <span style="color:#dda0dd">Text</span> "凡人修仙之仙界篇"</div>
+<div class="code-line"><span class="ln">6</span>   │  │  └─ <span style="color:#dda0dd">Row</span><span style="color:#8b949e"> [tags]</span></div>
+<div class="code-line"><span class="ln">7</span>   │  └─ <span style="color:#ff6b9d">Icon</span><span style="color:#8b949e"> [chevron]</span></div>
+<div class="code-line"><span class="ln" style="color:#484f58">8</span> <span style="color:#7ee787">◉ </span><span style="color:#58a6ff">TopAppBar</span><span style="color:#8b949e"> @42a190</span></div>
+<div class="code-line"><span class="ln" style="color:#484f58">9</span> Measurements: 400×56px, padding: 16dp</div>
+</div>
+<div style="font-size:11px;color:#8b949e;display:flex;justify-content:space-between;margin-top:8px">
+<span>FPS: 58.2</span><span>⊞ 42 个节点</span><span>🧠 48MB</span>
+</div>
+</div></div></div>
+
+<!-- 2: FFmpeg 工具箱 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="top-bar"><div class="back-btn">←</div><div class="title">🎬 FFmpeg 工具箱</div></div>
+<div class="content">
+<div class="tab-bar"><div class="tab">转换</div><div class="tab active">剪切</div><div class="tab">拼接</div><div class="tab">提取音频</div></div>
+<div class="card">
+<div style="margin-bottom:8px;color:#e6edf3;font-size:13px;font-weight:500">视频剪切</div>
+<div class="form-field"><input value="/sdcard/video/record.mp4" style="width:100%;background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:8px;color:#e6edf3;font-size:12px"></div>
+<div style="display:flex;gap:8px"><input value="00:00:00" style="width:70px;background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:6px;color:#e6edf3;font-size:12px;text-align:center"> 至 <input value="00:05:30" style="width:70px;background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:6px;color:#e6edf3;font-size:12px;text-align:center"></div>
+<button class="btn btn-primary" style="width:100%;margin-top:8px;font-size:12px">🎬 开始处理</button>
+</div>
+<div class="code-block">ffmpeg -i record.mp4 -ss 00:00:00 -to 00:05:30 -c copy output.mp4</div>
+</div></div></div>
+
+<!-- 3: Markdown 演示 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="top-bar"><div class="back-btn">←</div><div class="title">📝 StreamMarkdown</div></div>
+<div class="content">
+<div class="code-block" style="background:#1c2128;border:none"><div style="color:#dda0dd"># Markdown 渲染演示</div>
+<div style="color:#7ee787">**实时流式渲染**</div>
+<div style="color:#8b949e;margin-top:4px">支持标准 Markdown 语法，包括：</div>
+<div style="margin-top:4px">
+<span style="color:#58a6ff">- 代码块高亮</span><br>
+<span style="color:#58a6ff">- 表格渲染</span><br>
+<span style="color:#f0883e">- [x] 任务列表</span><br>
+<span style="color:#f0883e">- [ ] 待办事项</span>
+</div>
+<div style="border-left:3px solid #58a6ff;padding-left:12px;margin:8px 0;color:#8b949e">> 引用块样式演示</div>
+<code style="background:#21262d;padding:2px 6px;border-radius:4px;font-size:11px">inline code</code>
+| 列1 | 列2 |<br>
+| --- | --- |<br>
+| A | B |
+</div>
+</div></div></div>
+
+<!-- 4: 工具测试器 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="top-bar"><div class="back-btn">←</div><div class="title">🧪 工具测试</div></div>
+<div class="content">
+<div class="card"><div class="card-title">选择工具</div>
+<select style="width:100%;background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:8px;color:#e6edf3;font-size:13px;margin-top:6px">
+<option>polish_text - 文本精修</option>
+<option>analyze_rhythm - 爽点分析</option>
+<option>generate_outline - 大纲生成</option>
+</select></div>
+<div class="card"><div class="card-title">参数</div>
+<div style="margin-top:6px">
+<div style="color:#8b949e;font-size:11px;margin-bottom:4px">text (必填)</div>
+<textarea style="width:100%;background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:8px;color:#e6edf3;font-size:12px;min-height:60px">测试文本内容...</textarea>
+</div></div>
+<button class="btn btn-primary" style="width:100%">▶️ 运行测试</button>
+</div></div></div>
+
+<!-- 5: 默认助手引导 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="top-bar"><div class="back-btn">←</div><div class="title" style="font-size:14px">🤖 默认助手引导</div></div>
+<div class="content">
+<div class="card"><div class="card-title">首次使用引导</div><div class="card-desc">配置你的默认 AI 写作助手</div>
+<div style="margin-top:12px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:center;gap:12px;padding:8px;background:#0d1117;border-radius:8px;cursor:pointer;border:2px solid #58a6ff">
+<div style="width:36px;height:36px;border-radius:8px;background:#58a6ff33;display:flex;align-items:center;justify-content:center">🦙</div>
+<div style="flex:1"><div style="color:#e6edf3;font-size:13px">本地 7B 模型</div><div style="color:#8b949e;font-size:11px">离线高速运行</div></div>
+<span class="tag tag-green">推荐</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:8px;background:#0d1117;border-radius:8px;cursor:pointer">
+<div style="width:36px;height:36px;border-radius:8px;background:#3fb95033;display:flex;align-items:center;justify-content:center">☁️</div>
+<div style="flex:1"><div style="color:#e6edf3;font-size:13px">DeepSeek API</div><div style="color:#8b949e;font-size:11px">需配置 API Key</div></div>
+</div>
+</div></div></div></div></div>
+
+<!-- 6: 终端配置 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="top-bar"><div class="back-btn">←</div><div class="title">💻 终端配置</div></div>
+<div class="content">
+<div class="card">
+<div class="card-title">Ubuntu 24.04 LTS</div>
+<div class="card-desc" style="margin-top:6px"><span class="status-dot" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#3fb950;margin-right:4px"></span>运行中 · proot 模式</div>
+</div>
+<div class="setting-row"><div class="s-info"><div class="s-title">自动启动终端</div><div class="s-desc">应用启动时自动初始化</div></div><div class="switch on"><div class="thumb"></div></div></div>
+<div class="setting-row"><div class="s-info"><div class="s-title">终端字体大小</div></div><span class="s-chevron">12sp</span></div>
+<div class="setting-row"><div class="s-info"><div class="s-title">终端配色方案</div></div><span class="s-chevron">Nord</span></div>
+<div class="setting-row"><div class="s-info"><div class="s-title">自动配置向导</div></div><span class="s-chevron">›</span></div>
+<div class="card" style="margin-top:12px">
+<div class="card-title">⚡ 自动配置</div>
+<div class="card-desc">自动检测和配置 Shell 环境、包管理器、Python/Node 运行时</div>
+<div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap">
+<span class="tag tag-green">✓ bash</span>
+<span class="tag tag-green">✓ python3</span>
+<span class="tag tag-blue">⟳ node</span>
+<span class="tag tag-purple">○ git</span>
+</div>
+</div>
+</div></div></div>
+
+</div>
+<div class="sub" style="margin-top:32px;color:#8b949e">工具箱遗漏模块（6屏）· UI调试 · FFmpeg · Markdown · 工具测试 · 助手引导 · 终端</div>
+</body>
+</html>

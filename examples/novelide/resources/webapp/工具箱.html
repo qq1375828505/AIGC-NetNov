@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Fic-IDE - 工具箱模块</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d1117;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;padding:40px 20px;min-height:100vh}
+h1{color:#e6edf3;font-size:28px;margin-bottom:8px;letter-spacing:-0.5px}
+.sub{color:#8b949e;font-size:14px;margin-bottom:40px;text-align:center}
+.grid{display:flex;flex-wrap:wrap;gap:32px;justify-content:center;max-width:1400px}
+.phone{width:400px;height:844px;background:#1c2128;border-radius:44px;border:2px solid #30363d;overflow:hidden;position:relative;box-shadow:0 25px 50px -12px rgba(0,0,0,.5)}
+.phone-inner{height:100%;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#30363d transparent}
+.phone-inner::-webkit-scrollbar{width:4px}
+.phone-inner::-webkit-scrollbar-thumb{background:#30363d;border-radius:2px}
+.status-bar{display:flex;justify-content:space-between;padding:12px 24px 8px;color:#e6edf3;font-size:12px;font-weight:600}
+.top-bar{display:flex;align-items:center;padding:4px 16px;gap:8px}
+.top-bar .back-btn{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#e6edf3;font-size:20px}
+.top-bar .title{flex:1;color:#e6edf3;font-size:18px;font-weight:600}
+.top-bar .actions{display:flex;gap:4px}
+.top-bar .actions span{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#e6edf3;font-size:18px}
+.tool-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:12px 16px}
+.tool-item{background:#21262d;border-radius:12px;padding:16px 8px;border:1px solid #30363d;text-align:center;cursor:pointer;transition:all .15s}
+.tool-item:hover{border-color:#58a6ff44;background:#2d333b}
+.tool-item .t-icon{font-size:24px;margin-bottom:6px}
+.tool-item .t-name{color:#e6edf3;font-size:12px;font-weight:500}
+.tool-item .t-desc{color:#8b949e;font-size:10px;margin-top:2px}
+.list-item{display:flex;align-items:center;padding:12px 16px;gap:12px;border-bottom:1px solid #21262d;cursor:pointer}
+.list-item:hover{background:#2d333b}
+.list-item .l-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.list-item .l-info{flex:1;min-width:0}
+.list-item .l-title{color:#e6edf3;font-size:13px;font-weight:500}
+.list-item .l-desc{color:#8b949e;font-size:11px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list-item .l-extra{color:#8b949e;font-size:11px;flex-shrink:0}
+.file-row{display:flex;align-items:center;padding:8px 16px;gap:10px;cursor:pointer;border-bottom:1px solid #21262d}
+.file-row:hover{background:#2d333b}
+.file-row .f-icon{font-size:16px;width:20px;text-align:center}
+.file-row .f-name{color:#e6edf3;font-size:13px;flex:1}
+.file-row .f-size{color:#8b949e;font-size:11px}
+.file-row .f-date{color:#8b949e;font-size:11px;width:60px;text-align:right}
+.code-block{padding:12px 16px;background:#0d1117;margin:4px 16px;border-radius:8px;font-family:'Cascadia Code','Fira Code',monospace;font-size:12px;line-height:1.6;color:#e6edf3;overflow-x:auto}
+.code-line{display:flex;gap:16px}
+.code-line .ln{color:#484f58;text-align:right;width:28px;flex-shrink:0;user-select:none}
+.tab-bar{display:flex;gap:2px;padding:0 12px;border-bottom:1px solid #30363d;overflow-x:auto}
+.tab{padding:8px 14px;color:#8b949e;font-size:12px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.tab.active{color:#58a6ff;border-color:#58a6ff}
+@media(max-width:860px){.phone{width:380px}}
+</style>
+</head>
+<body>
+<h1>🔧 工具箱模块</h1>
+<div class="sub">Toolbox · 文件管理 · SQL 查看 · Logcat · Shell · 语音 · 权限管理</div>
+<div class="grid">
+
+<!-- Phone 1: 工具箱主界面 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="top-bar">
+<div class="back-btn">☰</div>
+<div class="title">🔧 工具箱</div>
+<div class="actions"><span>🔍</span></div>
+</div>
+<div class="tool-grid">
+<div class="tool-item"><div class="t-icon">📁</div><div class="t-name">文件管理</div><div class="t-desc">浏览设备文件</div></div>
+<div class="tool-item"><div class="t-icon">🛢️</div><div class="t-name">SQL 查看器</div><div class="t-desc">数据库浏览</div></div>
+<div class="tool-item"><div class="t-icon">📋</div><div class="t-name">Logcat</div><div class="t-desc">系统日志</div></div>
+<div class="tool-item"><div class="t-icon">💻</div><div class="t-name">Shell</div><div class="t-desc">终端执行</div></div>
+<div class="tool-item"><div class="t-icon">🎤</div><div class="t-name">语音转文字</div><div class="t-desc">ASR 识别</div></div>
+<div class="tool-item"><div class="t-icon">🔊</div><div class="t-name">文字转语音</div><div class="t-desc">TTS 朗读</div></div>
+<div class="tool-item"><div class="t-icon">🎬</div><div class="t-name">FFmpeg</div><div class="t-desc">媒体处理</div></div>
+<div class="tool-item"><div class="t-icon">🐛</div><div class="t-name">UI 调试</div><div class="t-desc">布局检查</div></div>
+<div class="tool-item"><div class="t-icon">🔑</div><div class="t-name">权限管理</div><div class="t-desc">工具授权</div></div>
+</div>
+<div style="padding:16px;padding-top:0">
+<button style="width:100%;padding:12px;background:#21262d;border:1px solid #30363d;border-radius:12px;color:#58a6ff;font-size:13px;cursor:pointer">📦 安装更多工具</button>
+</div>
+</div>
+</div>
+
+<!-- Phone 2: 文件管理器 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="top-bar">
+<div class="back-btn">←</div>
+<div class="title" style="font-size:14px">📁 文件管理</div>
+<div class="actions"><span>⋮</span></div>
+</div>
+<div class="file-row">
+<span class="f-icon">📁</span>
+<span class="f-name">.</span>
+<span class="f-size">—</span>
+<span class="f-date">—</span>
+</div>
+<div class="file-row">
+<span class="f-icon">📁</span>
+<span class="f-name">AI-Fic-IDE</span>
+<span class="f-size">—</span>
+<span class="f-date">2026-06-17</span>
+</div>
+<div class="file-row">
+<span class="f-icon">📁</span>
+<span class="f-name">Android</span>
+<span class="f-size">—</span>
+<span class="f-date">2026-06-15</span>
+</div>
+<div class="file-row">
+<span class="f-icon">📁</span>
+<span class="f-name">DCIM</span>
+<span class="f-size">—</span>
+<span class="f-date">2026-06-10</span>
+</div>
+<div class="file-row">
+<span class="f-icon">📁</span>
+<span class="f-name">Downloads</span>
+<span class="f-size">—</span>
+<span class="f-date">2026-06-17</span>
+</div>
+<div class="file-row">
+<span class="f-icon">📁</span>
+<span class="f-name">Documents</span>
+<span class="f-size">—</span>
+<span class="f-date">2026-06-12</span>
+</div>
+<div class="file-row">
+<span class="f-icon">📁</span>
+<span class="f-name">novel_workspace</span>
+<span class="f-size">—</span>
+<span class="f-date">2026-06-17</span>
+</div>
+<div class="file-row">
+<span class="f-icon">📄</span>
+<span class="f-name">chapter_001.txt</span>
+<span class="f-size">12.4 KB</span>
+<span class="f-date">10:12</span>
+</div>
+<div class="file-row">
+<span class="f-icon">📄</span>
+<span class="f-name">chapter_002.txt</span>
+<span class="f-size">14.7 KB</span>
+<span class="f-date">昨天</span>
+</div>
+<div class="file-row">
+<span class="f-icon">📄</span>
+<span class="f-name">outline_v2.md</span>
+<span class="f-size">8.2 KB</span>
+<span class="f-date">前天</span>
+</div>
+</div>
+</div>
+
+<!-- Phone 3: Logcat -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="top-bar">
+<div class="back-btn">←</div>
+<div class="title">📋 Logcat</div>
+<div class="actions"><span>⏸️</span><span>🗑️</span></div>
+</div>
+<div style="padding:4px 12px;display:flex;gap:4px">
+<select style="flex:1;background:#21262d;border:1px solid #30363d;border-radius:6px;color:#e6edf3;padding:6px 8px;font-size:12px">
+<option>Verbose</option>
+<option selected>Debug</option>
+<option>Info</option>
+<option>Warn</option>
+<option>Error</option>
+</select>
+<input style="flex:2;background:#21262d;border:1px solid #30363d;border-radius:6px;color:#e6edf3;padding:6px 8px;font-size:12px" placeholder="搜索日志...">
+</div>
+<div class="code-block" style="margin:8px 12px;font-size:11px;line-height:1.5;max-height:320px;overflow-y:auto">
+<div class="code-line"><span class="ln" style="color:#484f58">342</span><span style="color:#8b949e"> I </span><span style="color:#dda0dd">ChatVM</span><span style="color:#484f58">: </span><span style="color:#7ee787">Model loaded successfully (7B, 4-bit)</span></div>
+<div class="code-line"><span class="ln" style="color:#484f58">341</span><span style="color:#8b949e"> I </span><span style="color:#dda0dd">ToolReg</span><span style="color:#484f58">: </span>Registered 42 tools</div>
+<div class="code-line"><span class="ln" style="color:#484f58">340</span><span style="color:#8b949e"> D </span><span style="color:#dda0dd">MNN</span><span style="color:#484f58">: </span>Inference time: 847ms</div>
+<div class="code-line"><span class="ln" style="color:#484f58">339</span><span style="color:#8b949e"> W </span><span style="color:#dda0dd">Net</span><span style="color:#484f58">: </span><span style="color:#f0883e">API timeout, retrying (2/3)</span></div>
+<div class="code-line"><span class="ln" style="color:#484f58">338</span><span style="color:#8b949e"> E </span><span style="color:#dda0dd">DB</span><span style="color:#484f58">: </span><span style="color:#f85149">Failed to sync memory: timeout</span></div>
+<div class="code-line"><span class="ln" style="color:#484f58">337</span><span style="color:#8b949e"> I </span><span style="color:#dda0dd">System</span><span style="color:#484f58">: </span>App started in 2.1s</div>
+<div class="code-line"><span class="ln" style="color:#484f58">336</span><span style="color:#8b949e"> D </span><span style="color:#dda0dd">FloatWin</span><span style="color:#484f58">: </span>Floating window initialized</div>
+<div class="code-line"><span class="ln" style="color:#484f58">335</span><span style="color:#8b949e"> I </span><span style="color:#dda0dd">Term</span><span style="color:#484f58">: </span>Ubuntu 24.04 LTS ready</div>
+</div>
+</div>
+</div>
+
+<!-- Phone 4: Shell 终端 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="top-bar">
+<div class="back-btn">←</div>
+<div class="title">💻 Shell 终端</div>
+<div class="actions"><span>🔄</span><span>⋮</span></div>
+</div>
+<div class="code-block" style="margin:8px 12px;font-size:12px;line-height:1.6;max-height:360px;overflow-y:auto">
+<div class="code-line"><span style="color:#7ee787">user@aificide:~$</span> <span style="color:#e6edf3">ls -la</span></div>
+<div class="code-line"><span style="color:#8b949e">total 64</span></div>
+<div class="code-line"><span style="color:#8b949e">drwxr-xr-x 2 user user 4096 Jun 17 10:12 .</span></div>
+<div class="code-line"><span style="color:#8b949e">drwxr-xr-x 8 user user 4096 Jun 17 10:11 ..</span></div>
+<div class="code-line"><span style="color:#8b949e">-rw-r--r-- 1 user user  220 Jun 17 10:11 .bashrc</span></div>
+<div class="code-line"><span style="color:#8b949e">drwxr-xr-x 4 user user 4096 Jun 17 10:12 novels/</span></div>
+<div class="code-line"><span style="color:#8b949e">-rw-r--r-- 1 user user 12432 Jun 17 10:12 chapter_001.txt</span></div>
+<div class="code-line"><span style="color:#7ee787">user@aificide:~$</span> <span style="color:#e6edf3">grep -c "韩立" chapter_001.txt</span></div>
+<div class="code-line"><span style="color:#8b949e">42</span></div>
+<div class="code-line"><span style="color:#7ee787">user@aificide:~$</span> <span class="blink" style="animation:blink 1s infinite">▊</span></div>
+</div>
+<div style="padding:8px 12px;border-top:1px solid #30363d;display:flex;gap:8px;align-items:center">
+<input style="flex:1;background:#0d1117;border:1px solid #30363d;border-radius:8px;color:#e6edf3;padding:8px 12px;font-size:12px;font-family:monospace" placeholder="输入命令...">
+<span style="color:#8b949e;font-size:12px;cursor:pointer">⏎</span>
+</div>
+</div>
+
+<!-- Phone 5: SQL 查看器 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="top-bar">
+<div class="back-btn">←</div>
+<div class="title">🛢️ SQL 查看器</div>
+<div class="actions"><span>▶️</span><span>⋮</span></div>
+</div>
+<div class="tab-bar">
+<div class="tab active">数据库列表</div>
+<div class="tab">查询</div>
+<div class="tab">表结构</div>
+</div>
+<div class="list-item">
+<div class="l-icon" style="background:#58a6ff33;color:#58a6ff">🛢️</div>
+<div class="l-info"><div class="l-title">novel_data.db</div><div class="l-desc">7 张表 · 24.5 MB</div></div>
+</div>
+<div class="list-item">
+<div class="l-icon" style="background:#3fb95033;color:#3fb950">🛢️</div>
+<div class="l-info"><div class="l-title">chat_history.db</div><div class="l-desc">3 张表 · 56.2 MB</div></div>
+</div>
+<div class="list-item">
+<div class="l-icon" style="background:#dda0dd33;color:#dda0dd">🛢️</div>
+<div class="l-info"><div class="l-title">user_preferences.db</div><div class="l-desc">5 张表 · 1.2 MB</div></div>
+</div>
+<div class="list-item" style="border-bottom:none">
+<div class="l-icon" style="background:#f0883e33;color:#f0883e">🛢️</div>
+<div class="l-info"><div class="l-title">memory_store.db</div><div class="l-desc">4 张表 · 8.7 MB</div></div>
+</div>
+<div style="padding:12px 16px;border-top:1px solid #30363d">
+<div style="color:#8b949e;font-size:12px;margin-bottom:6px">SQL 查询</div>
+<div style="background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:8px 12px;color:#7ee787;font-size:12px;font-family:monospace">SELECT title, word_count FROM works ORDER BY word_count DESC LIMIT 10;</div>
+</div>
+</div>
+
+<!-- Phone 6: 语音 & 权限 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="top-bar">
+<div class="back-btn">←</div>
+<div class="title">🎤 语音与权限</div>
+</div>
+<div class="list-item">
+<div class="l-icon" style="background:#3fb95033;color:#3fb950">🎤</div>
+<div class="l-info"><div class="l-title">语音转文字</div><div class="l-desc">中文 ASR · 离线模型已加载</div></div>
+<span style="color:#3fb950;font-size:12px">就绪</span>
+</div>
+<div class="list-item">
+<div class="l-icon" style="background:#58a6ff33;color:#58a6ff">🔊</div>
+<div class="l-info"><div class="l-title">文字转语音</div><div class="l-desc">TTS 引擎 · 朗读章节内容</div></div>
+<span style="color:#8b949e;font-size:12px">未设置</span>
+</div>
+<div class="list-item">
+<div class="l-icon" style="background:#f0883e33;color:#f0883e">🔑</div>
+<div class="l-info"><div class="l-title">悬浮窗权限</div><div class="l-desc">浮动聊天窗口</div></div>
+<span style="color:#58a6ff;font-size:12px">已授予</span>
+</div>
+<div class="list-item">
+<div class="l-icon" style="background:#f0883e33;color:#f0883e">🔑</div>
+<div class="l-info"><div class="l-title">无障碍服务</div><div class="l-desc">屏幕分析 · 自动化</div></div>
+<span style="color:#f85149;font-size:12px">未授予</span>
+</div>
+<div class="list-item">
+<div class="l-icon" style="background:#f0883e33;color:#f0883e">🔑</div>
+<div class="l-info"><div class="l-title">通知监听</div><div class="l-desc">消息读取 · 自动回复</div></div>
+<span style="color:#58a6ff;font-size:12px">已授予</span>
+</div>
+<div class="list-item" style="border-bottom:none">
+<div class="l-icon" style="background:#f0883e33;color:#f0883e">🔑</div>
+<div class="l-info"><div class="l-title">ADB 授权</div><div class="l-desc">系统级调试</div></div>
+<span style="color:#8b949e;font-size:12px">未连接</span>
+</div>
+</div>
+
+</div>
+<div class="sub" style="margin-top:32px;color:#8b949e">工具箱模块 · 文件管理 · Logcat · Shell · SQL · 语音 · 权限管理 · FFmpeg · UI调试</div>
+</body>
+</html>

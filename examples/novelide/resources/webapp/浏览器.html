@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Fic-IDE - 浏览器 & 欢迎页</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d1117;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;padding:40px 20px;min-height:100vh}
+h1{color:#e6edf3;font-size:28px;margin-bottom:8px;letter-spacing:-0.5px}
+.sub{color:#8b949e;font-size:14px;margin-bottom:40px;text-align:center}
+.grid{display:flex;flex-wrap:wrap;gap:32px;justify-content:center;max-width:1400px}
+.phone{width:400px;height:844px;background:#1c2128;border-radius:44px;border:2px solid #30363d;overflow:hidden;position:relative;box-shadow:0 25px 50px -12px rgba(0,0,0,.5)}
+.phone-inner{height:100%;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#30363d transparent}
+.phone-inner::-webkit-scrollbar{width:4px}
+.phone-inner::-webkit-scrollbar-thumb{background:#30363d;border-radius:2px}
+.status-bar{display:flex;justify-content:space-between;padding:12px 24px 8px;color:#e6edf3;font-size:12px;font-weight:600}
+.top-bar{display:flex;align-items:center;padding:4px 16px;gap:8px}
+.top-bar .back-btn{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#e6edf3;font-size:20px}
+.top-bar .title{flex:1;color:#e6edf3;font-size:18px;font-weight:600}
+.top-bar .actions{display:flex;gap:4px}
+.top-bar .actions span{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#e6edf3;font-size:18px}
+/* Browser */
+.browser-url{padding:4px 12px;display:flex;gap:6px;align-items:center}
+.browser-url .url-field{flex:1;background:#21262d;border:1px solid #30363d;border-radius:8px;padding:6px 12px;color:#e6edf3;font-size:12px;display:flex;align-items:center;gap:6px}
+.browser-url .url-field .lock{color:#3fb950;font-size:10px}
+.browser-url .nav-btn{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#8b949e;font-size:14px;cursor:pointer}
+.browser-url .nav-btn:hover{background:#2d333b}
+.browser-content{padding:12px;color:#e6edf3;font-size:13px;line-height:1.6}
+.browser-tabs{display:flex;padding:4px 12px;gap:4px;overflow-x:auto}
+.browser-tab{background:#21262d;border:1px solid #30363d;border-radius:8px 8px 0 0;padding:6px 14px;display:flex;align-items:center;gap:6px;font-size:11px;color:#e6edf3;cursor:pointer;white-space:nowrap}
+.browser-tab.active{background:#1c2128;border-bottom-color:#1c2128}
+.browser-tab .tab-close{color:#484f58;font-size:12px;cursor:pointer}
+/* Welcome screen */
+.welcome{display:flex;flex-direction:column;align-items:center;padding:48px 24px;text-align:center}
+.welcome .logo{width:80px;height:80px;border-radius:20px;background:linear-gradient(135deg,#58a6ff,#a855f7);display:flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:16px;box-shadow:0 8px 32px rgba(88,166,255,.3)}
+.welcome h2{color:#e6edf3;font-size:24px;font-weight:700;margin-bottom:8px}
+.welcome .tagline{color:#8b949e;font-size:14px;margin-bottom:32px}
+.welcome .feature{display:flex;align-items:center;gap:12px;padding:12px 0;width:100%}
+.welcome .feature .f-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.welcome .feature .f-text{text-align:left;flex:1}
+.welcome .feature .f-text .ftitle{color:#e6edf3;font-size:14px;font-weight:500}
+.welcome .feature .f-text .fdesc{color:#8b949e;font-size:12px}
+/* Loading */
+.loading-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:48px;gap:16px}
+.loading-screen .loader{width:48px;height:48px;border:3px solid #30363d;border-top-color:#58a6ff;border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-screen .l-title{color:#e6edf3;font-size:16px;font-weight:600}
+.loading-screen .l-step{color:#8b949e;font-size:13px;display:flex;align-items:center;gap:8px;padding:4px 0}
+.loading-screen .l-step.done{color:#3fb950}
+.loading-screen .l-step.current{color:#58a6ff}
+/* Permission dialog */
+.dialog-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:30;backdrop-filter:blur(4px)}
+.dialog-box{background:#1c2128;border:1px solid #30363d;border-radius:24px;width:320px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.dialog-header{padding:24px 24px 16px;text-align:center}
+.dialog-header .d-icon{font-size:40px;margin-bottom:12px}
+.dialog-header .d-title{color:#e6edf3;font-size:17px;font-weight:600;margin-bottom:6px}
+.dialog-header .d-desc{color:#8b949e;font-size:13px;line-height:1.5}
+.dialog-actions{display:flex;padding:8px 16px 16px;gap:8px}
+.dialog-actions button{flex:1;padding:12px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;border:none}
+.dialog-actions .btn-cancel{background:#21262d;color:#e6edf3;border:1px solid #30363d}
+.dialog-actions .btn-confirm{background:#1f6feb;color:#fff}
+/* update */
+.update-card{background:linear-gradient(135deg,#1f6feb11,#a855f711);border:1px solid #58a6ff33;border-radius:16px;padding:20px;margin:16px;text-align:center}
+.update-card .u-icon{font-size:48px;margin-bottom:12px}
+.update-card .u-title{color:#e6edf3;font-size:18px;font-weight:600;margin-bottom:4px}
+.update-card .u-version{color:#58a6ff;font-size:13px;margin-bottom:12px}
+.update-card .u-changelog{text-align:left;color:#8b949e;font-size:13px;line-height:1.6}
+.update-card .u-changelog li{margin:4px 0;list-style:none;padding-left:8px}
+.update-card .u-changelog li::before{content:"• ";color:#58a6ff}
+/* Widget preview */
+.widget-bg{background:linear-gradient(135deg,#1f6feb,#a855f7);border-radius:20px;padding:20px;margin:16px;color:#fff;text-align:center}
+.widget-bg .widget-time{font-size:36px;font-weight:200;letter-spacing:-1px}
+.widget-bg .widget-date{font-size:12px;opacity:.8;margin-top:4px}
+.widget-bg .widget-btn{margin-top:16px;padding:8px 24px;background:rgba(255,255,255,.2);border-radius:20px;font-size:13px;cursor:pointer;display:inline-block}
+/* Error screen */
+.error-page{display:flex;flex-direction:column;align-items:center;justify-content:center;height:80%;padding:24px;text-align:center}
+.error-page .e-icon{font-size:64px;margin-bottom:16px}
+.error-page .e-title{color:#e6edf3;font-size:20px;font-weight:600;margin-bottom:8px}
+.error-page .e-desc{color:#8b949e;font-size:13px;margin-bottom:24px;line-height:1.5}
+.error-page button{padding:12px 32px;border-radius:12px;border:none;background:#1f6feb;color:#fff;font-size:14px;cursor:pointer}
+@media(max-width:860px){.phone{width:380px}}
+</style>
+</head>
+<body>
+<h1>🌐 浏览器 & 欢迎页</h1>
+<div class="sub">Web Browser · 启动加载 · 欢迎页 · 权限 · 更新 · 小部件 · 错误页</div>
+<div class="grid">
+
+<!-- Phone 1: Web 浏览器 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="top-bar">
+<div class="back-btn">←</div>
+<div class="title">🌐 浏览器</div>
+<div class="actions"><span>📑</span><span>⋮</span></div>
+</div>
+<div class="browser-tabs">
+<div class="browser-tab active"><span>🔒</span> 起点中文网 <span class="tab-close">✕</span></div>
+<div class="browser-tab">新标签页 <span class="tab-close">✕</span></div>
+</div>
+<div class="browser-url">
+<span class="nav-btn">←</span>
+<span class="nav-btn">→</span>
+<span class="nav-btn">🔄</span>
+<div class="url-field"><span class="lock">🔒</span> https://www.qidian.com</div>
+<span class="nav-btn">⋮</span>
+</div>
+<div class="browser-content">
+<div style="background:#21262d;border-radius:12px;padding:16px;margin-bottom:8px">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%2330363d' rx='8'/%3E%3Ctext x='8' y='28' font-size='20' fill='%2358a6ff'%3EQD%3C/text%3E%3C/svg%3E" style="border-radius:8px">
+<div style="flex:1">
+<div style="color:#e6edf3;font-size:14px;font-weight:500">起点中文网</div>
+<div style="color:#8b949e;font-size:11px">www.qidian.com</div>
+</div>
+</div>
+<div style="color:#c9d1d9;font-size:13px;line-height:1.7">
+<div style="padding:8px 0;border-bottom:1px solid #30363d;display:flex;gap:8px">
+<span style="background:#f0883e33;color:#f0883e;font-size:11px;padding:2px 8px;border-radius:4px">热推</span>
+<span style="color:#e6edf3">凡人修仙之仙界篇</span>
+</div>
+<div style="padding:8px 0;border-bottom:1px solid #30363d;display:flex;gap:8px">
+<span style="background:#58a6ff33;color:#58a6ff;font-size:11px;padding:2px 8px;border-radius:4px">新书</span>
+<span style="color:#e6edf3">灵境纪元 · 第234章</span>
+</div>
+<div style="padding:8px 0;display:flex;gap:8px">
+<span style="background:#3fb95033;color:#3fb950;font-size:11px;padding:2px 8px;border-radius:4px">完本</span>
+<span style="color:#e6edf3">我在异界当卷王 · 大结局</span>
+</div>
+</div>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<span style="background:#21262d;border:1px solid #30363d;border-radius:16px;padding:6px 12px;color:#e6edf3;font-size:12px;cursor:pointer">📑 书签</span>
+<span style="background:#21262d;border:1px solid #30363d;border-radius:16px;padding:6px 12px;color:#e6edf3;font-size:12px;cursor:pointer">📜 历史</span>
+<span style="background:#21262d;border:1px solid #30363d;border-radius:16px;padding:6px 12px;color:#e6edf3;font-size:12px;cursor:pointer">📥 下载</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Phone 2: 欢迎页 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="welcome">
+<div class="logo">📖</div>
+<h2>AI-Fic-IDE</h2>
+<div class="tagline">网文写作集成开发环境 · 从构思到完稿，AI 全程辅助</div>
+<div class="feature">
+<div class="f-icon" style="background:#58a6ff33;color:#58a6ff">🤖</div>
+<div class="f-text"><div class="ftitle">AI 写作助手</div><div class="fdesc">40+ 内置工具 · Agent 多轮推敲</div></div>
+</div>
+<div class="feature">
+<div class="f-icon" style="background:#a855f733;color:#a855f7">📝</div>
+<div class="f-text"><div class="ftitle">双编辑器</div><div class="fdesc">纯文本/富文本自由切换 · 自动保存</div></div>
+</div>
+<div class="feature">
+<div class="f-icon" style="background:#3fb95033;color:#3fb950">📚</div>
+<div class="f-text"><div class="ftitle">资料管理</div><div class="fdesc">角色 · 设定 · 伏笔 · AI 记忆系统</div></div>
+</div>
+<div class="feature">
+<div class="f-icon" style="background:#f0883e33;color:#f0883e">🛠️</div>
+<div class="f-text"><div class="ftitle">工具箱</div><div class="fdesc">Ubuntu 终端 · ADB · MCP 插件</div></div>
+</div>
+<button style="margin-top:24px;padding:14px 56px;border-radius:28px;border:none;background:linear-gradient(135deg,#58a6ff,#a855f7);color:#fff;font-size:16px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(88,166,255,.3)">开始使用 →</button>
+</div>
+</div>
+</div>
+
+<!-- Phone 3: 启动加载页 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="loading-screen">
+<div class="loader"></div>
+<div class="l-title">正在启动...</div>
+<div class="l-step done">✓ 初始化核心模块</div>
+<div class="l-step done">✓ 加载本地模型 (DeepSeek-7B)</div>
+<div class="l-step done">✓ 初始化工具注册表 (42个工具)</div>
+<div class="l-step current">⟳ 加载插件市场 (8/15)</div>
+<div class="l-step">○ 启动完成</div>
+</div>
+</div>
+</div>
+
+<!-- Phone 4: 权限请求 -->
+<div class="phone">
+<div class="phone-inner" style="position:relative">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div style="padding:16px;opacity:.4;filter:blur(2px)">
+<div class="card" style="background:#21262d;border:1px solid #30363d;border-radius:12px;padding:16px;margin-bottom:12px"><div style="color:#e6edf3;font-size:14px;font-weight:500">设置页面内容...</div></div>
+</div>
+<div class="dialog-overlay">
+<div class="dialog-box">
+<div class="dialog-header">
+<div class="d-icon">🪟</div>
+<div class="d-title">允许显示悬浮窗？</div>
+<div class="d-desc">AI-Fic-IDE 需要悬浮窗权限以提供浮动聊天窗口、全屏读写和屏幕 OCR 功能。</div>
+</div>
+<div style="padding:0 24px 8px">
+<div style="background:#21262d;border-radius:10px;padding:12px;display:flex;gap:8px">
+<span style="color:#1f6feb">🔒</span>
+<div style="color:#8b949e;font-size:12px;line-height:1.5">此权限仅用于浮动窗口功能，不会收集你的个人数据。</div>
+</div>
+</div>
+<div class="dialog-actions">
+<button class="btn-cancel">拒绝</button>
+<button class="btn-confirm">允许</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Phone 5: 更新页面 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="top-bar">
+<div class="back-btn">←</div>
+<div class="title">关于</div>
+</div>
+<div class="update-card">
+<div class="u-icon">🚀</div>
+<div class="u-title">新版本可用</div>
+<div class="u-version">v2.2.0 → v2.3.0</div>
+<div class="u-changelog">
+<div style="font-weight:500;color:#e6edf3;margin-bottom:8px">更新内容：</div>
+<li>新增番茄计时器，专注写作</li>
+<li>优化本地模型推理速度 (提升40%)</li>
+<li>修复爽点检测准确率问题</li>
+<li>新增全局搜索功能</li>
+<li>优化浮动窗口内存占用</li>
+</div>
+<button style="margin-top:16px;padding:12px 36px;border-radius:24px;border:none;background:linear-gradient(135deg,#58a6ff,#a855f7);color:#fff;font-size:14px;font-weight:600;cursor:pointer">立即更新</button>
+</div>
+<div style="padding:0 16px">
+<div style="color:#e6edf3;font-size:14px;font-weight:500;margin-bottom:8px">应用信息</div>
+<div class="setting-item" style="padding:10px 0;border-bottom:1px solid #21262d;display:flex;justify-content:space-between">
+<span style="color:#e6edf3;font-size:13px">版本号</span>
+<span style="color:#8b949e;font-size:13px">v2.2.0 (build 42)</span>
+</div>
+<div class="setting-item" style="padding:10px 0;border-bottom:1px solid #21262d;display:flex;justify-content:space-between">
+<span style="color:#e6edf3;font-size:13px">许可证</span>
+<span style="color:#8b949e;font-size:13px">GNU LGPLv3</span>
+</div>
+<div class="setting-item" style="padding:10px 0;display:flex;justify-content:space-between">
+<span style="color:#e6edf3;font-size:13px">基于</span>
+<span style="color:#8b949e;font-size:13px">Operit AI</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Phone 6: 错误页 + 桌面小部件 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="error-page">
+<div class="e-icon">😵</div>
+<div class="e-title">出了点问题</div>
+<div class="e-desc">本地模型加载失败，可能是模型文件损坏或内存不足。<br><br>
+建议：<br>
+1. 检查可用内存<br>
+2. 重新下载模型文件<br>
+3. 切换到 API 模式</div>
+<button>🔄 重新加载</button>
+<button style="margin-top:8px;background:#21262d;color:#e6edf3;border:1px solid #30363d;padding:12px 32px;border-radius:12px;font-size:14px;cursor:pointer">⚙️ 切换模式</button>
+</div>
+</div>
+</div>
+
+<!-- Phone 7: 小部件预览 (模拟桌面) -->
+<div class="phone">
+<div class="phone-inner" style="background:linear-gradient(135deg,#0d1117 0%,#1c2128 100%)">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div style="padding:24px 16px">
+<div class="widget-bg" style="margin:0;margin-bottom:16px">
+<div class="widget-time">10:12</div>
+<div class="widget-date">2026年6月17日 周三</div>
+<div style="margin-top:12px;font-size:13px;opacity:.9">今日写作目标：2000字</div>
+<div style="font-size:28px;font-weight:700;margin-top:4px">847 / 2000</div>
+<div style="height:4px;background:rgba(255,255,255,.2);border-radius:2px;margin-top:8px">
+<div style="width:42%;height:100%;background:#fff;border-radius:2px"></div>
+</div>
+<div class="widget-btn">📝 继续写作</div>
+</div>
+<div style="background:#21262d;border-radius:16px;padding:16px;border:1px solid #30363d;margin-bottom:12px">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+<span style="font-size:20px">🪄</span>
+<span style="color:#e6edf3;font-size:14px;font-weight:500">快捷工具</span>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<span style="background:#1f6feb33;color:#58a6ff;padding:6px 14px;border-radius:16px;font-size:12px;cursor:pointer">✍️ 续写</span>
+<span style="background:#dda0dd33;color:#dda0dd;padding:6px 14px;border-radius:16px;font-size:12px;cursor:pointer">✨ 润色</span>
+<span style="background:#3fb95033;color:#3fb950;padding:6px 14px;border-radius:16px;font-size:12px;cursor:pointer">📋 大纲</span>
+</div>
+</div>
+<div style="background:#21262d;border-radius:16px;padding:16px;border:1px solid #30363d">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+<span style="font-size:20px">📕</span>
+<span style="color:#e6edf3;font-size:14px;font-weight:500">最近作品</span>
+</div>
+<div style="color:#e6edf3;font-size:13px">凡人修仙之仙界篇</div>
+<div style="color:#8b949e;font-size:11px">上次写作: 今天 09:30 · 第234章</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="sub" style="margin-top:32px;color:#8b949e">浏览器 & 欢迎页模块 · 浏览器 · 欢迎页 · 启动加载 · 权限 · 更新 · 错误页 · 桌面小部件</div>
+</body>
+</html>
