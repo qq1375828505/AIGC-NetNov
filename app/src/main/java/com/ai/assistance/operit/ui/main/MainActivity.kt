@@ -43,7 +43,6 @@ import com.ai.assistance.operit.data.preferences.androidPermissionPreferences
 import com.ai.assistance.operit.data.updates.UpdateManager
 import com.ai.assistance.operit.data.updates.UpdateStatus
 import com.ai.assistance.operit.ui.common.NavItem
-import com.ai.assistance.operit.ui.features.agreement.screens.AgreementScreen
 import com.ai.assistance.operit.ui.features.startup.screens.PluginLoadingScreenWithState
 import com.ai.assistance.operit.ui.features.startup.screens.PluginLoadingState
 import com.ai.assistance.operit.ui.features.startup.screens.LocalPluginLoadingState
@@ -84,9 +83,6 @@ class MainActivity : ComponentActivity() {
     private var updateCheckPerformed = false
     private lateinit var anrMonitor: AnrMonitor
     private lateinit var mcpRepository: MCPRepository
-
-    // ======== 导航状态 ========
-    private var showPreferencesGuide by mutableStateOf(false)
 
     // ======== MCP插件状态 ========
     private val pluginLoadingState = PluginLoadingState()
@@ -552,8 +548,6 @@ class MainActivity : ComponentActivity() {
 
         // 初始化用户偏好管理器并直接检查初始化状态
         preferencesManager = UserPreferencesManager.getInstance(this)
-        // 跳过用户偏好引导页，直接标记为已初始化
-        showPreferencesGuide = false
         AppLogger.d(
                 TAG,
                 "初始化检查: 用户偏好引导已跳过，直接进入主界面"
@@ -671,68 +665,46 @@ class MainActivity : ComponentActivity() {
                         // 在这里可以放置一个加载指示器，或者一个空白屏幕
                         // 为了简单起见，我们暂时留空，因为检查过程很快
                     } else {
-                        // 检查是否需要显示用户协议
-                        if (!agreementPreferences.isAgreementAccepted()) {
-                            AgreementScreen(
-                                    onAgreementAccepted = {
-                                        agreementPreferences.setAgreementAccepted(true)
-                                        // 协议接受后，检查权限级别设置
-                                        lifecycleScope.launch {
-                                            // 确保使用非阻塞方式更新UI
-                                            delay(300) // 短暂延迟确保UI状态更新
-                                            checkPermissionLevelSet()
-                                            if (!showPermissionGuide) {
-                                                startPluginLoading()
-                                            }
-                                            // 重新设置应用内容
-                                            setAppContent()
+                        // 处理待处理的分享文件
+                        processPendingSharedFiles()
+                        processPendingSharedText()
+                        val shortcutNavItem = pendingShortcutNavItem
+                        val shortcutNavRequestId = pendingShortcutRequestId
+                        val routeNavRequest = pendingRouteId
+                        val routeNavArgs = pendingRouteArgs
+                        val routeNavRequestId = pendingRouteRequestId
+                        val initialNavItem = when {
+                            shortcutNavItem != null -> shortcutNavItem
+                            else -> currentMainNavItem
+                        }
+
+                        CompositionLocalProvider(LocalPluginLoadingState provides pluginLoadingState) {
+                            // 主应用界面 (始终存在于底层)
+                            OperitApp(
+                                    initialNavItem = initialNavItem,
+                                    toolHandler = toolHandler,
+                                    shortcutNavRequest = shortcutNavItem,
+                                    shortcutNavRequestId = shortcutNavRequestId,
+                                    routeNavRequest = routeNavRequest,
+                                    routeNavArgs = routeNavArgs,
+                                    routeNavRequestId = routeNavRequestId,
+                                    onShortcutNavHandled = { handledRequestId ->
+                                        if (pendingShortcutRequestId == handledRequestId) {
+                                            pendingShortcutNavItem = null
+                                            pendingShortcutRequestId = 0L
+                                        }
+                                    },
+                                    onCurrentNavItemChanged = { navItem ->
+                                        currentMainNavItem = navItem
+                                    },
+                                    onRouteNavHandled = { handledRequestId ->
+                                        if (pendingRouteRequestId == handledRequestId) {
+                                            pendingRouteId = null
+                                            pendingRouteArgs = emptyMap()
+                                            pendingRouteRequestId = 0L
                                         }
                                     }
                             )
-                        }
-                        // 跳过权限引导界面，直接显示主应用界面
-                        else {
-                            // 处理待处理的分享文件
-                            processPendingSharedFiles()
-                            processPendingSharedText()
-                            val shortcutNavItem = pendingShortcutNavItem
-                            val shortcutNavRequestId = pendingShortcutRequestId
-                            val routeNavRequest = pendingRouteId
-                            val routeNavArgs = pendingRouteArgs
-                            val routeNavRequestId = pendingRouteRequestId
-                            val initialNavItem = when {
-                                shortcutNavItem != null -> shortcutNavItem
-                                else -> currentMainNavItem
-                            }
-
-                            CompositionLocalProvider(LocalPluginLoadingState provides pluginLoadingState) {
-                                // 主应用界面 (始终存在于底层)
-                                OperitApp(
-                                        initialNavItem = initialNavItem,
-                                        toolHandler = toolHandler,
-                                        shortcutNavRequest = shortcutNavItem,
-                                        shortcutNavRequestId = shortcutNavRequestId,
-                                        routeNavRequest = routeNavRequest,
-                                        routeNavArgs = routeNavArgs,
-                                        routeNavRequestId = routeNavRequestId,
-                                        onShortcutNavHandled = { handledRequestId ->
-                                            if (pendingShortcutRequestId == handledRequestId) {
-                                                pendingShortcutNavItem = null
-                                                pendingShortcutRequestId = 0L
-                                            }
-                                        },
-                                        onCurrentNavItemChanged = { navItem ->
-                                            currentMainNavItem = navItem
-                                        },
-                                        onRouteNavHandled = { handledRequestId ->
-                                            if (pendingRouteRequestId == handledRequestId) {
-                                                pendingRouteId = null
-                                                pendingRouteArgs = emptyMap()
-                                                pendingRouteRequestId = 0L
-                                            }
-                                        }
-                                )
-                            }
                         }
                     }
                     // 插件加载界面 (带有淡出效果) - 始终在最上层

@@ -147,7 +147,7 @@ export default function IOPage(ctx: ComposeDslContext): ComposeNode {
       message
         ? UI.Card({
             background: colors.tertiaryContainer,
-            modifier: UI.Modifier.padding(bottom: 8)
+            modifier: UI.Modifier.padding({ bottom: 8 })
           }, UI.Row({
             padding: 12,
             fillMaxWidth: true,
@@ -164,13 +164,13 @@ export default function IOPage(ctx: ComposeDslContext): ComposeNode {
         : null,
 
       // 格式选择
-      UI.Text({ text: "选择格式", style: "titleMedium", modifier: UI.Modifier.padding(vertical: 8) }),
+      UI.Text({ text: "选择格式", style: "titleMedium", modifier: UI.Modifier.padding({ vertical: 8 }) }),
       formatCard("txt", "TXT 纯文本", "通用文本格式，兼容性最好", "description"),
       formatCard("md", "Markdown", "支持标题、加粗等格式标记", "text_format"),
       formatCard("json", "JSON", "保留完整结构化数据", "data_object"),
 
       // 导入导出操作
-      UI.Text({ text: "导入导出", style: "titleMedium", modifier: UI.Modifier.padding(top: 16, bottom: 8) }),
+      UI.Text({ text: "导入导出", style: "titleMedium", modifier: UI.Modifier.padding({ top: 16, bottom: 8 }) }),
       UI.Card({
         modifier: UI.Modifier.padding(4)
       }, UI.Column({
@@ -191,7 +191,7 @@ export default function IOPage(ctx: ComposeDslContext): ComposeNode {
       ])),
 
       // 备份恢复
-      UI.Text({ text: "备份与恢复", style: "titleMedium", modifier: UI.Modifier.padding(top: 16, bottom: 8) }),
+      UI.Text({ text: "备份与恢复", style: "titleMedium", modifier: UI.Modifier.padding({ top: 16, bottom: 8 }) }),
       UI.Card({
         modifier: UI.Modifier.padding(4)
       }, UI.Column({

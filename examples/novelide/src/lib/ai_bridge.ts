@@ -6,11 +6,11 @@ import { PROMPT_TEMPLATES } from "./prompt_templates.js";
 async function callAi(systemPrompt: string, prompt: string): Promise<string> {
   const fullMessage = `[系统指令] ${systemPrompt}\n\n[用户请求] ${prompt}`;
   const result = await Tools.Chat.sendMessage(fullMessage);
-  if (result.success && result.data) {
-    return result.data.message;
-  } else {
-    throw new Error(result.error || "AI 调用失败");
+  const aiReply = (result.aiResponse ?? "").trim();
+  if (!aiReply) {
+    throw new Error("AI 返回了空回复");
   }
+  return aiReply;
 }
 
 export class NovelAIBridge {
@@ -159,21 +159,4 @@ export class NovelAIBridge {
   }
 }
 
-// 声明全局 Tools 接口
-declare global {
-  const Tools: {
-    register(name: string, config: any): void;
-    callNative(method: string, args: any[]): Promise<any>;
-    Chat: {
-      sendMessage(message: string, chatId?: string, roleCardId?: string, senderName?: string, options?: any): Promise<{
-        success: boolean;
-        data?: { message: string; thinking?: string; chatId: string; messageId: string };
-        error?: string;
-      }>;
-      sendMessageStreaming(message: string, chatId?: string, roleCardId?: string, senderName?: string, options?: any): Promise<any>;
-      createNew(group?: string): Promise<any>;
-      findChat(params: any): Promise<any>;
-      listAll(): Promise<any>;
-    };
-  };
-}
+// Tools 全局类型已由 examples/types/index.d.ts 提供，无需本地声明

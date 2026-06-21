@@ -64,7 +64,7 @@ export default function StatsPage(ctx: ComposeDslContext): ComposeNode {
   // 目标进度条
   function goalProgressBar() {
     return UI.Card({
-      modifier: UI.Modifier.padding(horizontal: 12, vertical: 8).fillMaxWidth()
+      modifier: UI.Modifier.padding(12, 8).fillMaxWidth()
     }, UI.Column({ padding: 16, spacing: 12 }, [
       UI.Row({ fillMaxWidth: true, horizontalArrangement: "space-between" }, [
         UI.Text({ text: "今日目标", style: "titleMedium" }),
@@ -89,7 +89,7 @@ export default function StatsPage(ctx: ComposeDslContext): ComposeNode {
     const history = stats.dailyHistory.slice(-14); // 最近 14 天
     if (history.length === 0) {
       return UI.Card({
-        modifier: UI.Modifier.padding(horizontal: 12, vertical: 8).fillMaxWidth()
+        modifier: UI.Modifier.padding(12, 8).fillMaxWidth()
       }, UI.Column({ padding: 16, spacing: 8 }, [
         UI.Text({ text: "每日字数", style: "titleMedium" }),
         UI.Box({ fillMaxWidth: true, height: 180, contentAlignment: "center" }, [
@@ -133,7 +133,7 @@ export default function StatsPage(ctx: ComposeDslContext): ComposeNode {
     });
 
     return UI.Card({
-      modifier: UI.Modifier.padding(horizontal: 12, vertical: 8).fillMaxWidth()
+      modifier: UI.Modifier.padding(12, 8).fillMaxWidth()
     }, UI.Column({ padding: 16, spacing: 12 }, [
       UI.Text({ text: "每日字数（近 14 天）", style: "titleMedium" }),
       UI.Row({
