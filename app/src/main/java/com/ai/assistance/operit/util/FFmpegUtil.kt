@@ -1,16 +1,16 @@
 package com.ai.assistance.operit.util
 
 import com.ai.assistance.operit.util.AppLogger
-import com.arthenica.ffmpegkit.FFmpegKit
-import com.arthenica.ffmpegkit.FFprobeKit
-import com.arthenica.ffmpegkit.MediaInformation
-import com.arthenica.ffmpegkit.ReturnCode
 
 /**
  * Utility class for FFmpeg operations
+ *
+ * NOTE: ffmpeg-kit dependency has been removed (media processing module cut).
+ * All methods are stubs that return failure/null.
  */
 object FFmpegUtil {
     private const val TAG = "FFmpegUtil"
+    private const val STUB_MSG = "媒体处理功能已裁剪"
 
     /**
      * Build a scale filter string that survives FFmpegKit argument parsing.
@@ -19,40 +19,20 @@ object FFmpegUtil {
     fun scaleFilterMaxWidth(maxWidth: Int): String = "scale=min(${maxWidth}\\,iw):-2"
 
     /**
-     * Execute an FFmpeg command and return if it was successful
+     * Execute an FFmpeg command and return if it was successful.
+     * Stub: always returns false (media processing module cut).
      */
     fun executeCommand(command: String): Boolean {
-        try {
-            AppLogger.d(TAG, "Executing FFmpeg command: $command")
-            val session = FFmpegKit.execute(command)
-            val returnCode = session.returnCode
-
-            if (ReturnCode.isSuccess(returnCode)) {
-                AppLogger.d(TAG, "FFmpeg command executed successfully")
-                return true
-            } else {
-                AppLogger.e(
-                    TAG,
-                    "FFmpeg failed with return code: ${returnCode.value}, output: ${session.output}"
-                )
-                return false
-            }
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error executing FFmpeg command", e)
-            return false
-        }
+        AppLogger.w(TAG, "$STUB_MSG: executeCommand called with: $command")
+        return false
     }
 
     /**
-     * Get media information for a file
+     * Get media information for a file.
+     * Stub: always returns null (media processing module cut).
      */
-    fun getMediaInfo(filePath: String): MediaInformation? {
-        return try {
-            val mediaInfoSession = FFprobeKit.getMediaInformation(filePath)
-            mediaInfoSession.mediaInformation
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error getting media info: ${e.message}")
-            null
-        }
+    fun getMediaInfo(filePath: String): Any? {
+        AppLogger.w(TAG, "$STUB_MSG: getMediaInfo called for: $filePath")
+        return null
     }
-} 
+}
