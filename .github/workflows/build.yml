@@ -75,6 +75,9 @@ jobs:
       - name: Install npm dependencies
         run: npm install
       
+      - name: Install web-chat dependencies
+        run: npm --prefix web-chat install
+      
       - name: Build web-chat
         run: npm run build:webchat
       
