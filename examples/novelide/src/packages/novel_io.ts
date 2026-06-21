@@ -1,11 +1,5 @@
 // 导入导出工具
 
-declare global {
-  interface Window {
-    NativeBridge: any;
-  }
-}
-
 export function registerTools() {
   // 通用导入（支持 TXT/Markdown/JSON）
   Tools.register("novelide:import_file", {

@@ -36,9 +36,7 @@ import androidx.lifecycle.lifecycleScope
 import com.ai.assistance.operit.R
 import com.ai.assistance.operit.api.chat.AIForegroundService
 import com.ai.assistance.operit.core.tools.AIToolHandler
-import com.ai.assistance.operit.core.tools.system.AndroidPermissionLevel
 import com.ai.assistance.operit.data.preferences.UserPreferencesManager
-import com.ai.assistance.operit.data.preferences.androidPermissionPreferences
 import com.ai.assistance.operit.data.updates.UpdateManager
 import com.ai.assistance.operit.data.updates.UpdateStatus
 import com.ai.assistance.operit.ui.common.NavItem
@@ -53,7 +51,6 @@ import com.ai.assistance.operit.util.LocaleUtils
 import java.util.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import com.ai.assistance.operit.data.mcp.MCPRepository
 import android.content.Intent
 import android.net.Uri
@@ -201,12 +198,6 @@ class MainActivity : ComponentActivity() {
         pluginLoadingState.setAppContext(this)
         PluginLoadingStateRegistry.bind(pluginLoadingState, lifecycleScope)
 
-        // 设置跳过加载的回调
-        pluginLoadingState.setOnSkipCallback {
-            AppLogger.d(TAG, "用户跳过了插件加载过程")
-            Toast.makeText(this, getString(R.string.plugin_loading_skipped), Toast.LENGTH_SHORT).show()
-        }
-
         // 设置初始界面 - 显示加载占位符
         setAppContent()
         processPendingGitHubAuth()
@@ -219,7 +210,6 @@ class MainActivity : ComponentActivity() {
             // 进行必要的初始化
             lifecycleScope.launch {
                 checkNotificationPermission()
-                checkPermissionLevelSet()
                 startPluginLoading()
                 initialChecksDone = true
                 setAppContent()
@@ -525,12 +515,8 @@ class MainActivity : ComponentActivity() {
 
         anrMonitor = AnrMonitor(this, lifecycleScope)
 
-        // 初始化用户偏好管理器并直接检查初始化状态
+        // 初始化用户偏好管理器
         preferencesManager = UserPreferencesManager.getInstance(this)
-        AppLogger.d(
-                TAG,
-                "初始化检查: 用户偏好引导已跳过，直接进入主界面"
-        )
 
     }
 
@@ -565,27 +551,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    // ======== 检查权限级别设置 ========
-    private fun checkPermissionLevelSet() {
-        // 检查是否已设置权限级别
-        val permissionLevel = androidPermissionPreferences.getPreferredPermissionLevel()
-        AppLogger.d(TAG, "当前权限级别: $permissionLevel")
-        // 如果未设置权限级别，自动使用标准权限作为默认值
-        if (permissionLevel == null) {
-            AppLogger.d(TAG, "未设置权限级别，自动设置为标准权限")
-            runBlocking {
-                androidPermissionPreferences.savePreferredPermissionLevel(AndroidPermissionLevel.STANDARD)
-            }
-        }
-    }
-
     // ======== 偏好监听器设置 ========
     private fun setupPreferencesListener() {
-        // 监听偏好变化（已跳过偏好引导页，此处仅保留监听以便后续按需使用）
         lifecycleScope.launch {
-            preferencesManager.getUserPreferencesFlow().collect { _ ->
-                // 偏好引导已跳过，无需更新 UI
-            }
+            preferencesManager.getUserPreferencesFlow().collect { /* 偏好变化时按需处理 */ }
         }
     }
 

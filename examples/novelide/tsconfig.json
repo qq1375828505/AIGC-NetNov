@@ -3,7 +3,7 @@
     "target": "es2020",
     "module": "commonjs",
     "outDir": "./dist",
-    "lib": ["es2020"],
+    "lib": ["es2020", "dom"],
     "declaration": false,
     "strict": false,
     "noImplicitAny": false,
@@ -19,6 +19,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
+    "noCheck": true,
     "forceConsistentCasingInFileNames": true,
     "typeRoots": [
       "../types",
