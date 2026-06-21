@@ -50,11 +50,14 @@ set_target_properties(
     CXX_STANDARD_REQUIRED ON
 )
 
+find_library(CPP_SHARED c++_shared)
+
 target_link_libraries(
     quickjsjni
     android
     log
     m
+    ${CPP_SHARED}
 )
 
 target_link_options(quickjsjni PRIVATE "-Wl,-z,max-page-size=16384")
