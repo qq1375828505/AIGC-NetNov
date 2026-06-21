@@ -45,13 +45,11 @@ android {
         }
     }
 
-    // Temporarily disabled: CMake native build requires submodules that are not yet
-    // registered in the repository index. Re-enable once submodules are properly added.
-    // externalNativeBuild {
-    //     cmake {
-    //         path = file("src/main/cpp/CMakeLists.txt")
-    //     }
-    // }
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+        }
+    }
 
     defaultConfig {
         applicationId = "com.ai.assistance.novelide"
@@ -72,12 +70,11 @@ android {
             abiFilters.addAll(listOf("arm64-v8a"))
         }
 
-        // Temporarily disabled: CMake native build disabled (see top-level externalNativeBuild).
-        // externalNativeBuild {
-        //     cmake {
-        //         cppFlags("-std=c++17")
-        //     }
-        // }
+        externalNativeBuild {
+            cmake {
+                cppFlags("-std=c++17")
+            }
+        }
 
         buildConfigField("String", "GITHUB_CLIENT_ID", "\"${localProperties.getProperty("GITHUB_CLIENT_ID")}\"")
         buildConfigField("String", "GITHUB_CLIENT_SECRET", "\"${localProperties.getProperty("GITHUB_CLIENT_SECRET")}\"")
