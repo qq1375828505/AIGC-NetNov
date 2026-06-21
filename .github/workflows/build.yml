@@ -33,10 +33,9 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
       
-      - name: Install NDK
-        run: |
-          sdkmanager "ndk;27.0.12077973"
-      
+      # NDK step temporarily removed: CMake native build is disabled until
+      # git submodules are properly registered in the repository index.
+
       - name: Cache Gradle
         uses: actions/cache@v4
         with:
@@ -87,12 +86,10 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
       
-      - name: Verify submodules
-        run: |
-          ls -la quickjs/thirdparty/quickjs/VERSION || echo "WARNING: quickjs submodule missing"
-          ls -la app/src/main/cpp/thirdparty/ncnn/CMakeLists.txt || echo "WARNING: ncnn submodule missing"
-          ls -la app/src/main/cpp/thirdparty/sherpa-ncnn/CMakeLists.txt || echo "WARNING: sherpa-ncnn submodule missing"
-      
+      # Submodule verification temporarily removed: submodules are not yet
+      # registered in the repository index; CMake build is disabled for now.
+
+
       - name: Build Debug APK
         run: ./gradlew assembleDebug --stacktrace
       

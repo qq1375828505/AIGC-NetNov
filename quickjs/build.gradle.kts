@@ -12,11 +12,12 @@ android {
     defaultConfig {
         minSdk = 26
 
-        externalNativeBuild {
-            cmake {
-                cppFlags("-std=c++17")
-            }
-        }
+        // Temporarily disabled: CMake native build disabled (see top-level externalNativeBuild).
+        // externalNativeBuild {
+        //     cmake {
+        //         cppFlags("-std=c++17")
+        //     }
+        // }
 
         ndk {
             abiFilters.addAll(listOf("arm64-v8a"))
@@ -32,11 +33,13 @@ android {
         }
     }
 
-    externalNativeBuild {
-        cmake {
-            path = file("src/main/cpp/CMakeLists.txt")
-        }
-    }
+    // Temporarily disabled: CMake native build requires submodules that are not yet
+    // registered in the repository index. Re-enable once submodules are properly added.
+    // externalNativeBuild {
+    //     cmake {
+    //         path = file("src/main/cpp/CMakeLists.txt")
+    //     }
+    // }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
