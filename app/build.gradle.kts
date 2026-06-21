@@ -23,6 +23,7 @@ if (localPropertiesFile.exists()) {
 android {
     namespace = "com.ai.assistance.novelide"
     compileSdk = 36
+    ndkVersion = "27.0.12077973"
 
     signingConfigs {
         val releaseKeystorePath = localProperties.getProperty("RELEASE_STORE_FILE")
@@ -73,6 +74,7 @@ android {
         externalNativeBuild {
             cmake {
                 cppFlags("-std=c++17")
+                arguments "-DANDROID_STL=c++_shared"
             }
         }
 
