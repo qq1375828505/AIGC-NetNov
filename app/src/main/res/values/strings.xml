@@ -446,12 +446,73 @@
     <string name="avatar_fbx_camera_distance">FBX 相机距离（%1$s）</string>
     <string name="avatar_fbx_orbit_pivot_height">FBX 环绕中心高度（%1$s）</string>
     <string name="avatar_supported_formats_title">支持格式</string>
-    <string name="avatar_supported_formats_desc">- DragonBones：骨骼 .json + *_tex.json + *_tex.png\n- WebP：一个或多个 .webp 文件\n- MP4：一个或多个 .mp4 文件\n- MMD：.pmx 或 .pmd 模型，可选 .vmd 动作\n- glTF：.glb 或 .gltf（如有引用还需 .bin/贴图等资源）\n- FBX：.fbx（直传仅限自包含资源）</string>
+    <string name="avatar_supported_formats_desc">- DragonBones：骨骼 .json + *_tex.json + *_tex.png
+- WebP：一个或多个 .webp 文件
+- MP4：一个或多个 .mp4 文件
+- MMD：.pmx 或 .pmd 模型，可选 .vmd 动作
+- glTF：.glb 或 .gltf（如有引用还需 .bin/贴图等资源）
+- FBX：.fbx（直传仅限自包含资源）</string>
     <string name="avatar_import_methods_title">导入方式</string>
     <string name="avatar_import_methods_desc">- 直接选文件：.glb / .gltf / .mp4 / .fbx\n- ZIP 导入：DragonBones、WebP、MP4、MMD、多文件 glTF，或带外置贴图/资源的 FBX 包</string>
     <string name="import_structure_guide_tap_to_expand">导入结构指南（点击展开）</string>
     <string name="import_structure_guide_tap_to_collapse">导入结构指南（点击收起）</string>
-    <string name="import_structure_guide_content">这是“导入包”的目录结构（ZIP 或选中文件内部），不是应用内部存储。\n\nDragonBones（.zip）\n  my_dragonbones.zip\n    any_folder_name/\n      hero_ske.json\n      hero_tex.json\n      hero_tex.png\n  要求：ske/tex json/png 文件名前缀一致。\n\nWebP（.zip）\n  my_webp.zip\n    any_folder_name/\n      idle.webp\n      talking.webp\n      happy.webp\n  要求：至少包含一个 .webp 文件。\n\nMP4\n  方式 A（直接文件）:\n    avatar.mp4\n  方式 B（.zip）:\n    my_mp4.zip\n      any_folder_name/\n        idle.mp4\n        talking.mp4\n        happy.mp4\n  要求：至少包含一个 .mp4 文件。\n\nMMD（.zip）\n  my_mmd.zip\n    any_folder_name/\n      character.pmx（或 .pmd）\n      motions/idle.vmd（可选）\n      textures/...\n  要求：保持 PMX/PMD 引用的相对路径不变。\n\nglTF\n  方式 A（直接文件）:\n    avatar.glb\n  方式 B（多文件 glTF 使用 .zip）:\n    my_gltf.zip\n      any_folder_name/\n        avatar.gltf\n        avatar.bin\n        textures/...\n  要求：保持 .gltf 引用的相对路径不变。\n\nFBX\n  方式 A（直接文件，仅限自包含资源）:\n    avatar.fbx\n  方式 B（外置贴图/资源请使用 .zip）:\n    my_fbx.zip\n      any_folder_name/\n        avatar.fbx\n        textures/...\n  要求：直接上传 .fbx 仅支持内嵌资源；若模型引用外置贴图或其他资源，请保持相对路径并放进 ZIP。</string>
+    <string name="import_structure_guide_content">这是“导入包”的目录结构（ZIP 或选中文件内部），不是应用内部存储。
+
+DragonBones（.zip）
+  my_dragonbones.zip
+    any_folder_name/
+      hero_ske.json
+      hero_tex.json
+      hero_tex.png
+  要求：ske/tex json/png 文件名前缀一致。
+
+WebP（.zip）
+  my_webp.zip
+    any_folder_name/
+      idle.webp
+      talking.webp
+      happy.webp
+  要求：至少包含一个 .webp 文件。
+
+MP4
+  方式 A（直接文件）:
+    avatar.mp4
+  方式 B（.zip）:
+    my_mp4.zip
+      any_folder_name/
+        idle.mp4
+        talking.mp4
+        happy.mp4
+  要求：至少包含一个 .mp4 文件。
+
+MMD（.zip）
+  my_mmd.zip
+    any_folder_name/
+      character.pmx（或 .pmd）
+      motions/idle.vmd（可选）
+      textures/...
+  要求：保持 PMX/PMD 引用的相对路径不变。
+
+glTF
+  方式 A（直接文件）:
+    avatar.glb
+  方式 B（多文件 glTF 使用 .zip）:
+    my_gltf.zip
+      any_folder_name/
+        avatar.gltf
+        avatar.bin
+        textures/...
+  要求：保持 .gltf 引用的相对路径不变。
+
+FBX
+  方式 A（直接文件，仅限自包含资源）:
+    avatar.fbx
+  方式 B（外置贴图/资源请使用 .zip）:
+    my_fbx.zip
+      any_folder_name/
+        avatar.fbx
+        textures/...
+  要求：直接上传 .fbx 仅支持内嵌资源；若模型引用外置贴图或其他资源，请保持相对路径并放进 ZIP。</string>
     <string name="enter">进入</string>
     <string name="about_avatar_formats">本应用支持多种虚拟形象格式，包括DragonBones。以下是制作和导入模型的说明。</string>
     <string name="dragon_bones_config">DragonBones配置</string>
@@ -635,7 +696,11 @@
     
     <!-- Token Info Dialog -->
     <string name="token_info_title">获取 DeepSeek API Token</string>
-    <string name="token_info_content">你将会前往DeepSeek API官网。我们内置DeepSeek官网访问，是因为我们认为其为国内使用性价比最高的API，不仅性能强悍，而且还有各种优惠和磁盘缓存降低使用成本。\n\nAPI的访问和Token的设置与软件开发者无关，我们不会提供这方面的任何服务，也不会赚取任何费用。\n\n第一次使用自己的token建议只充1元，完全够用。</string>
+    <string name="token_info_content">你将会前往DeepSeek API官网。我们内置DeepSeek官网访问，是因为我们认为其为国内使用性价比最高的API，不仅性能强悍，而且还有各种优惠和磁盘缓存降低使用成本。
+
+API的访问和Token的设置与软件开发者无关，我们不会提供这方面的任何服务，也不会赚取任何费用。
+
+第一次使用自己的token建议只充1元，完全够用。</string>
     <string name="token_info_cancel">取消</string>
     <string name="token_info_confirm">前往获取</string>
     
@@ -1083,7 +1148,13 @@
     <string name="agreement_title">用户协议与隐私政策</string>
     <string name="agreement_subtitle">请在使用前仔细阅读并同意以下条款。</string>
     <string name="agreement_human_readable_title">人话版协议（非法律版本）</string>
-    <string name="agreement_human_readable_content">我们和你一样，不喜欢冗长乏味的协议。简单来说：\n\nOperitAI是一款免费的开源软件。它的自动化等功能很强大，请务必仅用于个人学习和日常辅助，不要用于任何商业或违规用途。\n\n您需要对自己的所有行为负责。对于您自行添加的扩展或修改的软件，我们也不承担责任。\n\n隐私方面：您的语音处理都在手机本地完成，很安全。AI聊天数据会直接发给AI公司，我们不经手。</string>
+    <string name="agreement_human_readable_content">我们和你一样，不喜欢冗长乏味的协议。简单来说：
+
+OperitAI是一款免费的开源软件。它的自动化等功能很强大，请务必仅用于个人学习和日常辅助，不要用于任何商业或违规用途。
+
+您需要对自己的所有行为负责。对于您自行添加的扩展或修改的软件，我们也不承担责任。
+
+隐私方面：您的语音处理都在手机本地完成，很安全。AI聊天数据会直接发给AI公司，我们不经手。</string>
     <string name="agreement_serious_title">严谨版法律协议</string>
     <string name="agreement_serious_content"><![CDATA[
         <p>欢迎使用 OperitAI。本软件是根据 GNU 宽通用公共许可证第三版（LGPLv3）的条款进行修改和分发的。</p>
@@ -1364,7 +1435,11 @@
     <string name="toast_open_termux_first">请先启动Termux</string>
     <string name="toast_operation_failed">操作失败: %1$s</string>
     <string name="toast_skip_tuna_source">已跳过清华源配置，您可以稍后在Termux中自行配置源</string>
-    <string name="toast_skip_tuna_source_dialog">您已选择跳过清华源配置。如需后续手动配置，请在Termux中执行以下命令：\n\ntermux-change-repo\n\n然后从列表中选择清华源或其他源。</string>
+    <string name="toast_skip_tuna_source_dialog">您已选择跳过清华源配置。如需后续手动配置，请在Termux中执行以下命令：
+
+termux-change-repo
+
+然后从列表中选择清华源或其他源。</string>
     
     <!-- 聊天历史选择器 -->
     <string name="chat_history">对话历史</string>
@@ -1398,7 +1473,12 @@
     <!-- Termux 相关 -->
     <string name="termux_not_installed_message">请先安装Termux应用</string>
     <string name="termux_manual_auth_title">需要手动授权</string>
-    <string name="termux_manual_auth_message">无法自动授予Termux运行命令权限，请手动操作:\n\n1. 打开Termux\n2. 长按屏幕，选择\'更多\'\n3. 选择\'设置\'\n4. 启用\'允许外部应用访问\'</string>
+    <string name="termux_manual_auth_message">无法自动授予Termux运行命令权限，请手动操作:
+
+1. 打开Termux
+2. 长按屏幕，选择\'更多\'
+3. 选择\'设置\'
+4. 启用\'允许外部应用访问\'</string>
     <string name="termux_storage_permission_message">无法自动授予Termux存储权限，请检查以下配置：\n\n1. Shell环境：请确保您拥有一个可用的Shell（如ADB或Root）。注意：若使用Shizuku，请勿以Root模式启动。\n2. Termux版本：请确保您安装的Termux为应用内置版，或从其官方GitHub仓库获取的Debug版本。</string>
     <string name="termux_all_permissions_granted">Termux全部权限授权成功</string>
     <string name="termux_some_permissions_failed">部分权限授权失败，请查看日志或手动设置</string>
@@ -1868,10 +1948,18 @@
     <string name="recognition_error">识别错误: %s</string>
     <string name="start_recognition_error">开始识别错误: %s</string>
     <string name="stop_recognition_error">停止识别错误: %s</string>
-    <string name="speech_usage_steps">1. 选择语音引擎\n2. 点击开始录音按钮\n3. 清晰地说话\n4. 点击停止录音\n5. 等待转录结果</string>
+    <string name="speech_usage_steps">1. 选择语音引擎
+2. 点击开始录音按钮
+3. 清晰地说话
+4. 点击停止录音
+5. 等待转录结果</string>
     <string name="speech_engine_note">注意：不同的语音引擎可能有不同的准确度和支持的语言</string>
     <string name="usage_instructions">使用说明</string>
-    <string name="speech_recognition_instructions">1. 选择识别引擎（Android原生/Sherpa-ncnn/Whisper离线）\n2. 选择识别语言（中文/英文等）\n3. 点击开始录音按钮\n4. 说话完成后点击停止按钮\n5. 查看识别结果</string>
+    <string name="speech_recognition_instructions">1. 选择识别引擎（Android原生/Sherpa-ncnn/Whisper离线）
+2. 选择识别语言（中文/英文等）
+3. 点击开始录音按钮
+4. 说话完成后点击停止按钮
+5. 查看识别结果</string>
     <string name="activity_monitor">Activity监听</string>
     <string name="smart_build">智能构建</string>
     <string name="target_app">目标: %1$s</string>
@@ -2057,7 +2145,12 @@
     <string name="tts_debug_service_type">服务类型: %s</string>
     <string name="tts_debug_params">请求参数: 文本=\'%1$s\', 语速=%2$sx, 音调=%3$sx</string>
     <string name="tts_debug_params_with_service">请求参数: 文本=\'%1$s\', 语速=%2$sx, 音调=%3$sx\n服务类型: %4$s</string>
-    <string name="tts_usage_instructions_content">1. 在输入框中输入要转换为语音的文本\n2. 调整语速和音调设置\n3. 点击「播放语音」按钮开始播放\n4. 点击「停止播放」按钮停止播放\n5. 如果出现错误，查看详细的错误信息和调试信息\n6. 使用「清除错误信息」按钮清除错误显示</string>
+    <string name="tts_usage_instructions_content">1. 在输入框中输入要转换为语音的文本
+2. 调整语速和音调设置
+3. 点击「播放语音」按钮开始播放
+4. 点击「停止播放」按钮停止播放
+5. 如果出现错误，查看详细的错误信息和调试信息
+6. 使用「清除错误信息」按钮清除错误显示</string>
     <string name="tool_speech_recognition">语音识别</string>
     <string name="tool_speech_recognition_desc">将语音转换为文本，支持多种引擎和语言</string>
     <string name="tool_permission_manager">应用权限管理</string>
@@ -2644,7 +2737,11 @@
     <string name="speech_services_http_headers_placeholder">{\"Content-Type\": \"application/json\"}</string>
     <string name="speech_services_http_headers_error">无效的 JSON 格式</string>
     <string name="speech_services_http_response_pipeline">响应处理管线</string>
-    <string name="speech_services_http_response_pipeline_placeholder">[\n  { &quot;type&quot;: &quot;parse_json&quot; },\n  { &quot;type&quot;: &quot;pick&quot;, &quot;path&quot;: &quot;audio_uri&quot; },\n  { &quot;type&quot;: &quot;http_get&quot; }\n]</string>
+    <string name="speech_services_http_response_pipeline_placeholder">[
+  { &quot;type&quot;: &quot;parse_json&quot; },
+  { &quot;type&quot;: &quot;pick&quot;, &quot;path&quot;: &quot;audio_uri&quot; },
+  { &quot;type&quot;: &quot;http_get&quot; }
+]</string>
     <string name="speech_services_http_response_pipeline_hint">留空或 [] 表示直接把响应体当音频。支持 parse_json、pick、parse_json_string、http_get、http_request_from_object、base64_decode。</string>
     <string name="speech_services_http_response_pipeline_error">无效的响应处理管线 JSON 数组</string>
     <string name="speech_services_http_method">HTTP 方法</string>
@@ -3400,7 +3497,14 @@
     <string name="layout_adjustment_preview_title">AI Markdown 预览</string>
     <string name="layout_adjustment_preview_desc">下方示例会展示当前已保存的 AI Markdown 行距、字距与段间距效果。前三段之间的留白会直接反映段间距设置。</string>
     <string name="layout_adjustment_preview_plain_text">这是一段普通文本预览。你可以观察字与字之间的距离，以及每一行之间的疏密变化。</string>
-    <string name="layout_adjustment_preview_markdown">第一段预览：用来观察正文行距与字距。\n\n第二段预览：这一段专门用来观察段落之间的留白。\n\n第三段预览：如果你调整了段间距，这里和上一段之间的距离会立即变化。\n\n- AI Markdown 列表项一\n- AI Markdown 列表项二</string>
+    <string name="layout_adjustment_preview_markdown">第一段预览：用来观察正文行距与字距。
+
+第二段预览：这一段专门用来观察段落之间的留白。
+
+第三段预览：如果你调整了段间距，这里和上一段之间的距离会立即变化。
+
+- AI Markdown 列表项一
+- AI Markdown 列表项二</string>
     <string name="current_value">当前值</string>
     <string name="closer_to_edge">靠近边缘</string>
     <string name="farther_from_edge">远离边缘</string>
@@ -3839,6 +3943,7 @@
     <string name="provider_llama_cpp">llama.cpp 本地推理</string>
     <string name="provider_ppinfra">派欧云</string>
     <string name="provider_novita">Novita AI</string>
+    <string name="provider_ag">Agnes AI</string>
     <string name="provider_openai_generic">OpenAI通用</string>
     <string name="provider_other">其他供应商</string>
     <string name="select_api_provider_title">选择API提供商</string>
@@ -4075,7 +4180,14 @@
     <string name="appearance_prompt_placeholder">例如：long hair, purple eyes, sweater vest...</string>
     <string name="appearance_prompt_tip">提示：使用英文关键词描述外貌特征，多个关键词用逗号分隔</string>
     <string name="feature_explanation">功能说明</string>
-    <string name="waifu_mode_explanation">• 普通模式：AI回复一次性全部发送\n• Waifu模式：AI回复按句子分割，每句独立气泡\n• 智能延迟：根据句子长度计算延迟时间\n• 合并发送：用户连续发送短消息时，停顿后合成一条消息交给AI\n• 自动清理：移除状态标签，只显示纯文本\n• 可选功能：合并发送、移除句末标点、编辑 Waifu 提示词、启用表情包\n• 适用场景：模拟更自然的对话节奏\n• 注意：此模式对工具调用的适配可能不佳</string>
+    <string name="waifu_mode_explanation">• 普通模式：AI回复一次性全部发送
+• Waifu模式：AI回复按句子分割，每句独立气泡
+• 智能延迟：根据句子长度计算延迟时间
+• 合并发送：用户连续发送短消息时，停顿后合成一条消息交给AI
+• 自动清理：移除状态标签，只显示纯文本
+• 可选功能：合并发送、移除句末标点、编辑 Waifu 提示词、启用表情包
+• 适用场景：模拟更自然的对话节奏
+• 注意：此模式对工具调用的适配可能不佳</string>
     <string name="settings_saved_message">设置已保存</string>
 
     <string name="settings_section_account">账号</string>
@@ -4799,7 +4911,14 @@
     <string name="external_http_chat_health_example">健康检查示例</string>
     <string name="external_http_chat_intent_title">Intent 调用说明</string>
     <string name="external_http_chat_intent_desc">广播入口仍然保留，适合本机 App 集成、Tasker 或 adb 调试</string>
-    <string name="external_http_chat_intent_overview">HTTP 与 Intent 参数语义一致，仅入口不同。\n\n请求 Action：%1$s\n默认回传 Action：%2$s\n\n常用 extras：message、request_id、group、create_new_chat、chat_id、create_if_none、show_floating、return_tool_status、initial_mode、auto_exit_after_ms、stop_after、reply_action、reply_package\n\n处理完成后会通过广播回传 success、chat_id、ai_response、error；如果只希望回传给指定 App，请设置 reply_package。</string>
+    <string name="external_http_chat_intent_overview">HTTP 与 Intent 参数语义一致，仅入口不同。
+
+请求 Action：%1$s
+默认回传 Action：%2$s
+
+常用 extras：message、request_id、group、create_new_chat、chat_id、create_if_none、show_floating、return_tool_status、initial_mode、auto_exit_after_ms、stop_after、reply_action、reply_package
+
+处理完成后会通过广播回传 success、chat_id、ai_response、error；如果只希望回传给指定 App，请设置 reply_package。</string>
     <string name="external_http_chat_copy_example">复制示例</string>
     <string name="external_http_chat_example_copied">示例命令已复制</string>
     <string name="external_http_chat_service_enabled">服务已启用</string>
@@ -5031,7 +5150,13 @@
     
     <!-- 疑难解答 -->
     <string name="default_assistant_guide_troubleshooting_title">遇到问题？</string>
-    <string name="default_assistant_guide_troubleshooting_content">如果在列表中找不到Operit，请确保：\n\n• 应用已正确安装且未被禁用\n• 已授予必要的权限（麦克风、悬浮窗等）\n• 尝试重启设备后再次设置\n\n部分定制系统可能限制第三方应用作为默认助手，如遇此情况，您仍可通过应用内的悬浮窗功能使用Operit。</string>
+    <string name="default_assistant_guide_troubleshooting_content">如果在列表中找不到Operit，请确保：
+
+• 应用已正确安装且未被禁用
+• 已授予必要的权限（麦克风、悬浮窗等）
+• 尝试重启设备后再次设置
+
+部分定制系统可能限制第三方应用作为默认助手，如遇此情况，您仍可通过应用内的悬浮窗功能使用Operit。</string>
     
     <!-- Voice Interaction Service -->
     <string name="voice_interaction_service_name">Operit AI 助手</string>
@@ -5657,7 +5782,11 @@
     <string name="backup_open_file_failed">无法打开文件</string>
     <string name="backup_import_file_empty">导入的文件为空</string>
 
-    <string name="backup_memory_import_result_success">导入到配置「%1$s」成功：\n- 新增记忆：%2$d条\n- 更新记忆：%3$d条\n- 跳过记忆：%4$d条\n- 新增链接：%5$d个</string>
+    <string name="backup_memory_import_result_success">导入到配置「%1$s」成功：
+- 新增记忆：%2$d条
+- 更新记忆：%3$d条
+- 跳过记忆：%4$d条
+- 新增链接：%5$d个</string>
     <string name="backup_memory_export_result_success">成功从配置「%1$s」导出 %2$d 条记忆和 %3$d 个链接到：\n%4$s</string>
 
     <string name="backup_model_config_import_result_success">成功导入模型配置：\n- 新增配置：%1$d个\n- 更新配置：%2$d个%3$s</string>
@@ -7048,7 +7177,13 @@
     <string name="mnn_model_dir_missing">模型目录不存在: %1$s\n请先下载模型</string>
     <string name="mnn_file_status">文件状态:</string>
     <string name="mnn_init_failed">模型初始化失败</string>
-    <string name="mnn_connection_success">MNN LLM模型连接成功！\n\n模型: %1$s\n目录: %2$s\n总大小: %3$s\n\n%4$s</string>
+    <string name="mnn_connection_success">MNN LLM模型连接成功！
+
+模型: %1$s
+目录: %2$s
+总大小: %3$s
+
+%4$s</string>
 
     <!-- APK Reverse Engineer -->
     <string name="apk_unnamed_function">(未命名功能)</string>
@@ -7105,7 +7240,11 @@
     <string name="apk_keystore_path_info">密钥库路径: %1$s</string>
     <string name="apk_signer_not_exist">签名器文件不存在: %1$s</string>
     <string name="apk_signing_aborted">签名已中止</string>
-    <string name="apk_signing_info">正在签名APK...\nAPK: %1$s\n密钥库: %2$s\n密钥别名: %3$s\n签名器: %4$s</string>
+    <string name="apk_signing_info">正在签名APK...
+APK: %1$s
+密钥库: %2$s
+密钥别名: %3$s
+签名器: %4$s</string>
     <string name="apk_use_builtin_keystore">使用内置调试密钥库</string>
     <string name="apk_zip_align_failed">ZIP对齐失败: %1$s</string>
     <string name="apk_zip_align_path">ZIP对齐路径: %1$s</string>
@@ -7378,7 +7517,13 @@
     <string name="task_context_current_task">当前任务: %1$s</string>
     <string name="task_context_dependency_results">依赖任务结果:</string>
     <string name="task_context_task_result">- 任务 %1$s 结果: %2$s</string>
-    <string name="task_instruction_with_context">\n%1$s\n\n请根据以上上下文信息，执行以下具体任务:\n%2$s\n\n请专注于完成这个特定的子任务，你的回答将作为整个计划的一部分。</string>
+    <string name="task_instruction_with_context">
+%1$s
+
+请根据以上上下文信息，执行以下具体任务:
+%2$s
+
+请专注于完成这个特定的子任务，你的回答将作为整个计划的一部分。</string>
     <string name="task_summary_key_results">各关键子任务执行结果:</string>
 
     <!-- ToolPermissionSystem -->

@@ -6,7 +6,9 @@ import com.ai.assistance.novelide.data.repository.novel.NovelRepository
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.UUID
 
 /**
@@ -24,9 +26,15 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun getNovelWorks(): String {
-        // 返回 JSON 格式的作品列表
-        // 实际实现需要从 Room 查询
-        return "[]"
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val works = repository.getAllWorks().first()
+                gson.toJson(works)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "[]"
+            }
+        }
     }
 
     @JavascriptInterface
@@ -64,8 +72,15 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun getChapters(workId: String): String {
-        // 返回 JSON 格式的章节列表
-        return "[]"
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val chapters = repository.getChaptersByWorkId(workId).first()
+                gson.toJson(chapters)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "[]"
+            }
+        }
     }
 
     @JavascriptInterface
@@ -84,8 +99,15 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun getChapterContent(chapterId: String): String {
-        // 返回章节内容
-        return ""
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val chapter = repository.getChapterById(chapterId)
+                chapter?.content ?: ""
+            } catch (e: Exception) {
+                e.printStackTrace()
+                ""
+            }
+        }
     }
 
     @JavascriptInterface
@@ -114,7 +136,15 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun getCharacters(workId: String): String {
-        return "[]"
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val characters = repository.getCharactersByWorkId(workId).first()
+                gson.toJson(characters)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "[]"
+            }
+        }
     }
 
     @JavascriptInterface
@@ -152,7 +182,15 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun getSettings(workId: String): String {
-        return "[]"
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val settings = repository.getSettingsByWorkId(workId).first()
+                gson.toJson(settings)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "[]"
+            }
+        }
     }
 
     @JavascriptInterface
@@ -190,7 +228,15 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun getLocations(workId: String): String {
-        return "[]"
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val locations = repository.getLocationsByWorkId(workId).first()
+                gson.toJson(locations)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "[]"
+            }
+        }
     }
 
     @JavascriptInterface
@@ -228,7 +274,15 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun getFactions(workId: String): String {
-        return "[]"
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val factions = repository.getFactionsByWorkId(workId).first()
+                gson.toJson(factions)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "[]"
+            }
+        }
     }
 
     @JavascriptInterface
@@ -266,7 +320,15 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun getItems(workId: String): String {
-        return "[]"
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val items = repository.getItemsByWorkId(workId).first()
+                gson.toJson(items)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "[]"
+            }
+        }
     }
 
     @JavascriptInterface
@@ -304,7 +366,15 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun getPlotHooks(workId: String): String {
-        return "[]"
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val hooks = repository.getPlotHooksByWorkId(workId).first()
+                gson.toJson(hooks)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "[]"
+            }
+        }
     }
 
     @JavascriptInterface
@@ -341,7 +411,15 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun getReferences(workId: String): String {
-        return "[]"
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val refs = repository.getReferencesByWorkId(workId).first()
+                gson.toJson(refs)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "[]"
+            }
+        }
     }
 
     @JavascriptInterface
@@ -379,7 +457,15 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun getTodos(workId: String): String {
-        return "[]"
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val todos = repository.getTodosByWorkId(workId).first()
+                gson.toJson(todos)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "[]"
+            }
+        }
     }
 
     @JavascriptInterface
@@ -417,7 +503,15 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun getCharacterRelationships(workId: String): String {
-        return "[]"
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val rels = repository.getCharacterRelationshipsByWorkId(workId).first()
+                gson.toJson(rels)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "[]"
+            }
+        }
     }
 
     @JavascriptInterface
@@ -456,7 +550,15 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun getNovelEvents(workId: String): String {
-        return "[]"
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val events = repository.getNovelEventsByWorkId(workId).first()
+                gson.toJson(events)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "[]"
+            }
+        }
     }
 
     @JavascriptInterface
@@ -494,7 +596,15 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun getEventParticipants(eventId: String): String {
-        return "[]"
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val participants = repository.getNovelEventParticipantsByEventId(eventId).first()
+                gson.toJson(participants)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "[]"
+            }
+        }
     }
 
     @JavascriptInterface
@@ -523,19 +633,49 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun getTomatoPresets(): String {
-        return "[]"
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val presets = repository.getAllTomatoPresets().first()
+                gson.toJson(presets)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "[]"
+            }
+        }
     }
 
     @JavascriptInterface
     fun getTomatoPresetById(presetId: String): String {
-        return "{}"
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val preset = repository.getTomatoPresetById(presetId)
+                if (preset != null) gson.toJson(preset) else "{}"
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "{}"
+            }
+        }
     }
 
     // ==================== 写作统计 ====================
 
     @JavascriptInterface
     fun getWritingStats(workId: String): String {
-        // 返回 JSON 格式的统计数据
-        return "{}"
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val chapters = repository.getChaptersByWorkId(workId).first()
+                val totalWords = chapters.sumOf { it.wordCount }
+                val totalChapters = chapters.size
+                val stats = mapOf(
+                    "totalWords" to totalWords,
+                    "totalChapters" to totalChapters,
+                    "workId" to workId
+                )
+                gson.toJson(stats)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                "{}"
+            }
+        }
     }
 }

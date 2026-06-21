@@ -450,12 +450,73 @@
     <string name="avatar_fbx_camera_distance">FBX Camera Distance (%1$s)</string>
     <string name="avatar_fbx_orbit_pivot_height">FBX Orbit Pivot Height (%1$s)</string>
     <string name="avatar_supported_formats_title">Supported formats</string>
-    <string name="avatar_supported_formats_desc">- DragonBones: skeleton .json + *_tex.json + *_tex.png\n- WebP: one or more .webp files\n- MP4: one or more .mp4 files\n- MMD: .pmx or .pmd model, optional .vmd motions\n- glTF: .glb or .gltf (plus referenced .bin/textures when needed)\n- FBX: .fbx (direct upload supports self-contained assets only)</string>
+    <string name="avatar_supported_formats_desc">- DragonBones: skeleton .json + *_tex.json + *_tex.png
+- WebP: one or more .webp files
+- MP4: one or more .mp4 files
+- MMD: .pmx or .pmd model, optional .vmd motions
+- glTF: .glb or .gltf (plus referenced .bin/textures when needed)
+- FBX: .fbx (direct upload supports self-contained assets only)</string>
     <string name="avatar_import_methods_title">Import methods</string>
     <string name="avatar_import_methods_desc">- Direct file picker: .glb / .gltf / .mp4 / .fbx\n- ZIP import: DragonBones, WebP, MP4, MMD, multi-file glTF, or FBX packages with external textures/resources</string>
     <string name="import_structure_guide_tap_to_expand">Import structure guide (tap to expand)</string>
     <string name="import_structure_guide_tap_to_collapse">Import structure guide (tap to collapse)</string>
-    <string name="import_structure_guide_content">This is the IMPORT PACKAGE layout (files inside your ZIP / picked file), not app internal storage.\n\nDragonBones (.zip)\n  my_dragonbones.zip\n    any_folder_name/\n      hero_ske.json\n      hero_tex.json\n      hero_tex.png\n  Requirement: ske/tex json/png files must share the same filename prefix.\n\nWebP (.zip)\n  my_webp.zip\n    any_folder_name/\n      idle.webp\n      talking.webp\n      happy.webp\n  Requirement: include at least one .webp file.\n\nMP4\n  Method A (direct file):\n    avatar.mp4\n  Method B (.zip):\n    my_mp4.zip\n      any_folder_name/\n        idle.mp4\n        talking.mp4\n        happy.mp4\n  Requirement: include at least one .mp4 file.\n\nMMD (.zip)\n  my_mmd.zip\n    any_folder_name/\n      character.pmx (or .pmd)\n      motions/idle.vmd (optional)\n      textures/...\n  Requirement: keep relative paths referenced by PMX/PMD unchanged.\n\nglTF\n  Method A (direct file):\n    avatar.glb\n  Method B (.zip for multi-file glTF):\n    my_gltf.zip\n      any_folder_name/\n        avatar.gltf\n        avatar.bin\n        textures/...\n  Requirement: keep relative paths referenced by .gltf unchanged.\n\nFBX\n  Method A (direct file, self-contained assets only):\n    avatar.fbx\n  Method B (use .zip for external textures/resources):\n    my_fbx.zip\n      any_folder_name/\n        avatar.fbx\n        textures/...\n  Requirement: direct .fbx upload only supports embedded resources; if the model references external textures or other assets, keep the relative paths and package everything in ZIP.</string>
+    <string name="import_structure_guide_content">This is the IMPORT PACKAGE layout (files inside your ZIP / picked file), not app internal storage.
+
+DragonBones (.zip)
+  my_dragonbones.zip
+    any_folder_name/
+      hero_ske.json
+      hero_tex.json
+      hero_tex.png
+  Requirement: ske/tex json/png files must share the same filename prefix.
+
+WebP (.zip)
+  my_webp.zip
+    any_folder_name/
+      idle.webp
+      talking.webp
+      happy.webp
+  Requirement: include at least one .webp file.
+
+MP4
+  Method A (direct file):
+    avatar.mp4
+  Method B (.zip):
+    my_mp4.zip
+      any_folder_name/
+        idle.mp4
+        talking.mp4
+        happy.mp4
+  Requirement: include at least one .mp4 file.
+
+MMD (.zip)
+  my_mmd.zip
+    any_folder_name/
+      character.pmx (or .pmd)
+      motions/idle.vmd (optional)
+      textures/...
+  Requirement: keep relative paths referenced by PMX/PMD unchanged.
+
+glTF
+  Method A (direct file):
+    avatar.glb
+  Method B (.zip for multi-file glTF):
+    my_gltf.zip
+      any_folder_name/
+        avatar.gltf
+        avatar.bin
+        textures/...
+  Requirement: keep relative paths referenced by .gltf unchanged.
+
+FBX
+  Method A (direct file, self-contained assets only):
+    avatar.fbx
+  Method B (use .zip for external textures/resources):
+    my_fbx.zip
+      any_folder_name/
+        avatar.fbx
+        textures/...
+  Requirement: direct .fbx upload only supports embedded resources; if the model references external textures or other assets, keep the relative paths and package everything in ZIP.</string>
     <string name="enter">Enter</string>
     <string name="about_avatar_formats">This app supports multiple avatar formats, including DragonBones. Here are instructions for creating and importing models.</string>
     <string name="dragon_bones_renamed">DragonBones has been renamed to LoongBones, and a new online editor has been launched.\nLoongBones supports professional animation features like IK, mesh deformation, and bone binding.</string>
@@ -628,7 +689,11 @@
     
     <!-- Token Info Dialog -->
     <string name="token_info_title">Get DeepSeek API Token</string>
-    <string name="token_info_content">You will be directed to the DeepSeek API website. We integrate DeepSeek access because we consider it the most cost-effective API with powerful performance, various discounts, and disk caching to reduce usage costs.\n\nAPI access and token configuration are not related to the app developers, and we do not provide any services in this regard or earn any fees.\n\nFor your first token usage, we recommend starting with a small amount as it\'s usually sufficient.</string>
+    <string name="token_info_content">You will be directed to the DeepSeek API website. We integrate DeepSeek access because we consider it the most cost-effective API with powerful performance, various discounts, and disk caching to reduce usage costs.
+
+API access and token configuration are not related to the app developers, and we do not provide any services in this regard or earn any fees.
+
+For your first token usage, we recommend starting with a small amount as it\'s usually sufficient.</string>
     <string name="token_info_cancel">Cancel</string>
     <string name="token_info_confirm">Get Token</string>
     
@@ -1372,7 +1437,11 @@
     <string name="toast_open_termux_first">Please start Termux first</string>
     <string name="toast_operation_failed">Operation failed: %1$s</string>
     <string name="toast_skip_tuna_source">Skipped Tuna mirror configuration, you can configure the mirror in Termux later</string>
-    <string name="toast_skip_tuna_source_dialog">You have chosen to skip Tuna mirror configuration. For manual configuration later, run the following command in Termux:\n\ntermux-change-repo\n\nThen select Tuna or another mirror from the list.</string>
+    <string name="toast_skip_tuna_source_dialog">You have chosen to skip Tuna mirror configuration. For manual configuration later, run the following command in Termux:
+
+termux-change-repo
+
+Then select Tuna or another mirror from the list.</string>
     
     <!-- Chat History Selector -->
     <string name="chat_history">Chat History</string>
@@ -1406,7 +1475,12 @@
     <!-- Termux Related -->
     <string name="termux_not_installed_message">Please install Termux first</string>
     <string name="termux_manual_auth_title">Manual Authorization Required</string>
-    <string name="termux_manual_auth_message">Cannot automatically grant Termux Run Command permission, please follow these steps:\n\n1. Open Termux\n2. Long press the screen, select \'More\'\n3. Select \'Settings\'\n4. Enable \'Allow External Apps\'</string>
+    <string name="termux_manual_auth_message">Cannot automatically grant Termux Run Command permission, please follow these steps:
+
+1. Open Termux
+2. Long press the screen, select \'More\'
+3. Select \'Settings\'
+4. Enable \'Allow External Apps\'</string>
     <string name="termux_storage_permission_message">Cannot automatically grant Termux storage permission, please check the following:\n\n1. Shell environment: Make sure you have a working Shell (such as ADB or Root). Note: If using Shizuku, do not start in Root mode.\n2. Termux version: Make sure your installed Termux is the built-in version or a Debug version from its official GitHub repository.</string>
     <string name="termux_all_permissions_granted">Termux permissions granted successfully</string>
     <string name="termux_some_permissions_failed">Some permission grants failed, please check the logs or set manually</string>
@@ -1733,10 +1807,18 @@
     <string name="recognition_error">Recognition error: %s</string>
     <string name="start_recognition_error">Start recognition error: %s</string>
     <string name="stop_recognition_error">Stop recognition error: %s</string>
-    <string name="speech_usage_steps">1. Select speech engine\n2. Click start recording button\n3. Speak clearly\n4. Click stop recording\n5. Wait for transcription results</string>
+    <string name="speech_usage_steps">1. Select speech engine
+2. Click start recording button
+3. Speak clearly
+4. Click stop recording
+5. Wait for transcription results</string>
     <string name="speech_engine_note">Note: Different speech engines may have different accuracy and supported languages</string>
     <string name="usage_instructions">Usage Instructions</string>
-    <string name="speech_recognition_instructions">1. Select recognition engine (Android Native/Sherpa-ncnn/Whisper Offline)\n2. Select recognition language (Chinese/English etc.)\n3. Click start recording button\n4. Click stop button after speaking\n5. View recognition results</string>
+    <string name="speech_recognition_instructions">1. Select recognition engine (Android Native/Sherpa-ncnn/Whisper Offline)
+2. Select recognition language (Chinese/English etc.)
+3. Click start recording button
+4. Click stop button after speaking
+5. View recognition results</string>
     <string name="activity_monitor">Activity Monitor</string>
     <string name="smart_build">Smart Build</string>
     <string name="target_app">Target: %1$s</string>
@@ -1789,7 +1871,14 @@
     <string name="external_http_chat_health_example">Health Check Example</string>
     <string name="external_http_chat_intent_title">Intent Calling Guide</string>
     <string name="external_http_chat_intent_desc">The broadcast entry is still available for local app integration, Tasker, or adb debugging</string>
-    <string name="external_http_chat_intent_overview">HTTP and Intent share the same parameter semantics. Only the entry method is different.\n\nRequest action: %1$s\nDefault result action: %2$s\n\nCommon extras: message, request_id, group, create_new_chat, chat_id, create_if_none, show_floating, return_tool_status, initial_mode, auto_exit_after_ms, stop_after, reply_action, reply_package\n\nAfter completion, Operit returns success, chat_id, ai_response, and error by broadcast. If the result should only be delivered to one app, set reply_package.</string>
+    <string name="external_http_chat_intent_overview">HTTP and Intent share the same parameter semantics. Only the entry method is different.
+
+Request action: %1$s
+Default result action: %2$s
+
+Common extras: message, request_id, group, create_new_chat, chat_id, create_if_none, show_floating, return_tool_status, initial_mode, auto_exit_after_ms, stop_after, reply_action, reply_package
+
+After completion, Operit returns success, chat_id, ai_response, and error by broadcast. If the result should only be delivered to one app, set reply_package.</string>
     <string name="external_http_chat_copy_example">Copy Example</string>
     <string name="external_http_chat_example_copied">Example command copied</string>
     <string name="external_http_chat_service_enabled">Service enabled</string>
@@ -1954,7 +2043,12 @@
     <string name="tts_debug_params_with_service">Request params: Text=\'%1$s\', Rate=%2$sx, Pitch=%3$sx\nService type: %4$s</string>
     <string name="tts_init_error_details">Service initialization method returned false, but no exception was thrown</string>
     <string name="tts_speak_error_details">TTS service returned failure status, please check configuration and network connection</string>
-    <string name="tts_usage_instructions_content">1. Enter text to convert to speech in the input box\n2. Adjust speech rate and pitch settings\n3. Click \"Play Speech\" button to start playback\n4. Click \"Stop Playback\" button to stop playback\n5. If an error occurs, view detailed error information and debug info\n6. Use \"Clear Error Message\" button to clear error display</string>
+    <string name="tts_usage_instructions_content">1. Enter text to convert to speech in the input box
+2. Adjust speech rate and pitch settings
+3. Click \"Play Speech\" button to start playback
+4. Click \"Stop Playback\" button to stop playback
+5. If an error occurs, view detailed error information and debug info
+6. Use \"Clear Error Message\" button to clear error display</string>
     <string name="tool_speech_recognition">Speech Recognition</string>
     <string name="tool_speech_recognition_desc">Convert speech to text with multiple engines and languages support</string>
     <string name="tool_permission_manager">App Permission Manager</string>
@@ -2575,7 +2669,11 @@
     <string name="speech_services_http_headers_placeholder">{\"Content-Type\": \"application/json\"}</string>
     <string name="speech_services_http_headers_error">Invalid JSON format</string>
     <string name="speech_services_http_response_pipeline">Response pipeline</string>
-    <string name="speech_services_http_response_pipeline_placeholder">[\n  { &quot;type&quot;: &quot;parse_json&quot; },\n  { &quot;type&quot;: &quot;pick&quot;, &quot;path&quot;: &quot;audio_uri&quot; },\n  { &quot;type&quot;: &quot;http_get&quot; }\n]</string>
+    <string name="speech_services_http_response_pipeline_placeholder">[
+  { &quot;type&quot;: &quot;parse_json&quot; },
+  { &quot;type&quot;: &quot;pick&quot;, &quot;path&quot;: &quot;audio_uri&quot; },
+  { &quot;type&quot;: &quot;http_get&quot; }
+]</string>
     <string name="speech_services_http_response_pipeline_hint">Leave blank or use [] to treat the response body as audio directly. Supported steps: parse_json, pick, parse_json_string, http_get, http_request_from_object, base64_decode.</string>
     <string name="speech_services_http_response_pipeline_error">Invalid response pipeline JSON array</string>
     <string name="speech_services_http_method">HTTP Method</string>
@@ -3474,7 +3572,14 @@
     <string name="layout_adjustment_preview_title">AI Markdown Preview</string>
     <string name="layout_adjustment_preview_desc">The example below reflects the currently saved AI Markdown line spacing, letter spacing, and paragraph spacing. The gaps between the first three paragraphs directly show paragraph spacing changes.</string>
     <string name="layout_adjustment_preview_plain_text">This is a plain text preview. You can observe the spacing between letters and the density between lines.</string>
-    <string name="layout_adjustment_preview_markdown">Paragraph one: use this to observe body line spacing and letter spacing.\n\nParagraph two: this paragraph is here specifically so you can judge paragraph spacing.\n\nParagraph three: when you adjust paragraph spacing, the gap above this line should change immediately.\n\n- AI Markdown list item one\n- AI Markdown list item two</string>
+    <string name="layout_adjustment_preview_markdown">Paragraph one: use this to observe body line spacing and letter spacing.
+
+Paragraph two: this paragraph is here specifically so you can judge paragraph spacing.
+
+Paragraph three: when you adjust paragraph spacing, the gap above this line should change immediately.
+
+- AI Markdown list item one
+- AI Markdown list item two</string>
     <string name="current_value">Current Value</string>
     <string name="closer_to_edge">Closer to Edge</string>
     <string name="farther_from_edge">Farther from Edge</string>
@@ -3873,6 +3978,7 @@
     <string name="provider_openai_local">OpenAI-Compatible (Local Model)</string>
     <string name="provider_ppinfra">PPInfra Cloud</string>
     <string name="provider_novita">Novita AI</string>
+    <string name="provider_ag">Agnes AI</string>
     <string name="provider_openai_generic">OpenAI (Generic)</string>
     <string name="provider_other">Other Providers</string>
     <string name="provider_doubao">Doubao</string>
@@ -4127,7 +4233,14 @@
     <string name="appearance_prompt_placeholder">e.g.: long hair, purple eyes, sweater vest...</string>
     <string name="appearance_prompt_tip">Tip: Use English keywords to describe appearance features, separate multiple keywords with commas</string>
     <string name="feature_explanation">Feature Explanation</string>
-    <string name="waifu_mode_explanation">• Normal Mode: AI responses sent all at once\n• Waifu Mode: AI responses split by sentences, each in separate bubbles\n• Smart Delay: Calculate delay time based on sentence length\n• Merge Send: consecutive short user messages are combined into one message after a pause\n• Auto Cleanup: Remove status tags, show only plain text\n• Optional Features: merge send, remove end punctuation, edit Waifu prompt, enable emoticons\n• Use Case: Simulate more natural conversation rhythm\n• Note: This mode may not adapt well to tool calls</string>
+    <string name="waifu_mode_explanation">• Normal Mode: AI responses sent all at once
+• Waifu Mode: AI responses split by sentences, each in separate bubbles
+• Smart Delay: Calculate delay time based on sentence length
+• Merge Send: consecutive short user messages are combined into one message after a pause
+• Auto Cleanup: Remove status tags, show only plain text
+• Optional Features: merge send, remove end punctuation, edit Waifu prompt, enable emoticons
+• Use Case: Simulate more natural conversation rhythm
+• Note: This mode may not adapt well to tool calls</string>
     <string name="settings_saved_message">Settings saved</string>
 
     <string name="settings_section_account">Account</string>
@@ -5205,7 +5318,11 @@
     <string name="backup_open_file_failed">Unable to open file</string>
     <string name="backup_import_file_empty">The imported file is empty</string>
 
-    <string name="backup_memory_import_result_success">Imported into profile "%1$s":\n- New memories: %2$d\n- Updated memories: %3$d\n- Skipped memories: %4$d\n- New links: %5$d</string>
+    <string name="backup_memory_import_result_success">Imported into profile "%1$s":
+- New memories: %2$d
+- Updated memories: %3$d
+- Skipped memories: %4$d
+- New links: %5$d</string>
     <string name="backup_memory_export_result_success">Exported from profile "%1$s": %2$d memory(ies) and %3$d link(s) to:\n%4$s</string>
 
     <string name="backup_model_config_import_result_success">Successfully imported model configurations:\n- New: %1$d\n- Updated: %2$d%3$s</string>
@@ -5498,7 +5615,12 @@
     <string name="autoglm_api_key_placeholder">Paste your Zhipu API Key here</string>
     <string name="autoglm_one_click_button">One-Click AutoGLM Config</string>
     <string name="autoglm_status_running">Running one-click configuration, please wait...</string>
-    <string name="autoglm_status_success">AutoGLM one-click configuration completed:\nModel: %1$s\nAPI Key: %2$s\nToolkit: AutoGLM\n\nYou can now use AutoGLM mode in the chat interface.</string>
+    <string name="autoglm_status_success">AutoGLM one-click configuration completed:
+Model: %1$s
+API Key: %2$s
+Toolkit: AutoGLM
+
+You can now use AutoGLM mode in the chat interface.</string>
     <string name="autoglm_status_error">One-click configuration failed: %1$s</string>
     <string name="autoglm_error_empty_api_key">Please fill in the Zhipu API Key first.</string>
 
@@ -6666,7 +6788,13 @@
     <string name="mnn_model_dir_missing">Model directory does not exist: %1$s\nPlease download the model first</string>
     <string name="mnn_file_status">File status:</string>
     <string name="mnn_init_failed">Model initialization failed</string>
-    <string name="mnn_connection_success">MNN LLM model connected successfully!\n\nModel: %1$s\nDirectory: %2$s\nTotal size: %3$s\n\n%4$s</string>
+    <string name="mnn_connection_success">MNN LLM model connected successfully!
+
+Model: %1$s
+Directory: %2$s
+Total size: %3$s
+
+%4$s</string>
 
     <!-- APK Reverse Engineer -->
     <string name="apk_unnamed_function">(Unnamed function)</string>
@@ -6691,7 +6819,11 @@
     <string name="apk_signing_aborted">Signing aborted</string>
     <string name="apk_use_builtin_keystore">Using built-in debug keystore</string>
     <string name="apk_keystore_path_info">Keystore path: %1$s</string>
-    <string name="apk_signing_info">Signing APK...\nAPK: %1$s\nKeystore: %2$s\nKey alias: %3$s\nSigner: %4$s</string>
+    <string name="apk_signing_info">Signing APK...
+APK: %1$s
+Keystore: %2$s
+Key alias: %3$s
+Signer: %4$s</string>
     <string name="apk_alignment_info">Aligning APK...\nAPK: %1$s</string>
     <string name="apk_apk_signer_path">APK signer path: %1$s</string>
     <string name="apk_zip_align_path">ZIP align path: %1$s</string>
@@ -6938,7 +7070,13 @@
     <string name="task_context_current_task">Current task: %1$s</string>
     <string name="task_context_dependency_results">Dependent task results:</string>
     <string name="task_context_task_result">- Task %1$s result: %2$s</string>
-    <string name="task_instruction_with_context">\n%1$s\n\nPlease execute the following specific task based on the above context:\n%2$s\n\nPlease focus on completing this specific subtask, your answer will be part of the entire plan.</string>
+    <string name="task_instruction_with_context">
+%1$s
+
+Please execute the following specific task based on the above context:
+%2$s
+
+Please focus on completing this specific subtask, your answer will be part of the entire plan.</string>
     <string name="task_summary_key_results">Key subtask execution results:</string>
 
     <!-- ToolPermissionSystem -->

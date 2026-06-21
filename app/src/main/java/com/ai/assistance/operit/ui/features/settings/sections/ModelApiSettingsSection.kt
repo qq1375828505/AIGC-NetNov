@@ -1086,6 +1086,7 @@ private fun getBuiltInProviderDisplayName(provider: ApiProviderType, context: an
         ApiProviderType.LLAMA_CPP -> context.getString(R.string.provider_llama_cpp)
         ApiProviderType.PPINFRA -> context.getString(R.string.provider_ppinfra)
         ApiProviderType.NOVITA -> context.getString(R.string.provider_novita)
+        ApiProviderType.AGNES -> context.getString(R.string.provider_ag)
         ApiProviderType.OTHER -> context.getString(R.string.provider_other)
     }
 }

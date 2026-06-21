@@ -1,4 +1,4 @@
-﻿package com.ai.assistance.operit.provider;
+package com.ai.assistance.operit.provider;
 
 interface IAccessibilityProvider {
     String getUiHierarchy();
