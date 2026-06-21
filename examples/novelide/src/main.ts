@@ -6,6 +6,14 @@ import novelStatsScreen from "./ui/novel_stats.ui.js";
 import novelToolsScreen from "./ui/novel_tools.ui.js";
 import novelWorkspaceScreen from "./ui/novel_workspace.ui.js";
 
+import { registerTools as registerNovelWorksTools } from "./packages/novel_works";
+import { registerTools as registerNovelChaptersTools } from "./packages/novel_chapters";
+import { registerTools as registerNovelMaterialsTools } from "./packages/novel_materials";
+import { registerTools as registerNovelAiTools } from "./packages/novel_ai_tools";
+import { registerTools as registerNovelIoTools } from "./packages/novel_io";
+import { registerTools as registerNovelStatsTools } from "./packages/novel_stats";
+import { registerTools as registerNovelAgentsTools } from "./packages/novel_agents";
+
 const NOVEL_BASE_ROUTE = "toolpkg:com.operit.novelide:ui";
 
 export function registerToolPkg(): boolean {
@@ -143,6 +151,18 @@ export function registerToolPkg(): boolean {
     params: {},
     title: { zh: "工作区", en: "Workspace" },
   });
+
+  // ========================================
+  // 注册各工具包的工具（共 66 个工具）
+  // ========================================
+
+  registerNovelWorksTools();       // 5 个工具：作品 CRUD
+  registerNovelChaptersTools();   // 6 个工具：章节管理
+  registerNovelMaterialsTools();  // 40 个工具：资料管理（角色/设定/地点/势力/道具/伏笔/参考资料/待办）
+  registerNovelAiTools();         // 7 个工具：AI 续写/精修/扩写/去AI味/爽点/水文/标题
+  registerNovelIoTools();         // 4 个工具：导入导出
+  registerNovelStatsTools();      // 3 个工具：写作统计
+  registerNovelAgentsTools();     // 2 个工具：子Agent调度/章节审核
 
   return true;
 }

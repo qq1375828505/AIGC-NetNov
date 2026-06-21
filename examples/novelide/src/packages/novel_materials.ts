@@ -20,7 +20,10 @@ export function registerTools() {
       required: ["workId", "name"]
     },
     execute: async (params: any) => {
-      const result = await Tools.callNative("createCharacter", [JSON.stringify(params)]);
+      const { workId, name, gender, age, appearance, personality, background, notes } = params;
+      // NativeBridge: createCharacter(workId, name, role)
+      const role = [gender, age, personality, background].filter(Boolean).join(" | ") || notes || "";
+      const result = await Tools.callNative("createCharacter", [workId, name, role]);
       return { success: true, characterId: result };
     }
   });
@@ -108,7 +111,9 @@ export function registerTools() {
       required: ["workId", "name", "content"]
     },
     execute: async (params: any) => {
-      const result = await Tools.callNative("createSetting", [JSON.stringify(params)]);
+      const { workId, name, content } = params;
+      // NativeBridge: createSetting(workId, name, content)
+      const result = await Tools.callNative("createSetting", [workId, name, content]);
       return { success: true, settingId: result };
     }
   });
@@ -193,7 +198,9 @@ export function registerTools() {
       required: ["workId", "name"]
     },
     execute: async (params: any) => {
-      const result = await Tools.callNative("createLocation", [JSON.stringify(params)]);
+      const { workId, name, description } = params;
+      // NativeBridge: createLocation(workId, name, description)
+      const result = await Tools.callNative("createLocation", [workId, name, description || ""]);
       return { success: true, locationId: result };
     }
   });
@@ -278,7 +285,9 @@ export function registerTools() {
       required: ["workId", "name"]
     },
     execute: async (params: any) => {
-      const result = await Tools.callNative("createFaction", [JSON.stringify(params)]);
+      const { workId, name, description } = params;
+      // NativeBridge: createFaction(workId, name, leader)
+      const result = await Tools.callNative("createFaction", [workId, name, description || ""]);
       return { success: true, factionId: result };
     }
   });
@@ -363,7 +372,9 @@ export function registerTools() {
       required: ["workId", "name"]
     },
     execute: async (params: any) => {
-      const result = await Tools.callNative("createItem", [JSON.stringify(params)]);
+      const { workId, name, description } = params;
+      // NativeBridge: createItem(workId, name, description)
+      const result = await Tools.callNative("createItem", [workId, name, description || ""]);
       return { success: true, itemId: result };
     }
   });
@@ -450,7 +461,10 @@ export function registerTools() {
       required: ["workId", "title", "content"]
     },
     execute: async (params: any) => {
-      const result = await Tools.callNative("createHook", [JSON.stringify(params)]);
+      const { workId, title, content } = params;
+      // NativeBridge: createPlotHook(workId, content)
+      const hookContent = title ? `${title}\n${content}` : content;
+      const result = await Tools.callNative("createPlotHook", [workId, hookContent]);
       return { success: true, hookId: result };
     }
   });
@@ -471,7 +485,7 @@ export function registerTools() {
       required: ["hookId"]
     },
     execute: async (params: any) => {
-      const result = await Tools.callNative("updateHook", [JSON.stringify(params)]);
+      const result = await Tools.callNative("updatePlotHook", [JSON.stringify(params)]);
       return { success: true };
     }
   });
@@ -486,7 +500,7 @@ export function registerTools() {
       required: ["hookId"]
     },
     execute: async (params: any) => {
-      const result = await Tools.callNative("deleteHook", [params.hookId]);
+      const result = await Tools.callNative("deletePlotHook", [params.hookId]);
       return { success: true };
     }
   });
@@ -501,7 +515,7 @@ export function registerTools() {
       required: ["workId"]
     },
     execute: async (params: any) => {
-      const result = await Tools.callNative("getHooks", [params.workId]);
+      const result = await Tools.callNative("getPlotHooks", [params.workId]);
       return { success: true, hooks: JSON.parse(result) };
     }
   });
@@ -538,7 +552,9 @@ export function registerTools() {
       required: ["workId", "title", "content"]
     },
     execute: async (params: any) => {
-      const result = await Tools.callNative("createReference", [JSON.stringify(params)]);
+      const { workId, title, content } = params;
+      // NativeBridge: createReference(workId, title, content)
+      const result = await Tools.callNative("createReference", [workId, title, content]);
       return { success: true, referenceId: result };
     }
   });
@@ -623,7 +639,10 @@ export function registerTools() {
       required: ["workId", "title"]
     },
     execute: async (params: any) => {
-      const result = await Tools.callNative("createTodo", [JSON.stringify(params)]);
+      const { workId, title, priority } = params;
+      // NativeBridge: createTodo(workId, content, priority)
+      const priorityNum = priority === "high" || priority === "高" ? 2 : priority === "medium" || priority === "中" ? 1 : 0;
+      const result = await Tools.callNative("createTodo", [workId, title, priorityNum]);
       return { success: true, todoId: result };
     }
   });
