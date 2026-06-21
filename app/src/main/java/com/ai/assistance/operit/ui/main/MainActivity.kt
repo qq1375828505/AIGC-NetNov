@@ -36,6 +36,7 @@ import androidx.lifecycle.lifecycleScope
 import com.ai.assistance.operit.R
 import com.ai.assistance.operit.api.chat.AIForegroundService
 import com.ai.assistance.operit.core.tools.AIToolHandler
+import com.ai.assistance.operit.core.tools.system.AndroidPermissionLevel
 import com.ai.assistance.operit.data.preferences.AgreementPreferences
 import com.ai.assistance.operit.data.preferences.UserPreferencesManager
 import com.ai.assistance.operit.data.preferences.androidPermissionPreferences
@@ -55,6 +56,7 @@ import com.ai.assistance.operit.util.LocaleUtils
 import java.util.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import com.ai.assistance.operit.data.mcp.MCPRepository
 import android.content.Intent
 import android.net.Uri
@@ -598,11 +600,16 @@ class MainActivity : ComponentActivity() {
         // 检查是否已设置权限级别
         val permissionLevel = androidPermissionPreferences.getPreferredPermissionLevel()
         AppLogger.d(TAG, "当前权限级别: $permissionLevel")
-        showPermissionGuide = permissionLevel == null
-        AppLogger.d(
-                TAG,
-                "权限级别检查: 已设置=${!showPermissionGuide}, 将${if(showPermissionGuide) "" else "不"}显示权限引导界面"
-        )
+        // 跳过首次启动引导页面，直接进入主界面
+        // 如果未设置权限级别，自动使用标准权限作为默认值
+        if (permissionLevel == null) {
+            AppLogger.d(TAG, "未设置权限级别，自动设置为标准权限（跳过引导页）")
+            runBlocking {
+                androidPermissionPreferences.savePreferredPermissionLevel(AndroidPermissionLevel.STANDARD)
+            }
+        }
+        showPermissionGuide = false
+        AppLogger.d(TAG, "权限级别检查: 跳过引导页面，直接进入主界面")
     }
 
     // ======== 偏好监听器设置 ========
@@ -689,18 +696,7 @@ class MainActivity : ComponentActivity() {
                                     }
                             )
                         }
-                        // 检查是否需要显示权限引导界面
-                        else if (showPermissionGuide) {
-                            PermissionGuideScreen(
-                                    onComplete = {
-                                        showPermissionGuide = false
-                                        // 权限设置完成后，启动插件加载并更新内容
-                                        startPluginLoading()
-                                        setAppContent()
-                                    }
-                            )
-                        }
-                        // 显示主应用界面
+                        // 跳过权限引导界面，直接显示主应用界面
                         else {
                             // 处理待处理的分享文件
                             processPendingSharedFiles()
