@@ -56,8 +56,8 @@ android {
         applicationId = "com.ai.assistance.novelide"
         minSdk = 26
         targetSdk = 34
-        versionCode = 44
-        versionName = "1.11.0+5"
+        versionCode = 45
+        versionName = "1.11.0+6"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -74,7 +74,7 @@ android {
         externalNativeBuild {
             cmake {
                 cppFlags("-std=c++17")
-                arguments "-DANDROID_STL=c++_shared"
+                arguments("-DANDROID_STL=c++_shared")
             }
         }
 
