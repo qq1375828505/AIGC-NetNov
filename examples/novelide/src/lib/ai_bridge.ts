@@ -6,6 +6,9 @@ import { PROMPT_TEMPLATES } from "./prompt_templates.js";
 async function callAi(systemPrompt: string, prompt: string): Promise<string> {
   const fullMessage = `[系统指令] ${systemPrompt}\n\n[用户请求] ${prompt}`;
   const result = await Tools.Chat.sendMessage(fullMessage);
+  if (!result) {
+    throw new Error("AI 调用失败：sendMessage 返回 undefined");
+  }
   const aiReply = (result.aiResponse ?? "").trim();
   if (!aiReply) {
     throw new Error("AI 返回了空回复");

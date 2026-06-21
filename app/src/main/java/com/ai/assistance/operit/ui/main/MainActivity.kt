@@ -37,7 +37,6 @@ import com.ai.assistance.operit.R
 import com.ai.assistance.operit.api.chat.AIForegroundService
 import com.ai.assistance.operit.core.tools.AIToolHandler
 import com.ai.assistance.operit.core.tools.system.AndroidPermissionLevel
-import com.ai.assistance.operit.data.preferences.AgreementPreferences
 import com.ai.assistance.operit.data.preferences.UserPreferencesManager
 import com.ai.assistance.operit.data.preferences.androidPermissionPreferences
 import com.ai.assistance.operit.data.updates.UpdateManager
@@ -79,7 +78,6 @@ class MainActivity : ComponentActivity() {
     // ======== 工具和管理器 ========
     private lateinit var toolHandler: AIToolHandler
     private lateinit var preferencesManager: UserPreferencesManager
-    private lateinit var agreementPreferences: AgreementPreferences
     private var updateCheckPerformed = false
     private lateinit var anrMonitor: AnrMonitor
     private lateinit var mcpRepository: MCPRepository
@@ -94,9 +92,6 @@ class MainActivity : ComponentActivity() {
     // UpdateManager实例
     private lateinit var updateManager: UpdateManager
 
-
-    // 是否显示权限引导界面
-    private var showPermissionGuide by mutableStateOf(false)
 
     // 是否已完成初始检查
     private var initialChecksDone = false
@@ -221,8 +216,14 @@ class MainActivity : ComponentActivity() {
 
         // 只在首次创建时执行检查（非配置变更）
         if (savedInstanceState == null) {
-            // 进行必要的初始检查
-            performInitialChecks()
+            // 进行必要的初始化
+            lifecycleScope.launch {
+                checkNotificationPermission()
+                checkPermissionLevelSet()
+                startPluginLoading()
+                initialChecksDone = true
+                setAppContent()
+            }
         } else {
             // 配置变更时不重新检查，直接显示主界面
             initialChecksDone = true
@@ -398,28 +399,6 @@ class MainActivity : ComponentActivity() {
 
     // ======== 设置初始占位内容 ========
 
-    // ======== 执行初始化检查 ========
-    private fun performInitialChecks() {
-        lifecycleScope.launch {
-            // 1. 检查通知权限（Android 13+）
-            checkNotificationPermission()
-
-            // 2. 检查权限级别设置
-            checkPermissionLevelSet()
-
-            // 3. 在协议已接受且无需权限引导时，启动插件加载
-            if (!showPermissionGuide && agreementPreferences.isAgreementAccepted()) {
-                startPluginLoading()
-            }
-
-            // 标记完成初始检查
-            initialChecksDone = true
-
-            // 设置应用内容
-            setAppContent()
-        }
-    }
-
     // ======== 启动插件加载 ========
     private fun startPluginLoading() {
         // 显示插件加载界面
@@ -553,9 +532,6 @@ class MainActivity : ComponentActivity() {
                 "初始化检查: 用户偏好引导已跳过，直接进入主界面"
         )
 
-        // 初始化协议偏好管理器
-        agreementPreferences = AgreementPreferences(this)
-
     }
 
     // ======== 检查通知权限 ========
@@ -594,16 +570,13 @@ class MainActivity : ComponentActivity() {
         // 检查是否已设置权限级别
         val permissionLevel = androidPermissionPreferences.getPreferredPermissionLevel()
         AppLogger.d(TAG, "当前权限级别: $permissionLevel")
-        // 跳过首次启动引导页面，直接进入主界面
         // 如果未设置权限级别，自动使用标准权限作为默认值
         if (permissionLevel == null) {
-            AppLogger.d(TAG, "未设置权限级别，自动设置为标准权限（跳过引导页）")
+            AppLogger.d(TAG, "未设置权限级别，自动设置为标准权限")
             runBlocking {
                 androidPermissionPreferences.savePreferredPermissionLevel(AndroidPermissionLevel.STANDARD)
             }
         }
-        showPermissionGuide = false
-        AppLogger.d(TAG, "权限级别检查: 跳过引导页面，直接进入主界面")
     }
 
     // ======== 偏好监听器设置 ========

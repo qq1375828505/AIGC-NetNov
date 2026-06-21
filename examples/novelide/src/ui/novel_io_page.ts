@@ -130,7 +130,7 @@ export default function IOPage(ctx: ComposeDslContext): ComposeNode {
     return UI.Button({
       onClick,
       enabled: !loading,
-      modifier: UI.Modifier.fillMaxWidth().padding(vertical: 4),
+      modifier: UI.Modifier.fillMaxWidth().padding({ vertical: 4 }),
       background: color || colors.primary
     }, loading ? `${label}中...` : `${icon === "upload" ? "↑" : icon === "download" ? "↓" : icon === "backup" ? "↗" : "↙"} ${label}`);
   }
