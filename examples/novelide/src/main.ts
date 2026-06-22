@@ -5,6 +5,9 @@ import novelOutlineScreen from "./ui/novel_outline.ui.js";
 import novelStatsScreen from "./ui/novel_stats.ui.js";
 import novelToolsScreen from "./ui/novel_tools.ui.js";
 import novelWorkspaceScreen from "./ui/novel_workspace.ui.js";
+import novelIOScreen from "./ui/novel_io.ui.js";
+import novelRelationshipScreen from "./ui/novel_relationship.ui.js";
+import novelTomatoScreen from "./ui/novel_tomato.ui.js";
 
 import { registerTools as registerNovelWorksTools } from "./packages/novel_works";
 import { registerTools as registerNovelChaptersTools } from "./packages/novel_chapters";
@@ -85,6 +88,33 @@ export function registerToolPkg(): boolean {
     order: 180,
   });
 
+  ToolPkg.registerNavigationEntry({
+    id: "novel_io_sidebar",
+    route: `${NOVEL_BASE_ROUTE}:novel_io`,
+    surface: "main_sidebar_plugins",
+    title: { zh: "导入导出", en: "Import/Export" },
+    icon: Icons.ImportExport,
+    order: 190,
+  });
+
+  ToolPkg.registerNavigationEntry({
+    id: "novel_relationship_sidebar",
+    route: `${NOVEL_BASE_ROUTE}:novel_relationship`,
+    surface: "main_sidebar_plugins",
+    title: { zh: "角色关系图", en: "Relationships" },
+    icon: Icons.AccountTree,
+    order: 200,
+  });
+
+  ToolPkg.registerNavigationEntry({
+    id: "novel_tomato_sidebar",
+    route: `${NOVEL_BASE_ROUTE}:novel_tomato`,
+    surface: "main_sidebar_plugins",
+    title: { zh: "番茄钟", en: "Pomodoro" },
+    icon: Icons.Timer,
+    order: 210,
+  });
+
   // ========================================
   // 注册 7 个 UI 路由
   // ========================================
@@ -150,6 +180,33 @@ export function registerToolPkg(): boolean {
     screen: novelWorkspaceScreen,
     params: {},
     title: { zh: "工作区", en: "Workspace" },
+  });
+
+  ToolPkg.registerUiRoute({
+    id: "novel_io",
+    route: `${NOVEL_BASE_ROUTE}:novel_io`,
+    runtime: "compose_dsl",
+    screen: novelIOScreen,
+    params: { workId: "string" },
+    title: { zh: "导入导出", en: "Import/Export" },
+  });
+
+  ToolPkg.registerUiRoute({
+    id: "novel_relationship",
+    route: `${NOVEL_BASE_ROUTE}:novel_relationship`,
+    runtime: "compose_dsl",
+    screen: novelRelationshipScreen,
+    params: { workId: "string" },
+    title: { zh: "角色关系图", en: "Relationships" },
+  });
+
+  ToolPkg.registerUiRoute({
+    id: "novel_tomato",
+    route: `${NOVEL_BASE_ROUTE}:novel_tomato`,
+    runtime: "compose_dsl",
+    screen: novelTomatoScreen,
+    params: {},
+    title: { zh: "番茄钟", en: "Pomodoro" },
   });
 
   // ========================================
