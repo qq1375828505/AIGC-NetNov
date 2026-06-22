@@ -19,37 +19,37 @@ open class RootUITools(context: Context) : DebuggerUITools(context) {
 
     /** Gets the current UI page/window information */
     override suspend fun getPageInfo(tool: AITool): ToolResult {
-        return ToolResult(tool.toolName, false, StringResultData("Not available in this build"))
+        return ToolResult(tool.name, false, StringResultData("Not available in this build"))
     }
 
     /** 点击元素 */
     override suspend fun clickElement(tool: AITool): ToolResult {
-        return ToolResult(tool.toolName, false, StringResultData("Not available in this build"))
+        return ToolResult(tool.name, false, StringResultData("Not available in this build"))
     }
 
     /** 设置输入文本 */
     override suspend fun setInputText(tool: AITool): ToolResult {
-        return ToolResult(tool.toolName, false, StringResultData("Not available in this build"))
+        return ToolResult(tool.name, false, StringResultData("Not available in this build"))
     }
 
     /** 执行轻触操作 */
     override suspend fun tap(tool: AITool): ToolResult {
-        return ToolResult(tool.toolName, false, StringResultData("Not available in this build"))
+        return ToolResult(tool.name, false, StringResultData("Not available in this build"))
     }
 
     /** 执行长按操作 */
     override suspend fun longPress(tool: AITool): ToolResult {
-        return ToolResult(tool.toolName, false, StringResultData("Not available in this build"))
+        return ToolResult(tool.name, false, StringResultData("Not available in this build"))
     }
 
     /** 执行滑动操作 */
     override suspend fun swipe(tool: AITool): ToolResult {
-        return ToolResult(tool.toolName, false, StringResultData("Not available in this build"))
+        return ToolResult(tool.name, false, StringResultData("Not available in this build"))
     }
 
     /** 模拟按键操作 */
     override suspend fun pressKey(tool: AITool): ToolResult {
-        return ToolResult(tool.toolName, false, StringResultData("Not available in this build"))
+        return ToolResult(tool.name, false, StringResultData("Not available in this build"))
     }
 
     /** 截图到文件 */

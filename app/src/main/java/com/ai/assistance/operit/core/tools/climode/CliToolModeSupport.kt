@@ -276,12 +276,70 @@ object CliToolModeSupport {
         return emptySet()
     }
 
-    private fun isToolNameAllowedForRoleCard(
+    fun isToolNameAllowedForRoleCard(
         toolName: String,
         allowedToolNames: Set<String>?,
         roleCardToolAccess: ResolvedCharacterCardToolAccess
     ): Boolean {
         return true
+    }
+
+    fun buildCliModeUnavailableMessage(useEnglish: Boolean): String {
+        return if (useEnglish) {
+            "This tool is only available in CLI tool mode."
+        } else {
+            "此工具仅在CLI工具模式下可用。"
+        }
+    }
+
+    fun buildProxyTargetUnavailableMessage(
+        targetToolName: String,
+        useEnglish: Boolean
+    ): String {
+        return if (useEnglish) {
+            "Hidden target tool '$targetToolName' is unavailable. Use 'search' first to discover a valid hidden tool name and params."
+        } else {
+            "隐藏目标工具 '$targetToolName' 不可用。请先使用 'search' 来发现有效的隐藏工具名称和参数。"
+        }
+    }
+
+    fun buildCliTopLevelRestrictionErrorMessage(
+        attemptedToolName: String,
+        useEnglish: Boolean
+    ): String {
+        return if (useEnglish) {
+            "Tool '$attemptedToolName' is hidden in CLI tool mode. Use 'search' to find the hidden target tool, then call 'proxy'."
+        } else {
+            "工具 '$attemptedToolName' 在CLI工具模式下是隐藏的。使用 'search' 查找隐藏目标工具，然后调用 'proxy'。"
+        }
+    }
+
+    fun buildHiddenToolCatalog(
+        context: Context,
+        packageManager: PackageManager,
+        roleCardToolAccess: ResolvedCharacterCardToolAccess,
+        useEnglish: Boolean
+    ): List<HiddenToolCatalogEntry> {
+        return emptyList()
+    }
+
+    fun buildReservedProxyTargetMessage(
+        targetToolName: String,
+        useEnglish: Boolean
+    ): String {
+        return if (useEnglish) {
+            "Hidden target tool '$targetToolName' is reserved and cannot be called through proxy."
+        } else {
+            "隐藏目标工具 '$targetToolName' 是保留的，不能通过代理调用。"
+        }
+    }
+
+    fun buildRoleAccessDeniedMessage(useEnglish: Boolean): String {
+        return if (useEnglish) {
+            "The current role card is not allowed to access this hidden tool."
+        } else {
+            "当前角色卡不允许访问此隐藏工具。"
+        }
     }
 
     private fun buildParameterHints(tool: ToolPrompt): List<String> {
