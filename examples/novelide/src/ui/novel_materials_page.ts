@@ -147,8 +147,19 @@ export default function MaterialsPage(ctx: ComposeDslContext): ComposeNode {
   const [editingItem, setEditingItem] = ctx.useState<any>("editingItem", null);
   const [showForm, setShowForm] = ctx.useState("showForm", false);
   const [formFields, setFormFields] = ctx.useState<Record<string, string>>("formFields", {});
+  const [searchQuery, setSearchQuery] = ctx.useState("searchQuery", "");
 
   const category = CATEGORIES[activeTab];
+
+  // 过滤后的列表
+  const filteredItems = searchQuery.trim()
+    ? items.filter((item: any) => {
+        const query = searchQuery.toLowerCase();
+        const name = (item.name || item.title || "").toLowerCase();
+        const desc = (item.description || item.notes || item.background || "").toLowerCase();
+        return name.includes(query) || desc.includes(query);
+      })
+    : items;
 
   async function loadItems() {
     setLoading(true);
@@ -287,19 +298,29 @@ export default function MaterialsPage(ctx: ComposeDslContext): ComposeNode {
       title: category.label,
       actions: [UI.IconButton({ icon: "add", onClick: startCreate })],
     }),
+    // 搜索框
+    UI.TextField({
+      value: searchQuery,
+      onValueChange: setSearchQuery,
+      label: "搜索",
+      placeholder: `搜索${category.label}...`,
+      fillMaxWidth: true,
+      leadingIcon: "search",
+      modifier: UI.Modifier.padding(horizontal: 8, vertical: 4)
+    }),
     loading
       ? UI.Box({ fillMaxSize: true, contentAlignment: "center" }, UI.CircularProgressIndicator())
-      : items.length === 0
+      : filteredItems.length === 0
         ? UI.Box({ fillMaxSize: true, contentAlignment: "center" }, [
             UI.Icon({ name: category.icon, size: 64, tint: colors.onSurfaceVariant }),
             UI.Text({
-              text: `暂无${category.label}数据`,
+              text: searchQuery ? "未找到匹配项" : `暂无${category.label}数据`,
               style: "bodyLarge",
               color: colors.onSurfaceVariant,
             }),
           ])
         : UI.LazyColumn({ fillMaxSize: true, contentPadding: 8 }, [
-            ...items.map((item: any) =>
+            ...filteredItems.map((item: any) =>
               UI.Card({
                 modifier: UI.Modifier.padding(4),
                 content: UI.Row({

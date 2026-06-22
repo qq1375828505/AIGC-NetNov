@@ -8,6 +8,8 @@ import novelWorkspaceScreen from "./ui/novel_workspace.ui.js";
 import novelIOScreen from "./ui/novel_io.ui.js";
 import novelRelationshipScreen from "./ui/novel_relationship.ui.js";
 import novelTomatoScreen from "./ui/novel_tomato.ui.js";
+import novelAgentsScreen from "./ui/novel_agents.ui.js";
+import novelSkillsScreen from "./ui/novel_skills.ui.js";
 
 import { registerTools as registerNovelWorksTools } from "./packages/novel_works";
 import { registerTools as registerNovelChaptersTools } from "./packages/novel_chapters";
@@ -115,8 +117,26 @@ export function registerToolPkg(): boolean {
     order: 210,
   });
 
+  ToolPkg.registerNavigationEntry({
+    id: "novel_agents_sidebar",
+    route: `${NOVEL_BASE_ROUTE}:novel_agents`,
+    surface: "main_sidebar_plugins",
+    title: { zh: "AI Agent", en: "AI Agents" },
+    icon: Icons.SmartToy,
+    order: 220,
+  });
+
+  ToolPkg.registerNavigationEntry({
+    id: "novel_skills_sidebar",
+    route: `${NOVEL_BASE_ROUTE}:novel_skills`,
+    surface: "main_sidebar_plugins",
+    title: { zh: "风格 Skill", en: "Style Skills" },
+    icon: Icons.AutoAwesome,
+    order: 230,
+  });
+
   // ========================================
-  // 注册 10 个 UI 路由
+  // 注册 12 个 UI 路由
   // ========================================
 
   ToolPkg.registerUiRoute({
@@ -207,6 +227,24 @@ export function registerToolPkg(): boolean {
     screen: novelTomatoScreen,
     params: {},
     title: { zh: "番茄钟", en: "Pomodoro" },
+  });
+
+  ToolPkg.registerUiRoute({
+    id: "novel_agents",
+    route: `${NOVEL_BASE_ROUTE}:novel_agents`,
+    runtime: "compose_dsl",
+    screen: novelAgentsScreen,
+    params: {},
+    title: { zh: "AI Agent", en: "AI Agents" },
+  });
+
+  ToolPkg.registerUiRoute({
+    id: "novel_skills",
+    route: `${NOVEL_BASE_ROUTE}:novel_skills`,
+    runtime: "compose_dsl",
+    screen: novelSkillsScreen,
+    params: {},
+    title: { zh: "风格 Skill", en: "Style Skills" },
   });
 
   // ========================================

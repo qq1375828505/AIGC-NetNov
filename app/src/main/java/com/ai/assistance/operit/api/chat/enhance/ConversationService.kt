@@ -1,15 +1,20 @@
 package com.ai.assistance.operit.api.chat.enhance
 
+import android.content.Context
 import com.ai.assistance.operit.core.chat.hooks.PromptTurn
 import com.ai.assistance.operit.core.tools.climode.ToolExposureMode
 import com.ai.assistance.operit.core.tools.packTool.PackageManager
 import com.ai.assistance.operit.data.model.PromptFunctionType
+import com.ai.assistance.operit.data.repository.CustomEmojiRepository
 
 /**
  * Stub implementation of ConversationService.
  * This is a placeholder to allow compilation without the actual implementation.
  */
-class ConversationService {
+class ConversationService(
+    private val context: Context,
+    private val customEmojiRepository: CustomEmojiRepository
+) {
     
     fun getConversationHistory(chatId: String): List<Any> = emptyList()
     

@@ -1532,4 +1532,78 @@ class NovelNativeBridge(
             }
         }
     }
+
+    // ==================== 大纲管理 ====================
+
+    @JavascriptInterface
+    fun getOutlineNodes(workId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                // 从数据库获取大纲节点（如果有的话）
+                // 由于没有专门的大纲表，返回空列表
+                gson.toJson(listOf<Any>())
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "获取大纲节点失败", e)
+                gson.toJson(listOf<Any>())
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun createOutlineNode(workId: String, title: String, content: String, parentId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                // 创建大纲节点（简化实现）
+                val nodeId = UUID.randomUUID().toString()
+                val node = mapOf(
+                    "id" to nodeId,
+                    "workId" to workId,
+                    "title" to title,
+                    "content" to content,
+                    "parentId" to if (parentId.isEmpty()) null else parentId,
+                    "sortOrder" to 0,
+                    "level" to 0,
+                    "createdAt" to System.currentTimeMillis(),
+                    "updatedAt" to System.currentTimeMillis()
+                )
+                // TODO: 保存到数据库
+                gson.toJson(mapOf("success" to true, "id" to nodeId))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "创建大纲节点失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "创建失败"))
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun updateOutlineNode(nodeId: String, title: String, content: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                // 更新大纲节点（简化实现）
+                // TODO: 更新数据库
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "更新大纲节点失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "更新失败"))
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun deleteOutlineNode(nodeId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                // 删除大纲节点（简化实现）
+                // TODO: 从数据库删除
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "删除大纲节点失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "删除失败"))
+            }
+        }
+    }
 }

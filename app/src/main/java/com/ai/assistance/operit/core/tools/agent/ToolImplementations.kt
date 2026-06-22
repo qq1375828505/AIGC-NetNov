@@ -1,8 +1,11 @@
 package com.ai.assistance.operit.core.tools.agent
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import com.ai.assistance.operit.data.model.AITool
 import com.ai.assistance.operit.data.model.ToolResult
 
+/** Interface for providing tool implementations to the ActionHandler. */
 interface ToolImplementations {
     suspend fun tap(tool: AITool): ToolResult
     suspend fun longPress(tool: AITool): ToolResult
@@ -10,4 +13,14 @@ interface ToolImplementations {
     suspend fun swipe(tool: AITool): ToolResult
     suspend fun pressKey(tool: AITool): ToolResult
     suspend fun captureScreenshot(tool: AITool): Pair<String?, Pair<Int, Int>?>
+    suspend fun captureScreenshotBitmap(tool: AITool): Pair<Bitmap?, Pair<Int, Int>?> {
+        val (filePath, dimensions) = captureScreenshot(tool)
+        if (filePath == null) {
+            return Pair(null, dimensions)
+        }
+
+        val bitmap = BitmapFactory.decodeFile(filePath) ?: return Pair(null, dimensions)
+        val resolvedDimensions = dimensions ?: Pair(bitmap.width, bitmap.height)
+        return Pair(bitmap, resolvedDimensions)
+    }
 }

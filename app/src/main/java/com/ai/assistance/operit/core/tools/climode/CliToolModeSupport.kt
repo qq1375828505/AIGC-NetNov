@@ -79,6 +79,35 @@ object CliToolModeSupport {
 
     fun defaultSearchLimit(): Int = DEFAULT_SEARCH_LIMIT
 
+    fun buildCliModePrompt(useEnglish: Boolean): String {
+        val intro =
+            if (useEnglish) {
+                """
+                CLI TOOL MODE
+                - Only two public tools are available: `search` and `proxy`.
+                - `search` only searches the hidden tool catalog. It does not read files, search code, or browse the web.
+                - All real capabilities are hidden behind `proxy`.
+                - Do not call hidden tools directly. Use `search` first, then call `proxy` with the discovered target tool name and JSON params.
+                """.trimIndent()
+            } else {
+                """
+                CLI TOOL MODE
+                - Only two public tools are available: `search` and `proxy`.
+                - `search` only searches the hidden tool catalog. It does not read files, search code, or browse the web.
+                - All real capabilities are hidden behind `proxy`.
+                - Do not call hidden tools directly. Use `search` first, then call `proxy` with the discovered target tool name and JSON params.
+                """.trimIndent()
+            }
+
+        val category =
+            SystemToolPromptCategory(
+                categoryName = "Public tools",
+                tools = buildCliPublicToolPrompts(useEnglish)
+            ).toString()
+
+        return "$intro\n\n$category"
+    }
+
     fun buildCliPublicToolPrompts(useEnglish: Boolean): List<ToolPrompt> {
         return if (useEnglish) {
             listOf(
@@ -178,6 +207,54 @@ object CliToolModeSupport {
         limit: Int
     ): List<HiddenToolCatalogEntry> {
         return emptyList()
+    }
+
+    fun formatSearchResults(
+        query: String,
+        results: List<HiddenToolCatalogEntry>,
+        useEnglish: Boolean
+    ): String {
+        if (results.isEmpty()) {
+            return if (useEnglish) {
+                "No hidden tools matched \"$query\". Try a broader capability keyword, then call proxy with a discovered target tool name."
+            } else {
+                "No hidden tools matched \"$query\". Try a broader capability keyword, then call proxy with a discovered target tool name."
+            }
+        }
+
+        return buildString {
+            if (useEnglish) {
+                appendLine("Hidden tool search results for \"$query\":")
+            } else {
+                appendLine("Hidden tool search results for \"$query\":")
+            }
+            results.forEachIndexed { index, entry ->
+                append(index + 1)
+                append(". `")
+                append(entry.displayName)
+                append("` [")
+                append(entry.sourceKind.label(useEnglish))
+                appendLine("]")
+                append("   ")
+                appendLine(entry.description.ifBlank {
+                    "No description."
+                })
+                append("   ")
+                append("Target: `")
+                append(entry.targetToolName)
+                appendLine("`")
+                if (!entry.suggestedParamsJson.isNullOrBlank()) {
+                    append("   ")
+                    append("Params hint: `")
+                    append(entry.suggestedParamsJson)
+                    appendLine("`")
+                } else if (entry.parameterHints.isNotEmpty()) {
+                    append("   ")
+                    append("Params: ")
+                    appendLine(entry.parameterHints.joinToString("; "))
+                }
+            }
+        }.trimEnd()
     }
 
     // 简化实现：返回"not available"结果
