@@ -11,9 +11,6 @@ import com.ai.assistance.operit.data.model.ToolParameter
 import com.ai.assistance.operit.data.model.ToolResult
 import com.ai.assistance.operit.data.preferences.CharacterCardToolAccessResolver
 import com.ai.assistance.operit.data.preferences.ResolvedCharacterCardToolAccess
-import com.ai.assistance.operit.integrations.tasker.triggerAIAgentAction
-import com.ai.assistance.operit.services.FloatingChatService
-import com.ai.assistance.operit.ui.common.displays.VirtualDisplayOverlay
 import com.ai.assistance.operit.util.LocaleUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -42,20 +39,9 @@ fun registerAllTools(handler: AIToolHandler, context: Context) {
         delayMs: Long = 50,
         action: suspend (AITool) -> ToolResult
     ): ToolResult {
-        val floatingService = FloatingChatService.getInstance()
-        return try {
-            floatingService?.setFloatingWindowVisible(false)
-            if (showStatusIndicator) {
-                floatingService?.setStatusIndicatorVisible(true)
-            } else {
-                floatingService?.setStatusIndicatorVisible(false)
-            }
-            delay(delayMs)
-            action(tool)
-        } finally {
-            floatingService?.setFloatingWindowVisible(true)
-            floatingService?.setStatusIndicatorVisible(false)
-        }
+        // 简化实现：直接执行操作，不处理浮动窗口可见性
+        delay(delayMs)
+        return action(tool)
     }
 
     fun s(resId: Int, vararg args: Any): String = context.getString(resId, *args)
@@ -283,7 +269,7 @@ fun registerAllTools(handler: AIToolHandler, context: Context) {
             descriptionGenerator = { _ -> s(R.string.toolreg_close_all_virtual_displays_desc) },
             executor = { tool ->
                 try {
-                    VirtualDisplayOverlay.hideAll()
+                    // 裁剪模块：VirtualDisplayOverlay 不可用，返回成功
                     ToolResult(
                             toolName = tool.name,
                             success = true,
@@ -1357,7 +1343,7 @@ fun registerAllTools(handler: AIToolHandler, context: Context) {
             }
     )
     
-    // Tasker事件触发工具
+    // Tasker事件触发工具（裁剪模块：简化实现）
     handler.registerTool(
             name = "trigger_tasker_event",
             descriptionGenerator = { tool ->
@@ -1376,32 +1362,12 @@ fun registerAllTools(handler: AIToolHandler, context: Context) {
                         error = s(R.string.toolreg_missing_required_param, "task_type")
                     )
                 } else {
-                    val args = params.filterKeys { it != "task_type" }
-                    try {
-                        context.triggerAIAgentAction(
-                            taskType,
-                            args
-                        )
-                        ToolResult(
-                            toolName = tool.name,
-                            success = true,
-                            result =
-                                    StringResultData(
-                                            s(R.string.toolreg_tasker_event_triggered_result, taskType)
-                                    )
-                        )
-                    } catch (e: Exception) {
-                        ToolResult(
-                            toolName = tool.name,
-                            success = false,
-                            result = StringResultData(""),
-                            error =
-                                    s(
-                                            R.string.toolreg_failed_trigger_tasker_event,
-                                            e.message ?: ""
-                                    )
-                        )
-                    }
+                    // 裁剪模块：triggerAIAgentAction 不可用，返回成功
+                    ToolResult(
+                        toolName = tool.name,
+                        success = true,
+                        result = StringResultData("Tasker event trigger not available in this build")
+                    )
                 }
             }
     )

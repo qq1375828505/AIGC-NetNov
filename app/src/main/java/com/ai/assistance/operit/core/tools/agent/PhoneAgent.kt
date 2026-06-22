@@ -14,12 +14,3 @@ object PhoneAgent {
     
     fun executeCommand(command: String): String = ""
 }
-
-object PhoneAgentJobRegistry {
-    
-    fun registerJob(jobId: String, job: Any) {}
-    
-    fun unregisterJob(jobId: String) {}
-    
-    fun getJob(jobId: String): Any? = null
-}

@@ -13,15 +13,21 @@ import android.view.Surface
  */
 object ShowerVideoRenderer {
 
-    private val core = com.ai.assistance.showerclient.ShowerVideoRenderer()
+    // 裁剪模块：showerclient 模块不可用，提供空实现
+    fun attach(surface: Surface, videoWidth: Int, videoHeight: Int) {
+        // 空实现
+    }
 
-    fun attach(surface: Surface, videoWidth: Int, videoHeight: Int) =
-        core.attach(surface, videoWidth, videoHeight)
+    fun detach() {
+        // 空实现
+    }
 
-    fun detach() = core.detach()
+    fun onFrame(data: ByteArray) {
+        // 空实现
+    }
 
-    fun onFrame(data: ByteArray) = core.onFrame(data)
-
-    suspend fun captureCurrentFramePng(): ByteArray? =
-        core.captureCurrentFramePng()
+    suspend fun captureCurrentFramePng(): ByteArray? {
+        // 裁剪模块：返回空
+        return null
+    }
 }
