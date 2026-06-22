@@ -306,7 +306,7 @@ export default function MaterialsPage(ctx: ComposeDslContext): ComposeNode {
       placeholder: `搜索${category.label}...`,
       fillMaxWidth: true,
       leadingIcon: "search",
-      modifier: UI.Modifier.padding(horizontal: 8, vertical: 4)
+      modifier: UI.Modifier.padding({ horizontal: 8, vertical: 4 })
     }),
     loading
       ? UI.Box({ fillMaxSize: true, contentAlignment: "center" }, UI.CircularProgressIndicator())
