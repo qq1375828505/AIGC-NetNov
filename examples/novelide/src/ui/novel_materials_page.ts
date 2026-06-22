@@ -170,9 +170,37 @@ export default function MaterialsPage(ctx: ComposeDslContext): ComposeNode {
         const payload = { id: editingItem.id, ...formFields };
         await (window.NativeBridge as any)[category.bridgeUpdate](JSON.stringify(payload));
       } else {
-        // 新增模式：调用 create 方法
+        // 新增模式：调用 create 方法（根据类别传递不同参数）
         const payload = { ...formFields };
-        await (window.NativeBridge as any)[category.bridgeCreate](workId, JSON.stringify(payload));
+        switch (category.key) {
+          case "characters":
+            await (window.NativeBridge as any).createCharacter(workId, payload.name || "", payload.role || "");
+            break;
+          case "settings":
+            await (window.NativeBridge as any).createSetting(workId, payload.name || "", payload.description || "");
+            break;
+          case "locations":
+            await (window.NativeBridge as any).createLocation(workId, payload.name || "", payload.description || "");
+            break;
+          case "factions":
+            await (window.NativeBridge as any).createFaction(workId, payload.name || "", payload.leader || "");
+            break;
+          case "items":
+            await (window.NativeBridge as any).createItem(workId, payload.name || "", payload.description || "");
+            break;
+          case "plot_hooks":
+            await (window.NativeBridge as any).createPlotHook(workId, payload.description || "");
+            break;
+          case "references":
+            await (window.NativeBridge as any).createReference(workId, payload.title || "", payload.notes || "");
+            break;
+          case "todos":
+            await (window.NativeBridge as any).createTodo(workId, payload.title || "", parseInt(payload.priority || "0"));
+            break;
+          default:
+            // 默认使用 JSON 字符串方式
+            await (window.NativeBridge as any)[category.bridgeCreate](workId, JSON.stringify(payload));
+        }
       }
       setShowForm(false);
       setEditingItem(null);
