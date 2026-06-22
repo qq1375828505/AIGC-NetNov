@@ -22,7 +22,7 @@ const NOVEL_BASE_ROUTE = "toolpkg:com.operit.novelide:ui";
 export function registerToolPkg(): boolean {
 
   // ========================================
-  // 注册 7 个侧边栏入口
+  // 注册 10 个侧边栏入口
   // ========================================
 
   ToolPkg.registerNavigationEntry({
@@ -116,7 +116,7 @@ export function registerToolPkg(): boolean {
   });
 
   // ========================================
-  // 注册 7 个 UI 路由
+  // 注册 10 个 UI 路由
   // ========================================
 
   ToolPkg.registerUiRoute({

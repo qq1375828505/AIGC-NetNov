@@ -7,6 +7,7 @@ import com.ai.assistance.novelide.data.model.novel.*
 import com.ai.assistance.novelide.data.repository.novel.NovelRepository
 import com.ai.assistance.operit.data.novel.NovelExporter
 import com.ai.assistance.operit.data.novel.NovelImporter
+import com.ai.assistance.operit.util.AppLogger
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -59,7 +60,8 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true, "id" to work.id))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "createWork failed", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
         }
     }
@@ -73,7 +75,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -86,7 +90,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -120,7 +126,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true, "id" to chapter.id))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -146,7 +154,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -159,7 +169,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -178,7 +190,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -212,7 +226,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true, "id" to character.id))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -226,7 +242,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -239,7 +257,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -273,7 +293,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true, "id" to setting.id))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -287,7 +309,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -300,7 +324,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -334,7 +360,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true, "id" to location.id))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -348,7 +376,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -361,7 +391,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -395,7 +427,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true, "id" to faction.id))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -409,7 +443,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -422,7 +458,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -456,7 +494,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true, "id" to item.id))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -470,7 +510,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -483,7 +525,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -516,7 +560,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true, "id" to hook.id))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -530,7 +576,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -543,7 +591,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -577,7 +627,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true, "id" to reference.id))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -591,7 +643,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -604,7 +658,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -638,7 +694,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true, "id" to todo.id))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -652,7 +710,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -665,7 +725,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -700,7 +762,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true, "id" to relationship.id))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -714,7 +778,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -727,7 +793,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -761,7 +829,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true, "id" to event.id))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -775,7 +845,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -788,7 +860,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -822,7 +896,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true, "id" to participant.id))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -835,7 +911,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -949,7 +1027,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true, "id" to volume.id))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -963,7 +1043,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -979,7 +1061,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -1013,7 +1097,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true, "id" to folder.id))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -1027,7 +1113,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -1040,7 +1128,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -1091,7 +1181,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true, "id" to item.id))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -1105,7 +1197,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -1118,7 +1212,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -1152,7 +1248,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true, "id" to skill.id))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -1166,7 +1264,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -1182,7 +1282,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -1216,7 +1318,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true, "id" to reminder.id))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -1230,7 +1334,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -1246,7 +1352,9 @@ class NovelNativeBridge(
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -1300,7 +1408,9 @@ class NovelNativeBridge(
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
@@ -1343,7 +1453,9 @@ class NovelNativeBridge(
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                gson.toJson(mapOf("success" to false, "error" to e.message))
+                AppLogger.e("NovelNativeBridge", "操作失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
             }
         }
     }
