@@ -13,7 +13,11 @@ export default function StatsPage(ctx: ComposeDslContext): ComposeNode {
     todayWords: 0,
     continuousDays: 0,
     dailyGoal: 2000,
-    dailyHistory: [] as { date: string; words: number }[]
+    dailyHistory: [] as { date: string; words: number }[],
+    totalChapters: 0,
+    avgChapterWords: 0,
+    longestChapter: null as { title: string; wordCount: number } | null,
+    shortestChapter: null as { title: string; wordCount: number } | null
   });
   const [loading, setLoading] = ctx.useState("loading", true);
 
@@ -27,7 +31,11 @@ export default function StatsPage(ctx: ComposeDslContext): ComposeNode {
         todayWords: data.todayWords ?? 0,
         continuousDays: data.continuousDays ?? 0,
         dailyGoal: data.dailyGoal ?? 2000,
-        dailyHistory: data.dailyHistory ?? []
+        dailyHistory: data.dailyHistory ?? [],
+        totalChapters: data.totalChapters ?? 0,
+        avgChapterWords: data.avgChapterWords ?? 0,
+        longestChapter: data.longestChapter ?? null,
+        shortestChapter: data.shortestChapter ?? null
       });
     } catch (error) {
       console.error("加载统计数据失败:", error);
@@ -163,12 +171,37 @@ export default function StatsPage(ctx: ComposeDslContext): ComposeNode {
           statCard("emoji_events", "完成度", `${goalPercent}%`, colors.tertiary)
         ]),
 
+        // 章节统计卡片
+        UI.Row({ fillMaxWidth: true, horizontalArrangement: 4 }, [
+          statCard("menu_book", "章节数", `${stats.totalChapters}`, colors.primary),
+          statCard("analytics", "平均字数", stats.avgChapterWords.toLocaleString(), colors.secondary)
+        ]),
+
         // 目标进度
         goalProgressBar(),
 
+        // 最长/最短章节
+        stats.longestChapter ? UI.Card({
+          modifier: UI.Modifier.padding(12, 8).fillMaxWidth(),
+          background: colors.surfaceVariant
+        }, UI.Column({ padding: 16, spacing: 8 }, [
+          UI.Text({ text: "最长章节", style: "labelMedium", color: colors.onSurfaceVariant }),
+          UI.Text({ text: stats.longestChapter.title, style: "titleSmall" }),
+          UI.Text({ text: `${stats.longestChapter.wordCount.toLocaleString()} 字`, style: "bodyMedium", color: colors.primary })
+        ])) : null,
+
+        stats.shortestChapter ? UI.Card({
+          modifier: UI.Modifier.padding(12, 8).fillMaxWidth(),
+          background: colors.surfaceVariant
+        }, UI.Column({ padding: 16, spacing: 8 }, [
+          UI.Text({ text: "最短章节", style: "labelMedium", color: colors.onSurfaceVariant }),
+          UI.Text({ text: stats.shortestChapter.title, style: "titleSmall" }),
+          UI.Text({ text: `${stats.shortestChapter.wordCount.toLocaleString()} 字`, style: "bodyMedium", color: colors.secondary })
+        ])) : null,
+
         // 每日字数图表
         dailyChart()
-      ]);
+      ].filter(Boolean));
 
   return UI.Box({ fillMaxSize: true }, [
     UI.TopAppBar({ title: "写作统计" }),

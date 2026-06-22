@@ -11,8 +11,16 @@ interface OutlineNode {
   parentId: string | null;
   sortOrder: number;
   level: number;
+  chapterId?: string | null;
+  chapterTitle?: string;
   createdAt: number;
   updatedAt: number;
+}
+
+interface Chapter {
+  id: string;
+  title: string;
+  sortOrder: number;
 }
 
 export default function OutlinePage(ctx: ComposeDslContext): ComposeNode {
@@ -22,10 +30,12 @@ export default function OutlinePage(ctx: ComposeDslContext): ComposeNode {
   const workId = params.workId ?? "";
 
   const [nodes, setNodes] = ctx.useState("nodes", []);
+  const [chapters, setChapters] = ctx.useState("chapters", []);
   const [selectedNode, setSelectedNode] = ctx.useState("selectedNode", null);
   const [isEditing, setIsEditing] = ctx.useState("isEditing", false);
   const [editTitle, setEditTitle] = ctx.useState("editTitle", "");
   const [editContent, setEditContent] = ctx.useState("editContent", "");
+  const [editChapterId, setEditChapterId] = ctx.useState("editChapterId", "");
   const [parentId, setParentId] = ctx.useState("parentId", null);
   const [showAddDialog, setShowAddDialog] = ctx.useState("showAddDialog", false);
 
@@ -37,6 +47,17 @@ export default function OutlinePage(ctx: ComposeDslContext): ComposeNode {
       setNodes(Array.isArray(list) ? list : []);
     } catch (error) {
       console.error("加载大纲失败:", error);
+    }
+  }
+
+  // 加载章节列表
+  async function loadChapters() {
+    try {
+      const result = await Tools.callNative("getChapters", [workId]);
+      const list = typeof result === "string" ? JSON.parse(result) : result;
+      setChapters(Array.isArray(list) ? list : []);
+    } catch (error) {
+      console.error("加载章节失败:", error);
     }
   }
 
@@ -77,6 +98,7 @@ export default function OutlinePage(ctx: ComposeDslContext): ComposeNode {
   // 初始化
   ctx.useEffect(() => {
     loadNodes();
+    loadChapters();
   }, []);
 
   // 顶部栏
@@ -210,6 +232,16 @@ export default function OutlinePage(ctx: ComposeDslContext): ComposeNode {
           maxLines: 10,
           multiline: true
         }),
+        UI.Dropdown({
+          label: "关联章节",
+          value: editChapterId,
+          onValueChange: setEditChapterId,
+          options: [
+            { value: "", label: "无关联" },
+            ...chapters.map((ch: Chapter) => ({ value: ch.id, label: ch.title }))
+          ],
+          fillMaxWidth: true
+        }),
         UI.Row({
           spacing: 8,
           horizontalArrangement: "end"
@@ -224,6 +256,11 @@ export default function OutlinePage(ctx: ComposeDslContext): ComposeNode {
         ])
       ]);
     }
+
+    // 查找关联章节
+    const linkedChapter = selectedNode.chapterId 
+      ? chapters.find((ch: Chapter) => ch.id === selectedNode.chapterId)
+      : null;
 
     return UI.Column({
       fillMaxWidth: true,
@@ -244,7 +281,10 @@ export default function OutlinePage(ctx: ComposeDslContext): ComposeNode {
         }, [
           UI.IconButton({
             icon: "edit",
-            onClick: () => setIsEditing(true)
+            onClick: () => {
+              setEditChapterId(selectedNode.chapterId || "");
+              setIsEditing(true);
+            }
           }),
           UI.IconButton({
             icon: "delete",
@@ -252,6 +292,12 @@ export default function OutlinePage(ctx: ComposeDslContext): ComposeNode {
           })
         ])
       ]),
+      // 章节关联标签
+      linkedChapter ? UI.Chip({
+        label: `关联章节: ${linkedChapter.title}`,
+        icon: "link",
+        variant: "outlined"
+      }) : null,
       UI.Text({
         text: selectedNode.content || "暂无内容",
         style: "bodyMedium",
@@ -262,7 +308,7 @@ export default function OutlinePage(ctx: ComposeDslContext): ComposeNode {
         style: "bodySmall",
         color: colors.onSurfaceVariant
       })
-    ]);
+    ].filter(Boolean));
   }
 
   // 添加节点对话框

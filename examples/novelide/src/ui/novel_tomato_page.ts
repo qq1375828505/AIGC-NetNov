@@ -18,6 +18,7 @@ export default function TomatoPage(ctx: ComposeDslContext): ComposeNode {
   const [tomatoCount, setTomatoCount] = ctx.useState("tomatoCount", 0);
   const [todayCount, setTodayCount] = ctx.useState("todayCount", 0);
   const [timerRef, setTimerRef] = ctx.useState("timerRef", null);
+  const [pulseAnimation, setPulseAnimation] = ctx.useState("pulseAnimation", false);
 
   // 加载预设列表
   async function loadPresets() {
@@ -159,18 +160,30 @@ export default function TomatoPage(ctx: ComposeDslContext): ComposeNode {
         color: progressColor
       }),
 
-      // 倒计时圆环
-      UI.Box({
-        width: 200,
-        height: 200,
-        contentAlignment: "center"
+      // 倒计时圆环（带动画效果）
+      UI.AnimatedVisibility({
+        visible: true,
+        enter: "fadeIn",
+        exit: "fadeOut"
+      }, UI.Box({
+        width: 220,
+        height: 220,
+        contentAlignment: "center",
+        modifier: UI.Modifier
+          .background(
+            isRunning && remainingSeconds <= 10 
+              ? `${progressColor}20` 
+              : "transparent",
+            110
+          )
+          .animateContentSize()
       }, [
         UI.CircularProgressIndicator({
           progress: getProgress(),
           size: 200,
           color: progressColor,
           trackColor: colors.surfaceVariant,
-          strokeWidth: 8
+          strokeWidth: 10
         }),
         UI.Column({
           horizontalAlignment: "center",
@@ -178,8 +191,9 @@ export default function TomatoPage(ctx: ComposeDslContext): ComposeNode {
         }, [
           UI.Text({
             text: formatTime(remainingSeconds),
-            style: "displaySmall",
-            color: colors.onSurface
+            style: "displayLarge",
+            color: colors.onSurface,
+            modifier: UI.Modifier.animateContentSize()
           }),
           UI.Text({
             text: `总计 ${formatTime(totalSeconds)}`,
@@ -187,7 +201,17 @@ export default function TomatoPage(ctx: ComposeDslContext): ComposeNode {
             color: colors.onSurfaceVariant
           })
         ])
-      ]),
+      ])),
+
+      // 倒计时警告（最后10秒）
+      isRunning && remainingSeconds <= 10 && remainingSeconds > 0
+        ? UI.Text({
+            text: "即将完成！",
+            style: "labelLarge",
+            color: colors.error,
+            modifier: UI.Modifier.animatePulse()
+          })
+        : null,
 
       // 控制按钮
       UI.Row({
@@ -201,10 +225,12 @@ export default function TomatoPage(ctx: ComposeDslContext): ComposeNode {
         UI.Button({
           onClick: toggleTimer,
           enabled: remainingSeconds > 0,
-          modifier: UI.Modifier.paddingHorizontal(16)
+          modifier: UI.Modifier
+            .paddingHorizontal(16)
+            .animateScale(isRunning ? 1.05 : 1.0)
         }, isRunning ? "暂停" : "开始"),
       ])
-    ])
+    ].filter(Boolean))
   ]);
 
   // 番茄计数统计
