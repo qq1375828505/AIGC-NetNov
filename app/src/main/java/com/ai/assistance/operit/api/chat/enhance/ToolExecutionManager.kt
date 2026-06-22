@@ -784,8 +784,8 @@ object ToolExecutionManager {
                     val packageTools =
                         packageManager.getPackageTools(packName)
                     val isAdviceTool = false
-                    val isPackageActivated = packageTools
-                        .any { toolHandler.getToolExecutor("$packName:$it") != null }
+                    val isPackageActivated = packageTools?.tools
+                        ?.any { toolHandler.getToolExecutor("$packName:${it.name}") != null } ?: false
 
                     if (isAdviceTool) {
                         "Tool '$toolNamePart' is an advice-only entry in package '$packName' and is not executable."

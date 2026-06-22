@@ -45,9 +45,13 @@ class PackageManager private constructor(
     // Nested data classes for package management
     data class ToolPkgContainerDetails(
         val name: String = "",
-        val description: String = "",
+        val description: LocalizedText = LocalizedText(),
         val packageName: String = "",
-        val version: String = ""
+        val version: String = "",
+        val displayName: LocalizedText = LocalizedText(),
+        val isBuiltIn: Boolean = false,
+        val enabledByDefault: Boolean = false,
+        val tools: List<PackageTool> = emptyList()
     )
     
     data class PackageLoadErrorInfo(
@@ -128,7 +132,7 @@ class PackageManager private constructor(
     
     fun getEnabledPackageNameSetInternal(): Set<String> = emptySet()
     
-    fun getAvailablePackages(): List<ToolPkgContainerDetails> = emptyList()
+    fun getAvailablePackages(): Map<String, ToolPkgContainerDetails> = emptyMap()
     
     fun getAvailableServerPackages(): List<ToolPkgContainerDetails> = emptyList()
     
@@ -157,6 +161,18 @@ class PackageManager private constructor(
     fun getToolPkgContainersInternal(): List<ToolPkgContainerDetails> = emptyList()
     
     fun getEnabledPackageNameSet(): Set<String> = emptySet()
+    
+    /**
+     * 获取已禁用的包列表
+     * @return List<String> 已禁用的包名列表
+     */
+    fun getDisabledPackages(): List<String> = emptyList()
+    
+    /**
+     * 获取外部包路径
+     * @return String 外部包路径
+     */
+    fun getExternalPackagesPath(): String = ""
     
     fun getDisplayName(packageName: String): String = ""
     

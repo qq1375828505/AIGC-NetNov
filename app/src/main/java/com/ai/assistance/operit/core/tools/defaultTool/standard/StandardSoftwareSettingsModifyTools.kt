@@ -161,7 +161,7 @@ class StandardSoftwareSettingsModifyTools(private val context: Context) {
 
     fun listSandboxPackages(tool: AITool, packageManager: PackageManager): ToolResult {
         return try {
-            val availablePackages = packageManager.getAvailablePackages(forceRefresh = true)
+            val availablePackages = packageManager.getAvailablePackages()
             val enabledSet = packageManager.getEnabledPackageNames().toSet()
             val disabledSet = packageManager.getDisabledPackages().toSet()
             val externalPackagesPath = packageManager.getExternalPackagesPath()
@@ -199,7 +199,7 @@ class StandardSoftwareSettingsModifyTools(private val context: Context) {
                         enabledCount = availablePackages.keys.count { enabledSet.contains(it) },
                         disabledCount = availablePackages.keys.count { !enabledSet.contains(it) },
                         packages = packages,
-                        packageLoadErrors = packageLoadErrors
+                        packageLoadErrors = packageLoadErrors.associate { it.packageName to it.errorMessage }
                     )
             )
         } catch (e: Exception) {

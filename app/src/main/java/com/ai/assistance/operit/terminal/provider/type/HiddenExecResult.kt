@@ -7,5 +7,8 @@ data class HiddenExecResult(
     val output: String = "",
     val exitCode: Int = 0,
     val isError: Boolean = false,
-    val isTimeout: Boolean = false
+    val isTimeout: Boolean = false,
+    val error: String = "",
+    val state: String = "",
+    val rawOutputPreview: String = ""
 )
