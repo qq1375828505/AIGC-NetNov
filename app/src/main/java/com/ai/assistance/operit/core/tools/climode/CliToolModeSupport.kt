@@ -278,7 +278,7 @@ object CliToolModeSupport {
 
     fun isToolNameAllowedForRoleCard(
         toolName: String,
-        allowedToolNames: Set<String>?,
+        usePackageSourceName: String?,
         roleCardToolAccess: ResolvedCharacterCardToolAccess
     ): Boolean {
         return true

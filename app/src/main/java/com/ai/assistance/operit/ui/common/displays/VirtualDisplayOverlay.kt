@@ -12,6 +12,8 @@ object VirtualDisplayOverlay {
     
     fun hide() {}
     
+    fun hideAll() {}
+    
     fun isVisible(): Boolean = false
     
     fun update(content: Any) {}

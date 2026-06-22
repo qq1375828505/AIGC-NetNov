@@ -1,6 +1,7 @@
 package com.ai.assistance.operit.core.tools.packTool
 
 import com.ai.assistance.operit.core.tools.PackageTool
+import com.ai.assistance.operit.core.tools.javascript.JsEngine
 
 data class LocalizedText(val values: Map<String, String> = emptyMap()) {
     fun resolve(preferredLanguage: String): String {
@@ -22,7 +23,11 @@ data class ToolPackage(
  * Stub implementation of PackageManager.
  * This is a placeholder to allow compilation without the actual implementation.
  */
-class PackageManager private constructor(context: android.content.Context, toolHandler: com.ai.assistance.operit.core.tools.AIToolHandler) {
+class PackageManager private constructor(
+    context: android.content.Context,
+    toolHandler: com.ai.assistance.operit.core.tools.AIToolHandler
+) {
+    private val appContext: android.content.Context = context.applicationContext
     
     companion object {
         @Volatile
@@ -72,13 +77,51 @@ class PackageManager private constructor(context: android.content.Context, toolH
     data class ToolPkgDesktopWidget(
         val id: String = "",
         val name: String = "",
-        val description: String = ""
+        val description: String = "",
+        val containerPackageName: String = "",
+        val toolPkgId: String = "",
+        val widgetId: String = "",
+        val routeId: String = "",
+        val renderRouteId: String = "",
+        val title: String = "",
+        val subtitle: String = "",
+        val icon: String? = null,
+        val order: Int = 0
     )
     
-    interface ToolPkgRuntimeChangeListener {
-        fun onPackageLoaded(packageName: String) {}
-        fun onPackageUnloaded(packageName: String) {}
+    data class ToolPkgUiRoute(
+        val containerPackageName: String = "",
+        val toolPkgId: String = "",
+        val routeId: String = "",
+        val uiModuleId: String = "",
+        val runtime: String = "",
+        val screen: String = "",
+        val title: String = "",
+        val description: String = "",
+        val keepAlive: Boolean = false,
+        val moduleSpec: Map<String, Any?> = emptyMap()
+    )
+    
+    data class ToolPkgNavigationEntry(
+        val containerPackageName: String = "",
+        val toolPkgId: String = "",
+        val entryId: String = "",
+        val routeId: String = "",
+        val surface: String = "",
+        val title: String = "",
+        val description: String = "",
+        val icon: String? = null,
+        val action: Map<String, Any?> = emptyMap()
+    )
+    
+    fun interface ToolPkgRuntimeChangeListener {
+        fun onContainersChanged(activeContainers: List<ToolPkgContainerRuntime>)
     }
+    
+    data class ToolPkgContainerRuntime(
+        val packageName: String = "",
+        val isActive: Boolean = false
+    )
     
     // Package management methods
     fun getEnabledPackageNames(): List<String> = emptyList()
@@ -179,4 +222,59 @@ class PackageManager private constructor(context: android.content.Context, toolH
     fun addToolPkgRuntimeChangeListener(listener: ToolPkgRuntimeChangeListener) {}
     
     fun removeToolPkgRuntimeChangeListener(listener: ToolPkgRuntimeChangeListener) {}
+    
+    fun getToolPkgUiRoutes(
+        runtime: String = "compose_dsl",
+        resolveContext: android.content.Context? = null
+    ): List<ToolPkgUiRoute> = emptyList()
+    
+    fun getToolPkgDesktopWidgets(
+        resolveContext: android.content.Context? = null
+    ): List<ToolPkgDesktopWidget> = emptyList()
+    
+    fun getToolPkgComposeDslScript(
+        containerPackageName: String,
+        uiModuleId: String? = null
+    ): String? = null
+    
+    fun getToolPkgComposeDslScreenPath(
+        containerPackageName: String,
+        uiModuleId: String? = null
+    ): String? = null
+    
+    fun getToolPkgExecutionEngine(contextKey: String): JsEngine {
+        return JsEngine(appContext)
+    }
+    
+    fun releaseToolPkgExecutionEngine(contextKey: String) {}
+    
+    fun getToolPkgNavigationEntries(
+        runtime: String = "compose_dsl",
+        resolveContext: android.content.Context? = null
+    ): List<ToolPkgNavigationEntry> = emptyList()
+    
+    fun runToolPkgNavigationEntryAction(
+        containerPackageName: String,
+        entryId: String,
+        functionName: String,
+        inlineFunctionSource: String? = null,
+        eventPayload: Map<String, Any?> = emptyMap(),
+        onIntermediateResult: ((Any?) -> Unit)? = null
+    ): Result<Any?> = Result.success(null)
+    
+    fun readToolPkgTextResource(
+        packageNameOrSubpackageId: String,
+        resourcePath: String
+    ): String? = null
+    
+    fun getToolPkgWorkflowTemplates(
+        context: android.content.Context
+    ): List<ToolPkgWorkflowTemplate> = emptyList()
+    
+    fun importToolPkgWorkflowTemplate(
+        containerPackageName: String,
+        templateId: String
+    ): Result<Any?> = Result.success(null)
+    
+    fun getEnabledToolPkgContainerRuntimes(): List<ToolPkgContainerRuntime> = emptyList()
 }

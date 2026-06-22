@@ -86,7 +86,8 @@ internal data class ToolPkgAppLifecycleHookRuntime(
 internal data class ToolPkgFunctionHookRuntime(
     val id: String,
     val function: String,
-    val functionSource: String? = null
+    val functionSource: String? = null,
+    val containerPackageName: String = ""
 )
 
 internal data class ToolPkgAiProviderHandlerRuntime(
