@@ -1,5 +1,7 @@
 // 子 Agent 调度系统
 
+import { Logger, safeNativeJsonCall, requireString, safeJsonParse } from "./novel_utils";
+
 export const AGENT_CONFIGS = {
   outline: {
     id: "outline",
@@ -137,12 +139,21 @@ export class NovelAgentDispatcher {
     }
 
     // 调用 AI
-    const result = await Tools.Chat({
-      messages: [{ role: "user", content: fullPrompt }],
-      systemPrompt: agent.systemPrompt
-    });
+    try {
+      const result = await Tools.Chat({
+        messages: [{ role: "user", content: fullPrompt }],
+        systemPrompt: agent.systemPrompt
+      });
 
-    return result;
+      if (!result) {
+        throw new Error(`Agent ${agentId} 返回了空结果`);
+      }
+
+      return result;
+    } catch (error) {
+      Logger.error(`Agent ${agentId} 调用失败`, error);
+      throw error;
+    }
   }
 
   /**
@@ -181,18 +192,24 @@ export function registerTools() {
       // 获取作品上下文
       if (workId) {
         try {
-          const works = JSON.parse(await Tools.callNative("getNovelWorks", []));
+          const works = await safeNativeJsonCall<any[]>("getNovelWorks", []);
           const work = works.find((w: any) => w.id === workId);
           if (work) {
             context.workTitle = work.title;
           }
         } catch (e) {
-          // 忽略错误
+          Logger.warn("获取作品上下文失败", e);
         }
       }
 
-      const result = await NovelAgentDispatcher.dispatch(agentId, task, context);
-      return { success: true, result };
+      try {
+        const result = await NovelAgentDispatcher.dispatch(agentId, task, context);
+        Logger.info(`Agent ${agentId} 调度成功`);
+        return { success: true, result };
+      } catch (error) {
+        Logger.error(`Agent ${agentId} 调度失败`, error);
+        return { success: false, error: (error as Error).message || "Agent 调度失败" };
+      }
     }
   });
 
@@ -210,24 +227,29 @@ export function registerTools() {
     execute: async (params: any) => {
       const { chapterId, workId } = params;
 
-      // 获取章节内容
-      const content = await Tools.callNative("getChapterContent", [chapterId]);
+      try {
+        // 获取章节内容
+        const content = await Tools.callNative("getChapterContent", [chapterId]);
 
-      // 调用多个 Agent 分析
-      const [pleasureResult, waterResult, polishResult] = await Promise.all([
-        NovelAgentDispatcher.dispatch("pleasure", content),
-        NovelAgentDispatcher.dispatch("water", content),
-        NovelAgentDispatcher.dispatch("polish", content)
-      ]);
+        // 调用多个 Agent 分析
+        const [pleasureResult, waterResult, polishResult] = await Promise.all([
+          NovelAgentDispatcher.dispatch("pleasure", content),
+          NovelAgentDispatcher.dispatch("water", content),
+          NovelAgentDispatcher.dispatch("polish", content)
+        ]);
 
-      return {
-        success: true,
-        review: {
-          pleasure: JSON.parse(pleasureResult),
-          water: JSON.parse(waterResult),
-          polish: polishResult
-        }
-      };
+        return {
+          success: true,
+          review: {
+            pleasure: safeJsonParse(pleasureResult) ?? { raw: pleasureResult },
+            water: safeJsonParse(waterResult) ?? { raw: waterResult },
+            polish: polishResult
+          }
+        };
+      } catch (error) {
+        Logger.error("章节审核失败", error);
+        return { success: false, error: (error as Error).message || "章节审核失败" };
+      }
     }
   });
 }

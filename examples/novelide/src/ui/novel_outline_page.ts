@@ -72,16 +72,39 @@ export default function OutlinePage(ctx: ComposeDslContext): ComposeNode {
     }
   }
 
-  // 更新节点
-  async function updateNode(nodeId: string, title: string, content: string) {
+  // 更新节点（支持章节关联）
+  async function updateNode(nodeId: string, title: string, content: string, chapterId?: string) {
     try {
-      await Tools.callNative("updateOutlineNode", [nodeId, title, content]);
+      await Tools.callNative("updateOutlineNodeEx", [nodeId, title, content, chapterId || ""]);
       await loadNodes();
       setIsEditing(false);
       setSelectedNode(null);
     } catch (error) {
       console.error("更新节点失败:", error);
     }
+  }
+
+  // 拖拽排序节点
+  async function moveNode(nodeId: string, newParentId: string | null, newSortOrder: number) {
+    try {
+      await Tools.callNative("reorderOutlineNode", [nodeId, newParentId || "", newSortOrder]);
+      await loadNodes();
+    } catch (error) {
+      console.error("移动节点失败:", error);
+    }
+  }
+
+  // 展开/折叠状态
+  const [expandedNodes, setExpandedNodes] = ctx.useState("expandedNodes", new Set<string>());
+
+  function toggleExpand(nodeId: string) {
+    const newSet = new Set(expandedNodes);
+    if (newSet.has(nodeId)) {
+      newSet.delete(nodeId);
+    } else {
+      newSet.add(nodeId);
+    }
+    setExpandedNodes(newSet);
   }
 
   // 删除节点
@@ -121,13 +144,20 @@ export default function OutlinePage(ctx: ComposeDslContext): ComposeNode {
     ]
   });
 
-  // 节点列表（树形结构）
+  // 节点列表（树形结构，支持展开折叠）
   function renderNodeList() {
     const rootNodes = nodes.filter((n: OutlineNode) => !n.parentId);
     
     function renderNode(node: OutlineNode, level: number = 0) {
       const children = nodes.filter((n: OutlineNode) => n.parentId === node.id);
       const isSelected = selectedNode?.id === node.id;
+      const isExpanded = expandedNodes.has(node.id);
+      const hasChildren = children.length > 0;
+      
+      // 查找关联章节
+      const linkedChapter = node.chapterId 
+        ? chapters.find((ch: Chapter) => ch.id === node.chapterId)
+        : null;
       
       return UI.Column({
         key: node.id,
@@ -140,6 +170,7 @@ export default function OutlinePage(ctx: ComposeDslContext): ComposeNode {
               setSelectedNode(node);
               setEditTitle(node.title);
               setEditContent(node.content);
+              setEditChapterId(node.chapterId || "");
               setIsEditing(false);
             })
             .padding(4),
@@ -147,11 +178,18 @@ export default function OutlinePage(ctx: ComposeDslContext): ComposeNode {
         }, UI.Row({
           fillMaxWidth: true,
           padding: 12,
-          spacing: 12,
+          spacing: 8,
           verticalAlignment: "center"
         }, [
+          // 展开/折叠按钮
+          hasChildren ? UI.IconButton({
+            icon: isExpanded ? "expand_more" : "chevron_right",
+            onClick: () => toggleExpand(node.id),
+            compact: true,
+            tint: colors.onSurfaceVariant
+          }) : UI.Box({ width: 24 }),
           UI.Icon({
-            icon: children.length > 0 ? "folder" : "description",
+            icon: hasChildren ? (isExpanded ? "folder_open" : "folder") : "description",
             tint: isSelected ? colors.primary : colors.onSurfaceVariant
           }),
           UI.Column({
@@ -163,8 +201,14 @@ export default function OutlinePage(ctx: ComposeDslContext): ComposeNode {
               color: isSelected ? colors.onPrimaryContainer : colors.onSurface,
               maxLines: 1
             }),
+            linkedChapter ? UI.Text({
+              text: `🔗 ${linkedChapter.title}`,
+              style: "labelSmall",
+              color: colors.primary,
+              maxLines: 1
+            }) : null,
             node.content ? UI.Text({
-              text: node.content.substring(0, 50) + (node.content.length > 50 ? "..." : ""),
+              text: node.content.substring(0, 40) + (node.content.length > 40 ? "..." : ""),
               style: "bodySmall",
               color: colors.onSurfaceVariant,
               maxLines: 1
@@ -182,7 +226,8 @@ export default function OutlinePage(ctx: ComposeDslContext): ComposeNode {
             compact: true
           })
         ])),
-        ...children.map(child => renderNode(child, level + 1))
+        // 递归渲染子节点（仅在展开时）
+        ...(isExpanded || !hasChildren ? children.map(child => renderNode(child, level + 1)) : [])
       ]);
     }
 
@@ -251,7 +296,7 @@ export default function OutlinePage(ctx: ComposeDslContext): ComposeNode {
             variant: "outlined"
           }, "取消"),
           UI.Button({
-            onClick: () => updateNode(selectedNode.id, editTitle, editContent)
+            onClick: () => updateNode(selectedNode.id, editTitle, editContent, editChapterId)
           }, "保存")
         ])
       ]);
@@ -292,12 +337,30 @@ export default function OutlinePage(ctx: ComposeDslContext): ComposeNode {
           })
         ])
       ]),
-      // 章节关联标签
-      linkedChapter ? UI.Chip({
-        label: `关联章节: ${linkedChapter.title}`,
-        icon: "link",
-        variant: "outlined"
-      }) : null,
+      // 章节关联标签（可点击跳转）
+      linkedChapter ? UI.Row({
+        spacing: 8,
+        verticalAlignment: "center"
+      }, [
+        UI.Chip({
+          label: `关联章节: ${linkedChapter.title}`,
+          icon: "link",
+          variant: "outlined"
+        }),
+        UI.IconButton({
+          icon: "open_in_new",
+          onClick: () => {
+            // 跳转到章节编辑器
+            try {
+              Tools.callNative("navigateToChapter", [linkedChapter.id]);
+            } catch (e) {
+              console.log("跳转章节:", linkedChapter.id);
+            }
+          },
+          tooltip: "打开章节",
+          compact: true
+        })
+      ]) : null,
       UI.Text({
         text: selectedNode.content || "暂无内容",
         style: "bodyMedium",
@@ -343,6 +406,16 @@ export default function OutlinePage(ctx: ComposeDslContext): ComposeNode {
           fillMaxWidth: true,
           minLines: 3,
           multiline: true
+        }),
+        UI.Dropdown({
+          label: "关联章节（可选）",
+          value: editChapterId,
+          onValueChange: setEditChapterId,
+          options: [
+            { value: "", label: "无关联" },
+            ...chapters.map((ch: Chapter) => ({ value: ch.id, label: ch.title }))
+          ],
+          fillMaxWidth: true
         }),
         UI.Row({
           spacing: 8,

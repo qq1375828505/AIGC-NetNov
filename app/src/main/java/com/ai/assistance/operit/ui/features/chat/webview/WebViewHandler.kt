@@ -169,9 +169,11 @@ class WebViewHandler(private val context: Context) {
             // 初始化 NovelNativeBridge
             val database = AppDatabase.getDatabase(context)
             val novelDao = database.novelDao()
-            val novelRepository = NovelRepository(novelDao)
+            val outlineDao = database.outlineDao()
+            val novelRepository = NovelRepository(novelDao, outlineDao)
             val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
             novelNativeBridge = NovelNativeBridge(context, novelRepository, scope)
+            novelNativeBridge!!.setWebView(this)
             addJavascriptInterface(novelNativeBridge!!, "NovelNativeBridge")
 
             // 配置WebView设置

@@ -1,5 +1,7 @@
 // 写作统计工具
 
+import { Logger, safeNativeJsonCall, requireString, clearJsonCache } from "./novel_utils";
+
 export function registerTools() {
   // 获取写作统计
   Tools.register("novelide:get_writing_stats", {
@@ -8,12 +10,18 @@ export function registerTools() {
       type: "object",
       properties: {
         workId: { type: "string", description: "作品ID" }
-      }
+      },
+      required: ["workId"]
     },
     execute: async (params: any) => {
-      const { workId } = params;
-      const result = await Tools.callNative("getWritingStats", [workId || ""]);
-      return { success: true, stats: JSON.parse(result) };
+      const workId = requireString(params.workId, "workId");
+      try {
+        const stats = await safeNativeJsonCall<any>("getWritingStats", [workId]);
+        return { success: true, stats };
+      } catch (error) {
+        Logger.error("获取写作统计失败", error);
+        return { success: false, error: (error as Error).message || "获取写作统计失败", stats: {} };
+      }
     }
   });
 
@@ -28,9 +36,14 @@ export function registerTools() {
       required: ["workId"]
     },
     execute: async (params: any) => {
-      const { workId } = params;
-      const result = await Tools.callNative("getChapterStats", [workId]);
-      return { success: true, stats: JSON.parse(result) };
+      const workId = requireString(params.workId, "workId");
+      try {
+        const stats = await safeNativeJsonCall<any>("getChapterStats", [workId]);
+        return { success: true, stats };
+      } catch (error) {
+        Logger.error("获取章节统计失败", error);
+        return { success: false, error: (error as Error).message || "获取章节统计失败", stats: {} };
+      }
     }
   });
 
@@ -42,12 +55,19 @@ export function registerTools() {
       properties: {
         workId: { type: "string", description: "作品ID" },
         days: { type: "number", description: "查询天数（默认30天）" }
-      }
+      },
+      required: ["workId"]
     },
     execute: async (params: any) => {
-      const { workId = "", days = 30 } = params;
-      const result = await Tools.callNative("getDailyStats", [workId, days]);
-      return { success: true, stats: JSON.parse(result) };
+      const workId = requireString(params.workId, "workId");
+      const { days = 30 } = params;
+      try {
+        const stats = await safeNativeJsonCall<any>("getDailyStats", [workId, days]);
+        return { success: true, stats };
+      } catch (error) {
+        Logger.error("获取每日统计失败", error);
+        return { success: false, error: (error as Error).message || "获取每日统计失败", stats: {} };
+      }
     }
   });
 }

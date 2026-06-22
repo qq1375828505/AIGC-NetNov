@@ -14,6 +14,7 @@ import com.ai.assistance.operit.data.model.MessageEntity
 import com.ai.assistance.operit.data.model.MessageVariantEntity
 import com.ai.assistance.novelide.data.model.novel.*
 import com.ai.assistance.novelide.data.dao.novel.NovelDao
+import com.ai.assistance.novelide.data.dao.novel.OutlineDao
 import com.ai.assistance.novelide.data.migration.MIGRATION_20_21
 import com.ai.assistance.novelide.data.migration.TomatoPresetSeeder
 
@@ -42,9 +43,10 @@ import com.ai.assistance.novelide.data.migration.TomatoPresetSeeder
         CustomMaterialItem::class,
         CharacterRelationship::class,
         NovelEvent::class,
-        NovelEventParticipant::class
+        NovelEventParticipant::class,
+        OutlineNode::class
     ],
-    version = 21,
+    version = 22,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -58,6 +60,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun messageVariantDao(): MessageVariantDao
 
     abstract fun novelDao(): NovelDao
+
+    abstract fun outlineDao(): OutlineDao
 
     companion object {
         @Volatile
@@ -248,6 +252,31 @@ abstract class AppDatabase : RoomDatabase() {
                 }
             }
 
+        private val MIGRATION_21_22 =
+            object : Migration(21, 22) {
+                override fun migrate(db: SupportSQLiteDatabase) {
+                    db.execSQL(
+                        """
+                            CREATE TABLE IF NOT EXISTS `outline_nodes` (
+                                `id` TEXT NOT NULL,
+                                `workId` TEXT NOT NULL,
+                                `title` TEXT NOT NULL,
+                                `content` TEXT NOT NULL DEFAULT '',
+                                `parentId` TEXT,
+                                `sortOrder` INTEGER NOT NULL DEFAULT 0,
+                                `level` INTEGER NOT NULL DEFAULT 0,
+                                `chapterId` TEXT,
+                                `createdAt` INTEGER NOT NULL,
+                                `updatedAt` INTEGER NOT NULL,
+                                PRIMARY KEY(`id`),
+                                FOREIGN KEY(`workId`) REFERENCES `novel_works`(`id`) ON DELETE CASCADE
+                            )
+                        """.trimIndent()
+                    )
+                    db.execSQL("CREATE INDEX IF NOT EXISTS `index_outline_nodes_workId` ON `outline_nodes` (`workId`)")
+                }
+            }
+
         // 定义从版本2到3的迁移
         private val MIGRATION_2_3 =
             object : Migration(2, 3) {
@@ -365,7 +394,8 @@ abstract class AppDatabase : RoomDatabase() {
                                 MIGRATION_17_18,
                                 MIGRATION_18_19,
                                 MIGRATION_19_20,
-                                MIGRATION_20_21
+                                MIGRATION_20_21,
+                                MIGRATION_21_22
                             )
                             .addCallback(object : RoomDatabase.Callback() {
                                 override fun onCreate(db: SupportSQLiteDatabase) {

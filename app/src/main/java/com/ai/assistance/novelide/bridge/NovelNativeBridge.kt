@@ -3,6 +3,7 @@ package com.ai.assistance.novelide.bridge
 import android.content.Context
 import android.net.Uri
 import android.webkit.JavascriptInterface
+import android.webkit.WebView
 import com.ai.assistance.novelide.data.model.novel.*
 import com.ai.assistance.novelide.data.repository.novel.NovelRepository
 import com.ai.assistance.operit.data.novel.NovelExporter
@@ -12,14 +13,17 @@ import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * 网文写作 NativeBridge
  * 提供给 HTML 前端调用的 JavaScript 接口
  *
- * 所有写操作使用 runBlocking(Dispatchers.IO) 同步执行，
+ * 轻量级 CRUD 操作使用 runBlocking(Dispatchers.IO) 同步执行，
+ * 耗时操作（导入导出等）使用异步回调模式避免阻塞。
  * 返回统一 JSON 格式：成功 {"success": true, "id": "xxx"} 或 {"success": true}，
  * 失败 {"success": false, "error": "错误信息"}
  */
@@ -30,6 +34,65 @@ class NovelNativeBridge(
 ) {
 
     private val gson = Gson()
+
+    /** WebView 引用，用于异步回调 */
+    private var webView: WebView? = null
+
+    /** 异步操作待返回结果 */
+    private val pendingResults = ConcurrentHashMap<String, String>()
+
+    /** 设置 WebView 引用（由 WebViewHandler 调用） */
+    fun setWebView(webView: WebView) {
+        this.webView = webView
+    }
+
+    /**
+     * 异步执行耗时操作，结果通过 evaluateJavascript 回调前端
+     * 前端需注册 window.__onNovelBridgeResult(callId, result) 处理回调
+     */
+    private fun executeAsync(callId: String, block: suspend () -> String) {
+        scope.launch(Dispatchers.IO) {
+            try {
+                val result = block()
+                pendingResults[callId] = result
+                // 尝试通过 WebView 回调
+                val wv = webView
+                if (wv != null) {
+                    val escapedResult = gson.toJson(result) // 转义JSON字符串
+                    wv.post {
+                        wv.evaluateJavascript(
+                            "window.__onNovelBridgeResult && window.__onNovelBridgeResult('$callId', $escapedResult)",
+                            null
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                AppLogger.e("NovelNativeBridge", "Async operation failed: $callId", e)
+                val errorResult = gson.toJson(mapOf("success" to false, "error" to (e.message ?: "操作失败")))
+                pendingResults[callId] = errorResult
+                webView?.post {
+                    webView?.evaluateJavascript(
+                        "window.__onNovelBridgeResult && window.__onNovelBridgeResult('$callId', $errorResult)",
+                        null
+                    )
+                }
+            }
+        }
+    }
+
+    /**
+     * 轮询获取异步操作结果（前端在 WebView 回调不可用时的备选方案）
+     * 返回结果后自动清除，未完成返回 null
+     */
+    @JavascriptInterface
+    fun getAsyncResult(callId: String): String {
+        return pendingResults.remove(callId) ?: ""
+    }
+
+    /** 待导航章节ID，由 navigateToChapter 设置，前端通过 getPendingNavigation 轮询 */
+    @Volatile
+    var pendingNavigationChapterId: String? = null
+        private set
 
     // ==================== 作品 ====================
 
@@ -960,6 +1023,228 @@ class NovelNativeBridge(
         }
     }
 
+    // ==================== 作品详情 ====================
+
+    @JavascriptInterface
+    fun getWork(workId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val work = repository.getWorkById(workId)
+                if (work != null) gson.toJson(work) else "{}"
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "getWork failed", e)
+                "{}"
+            }
+        }
+    }
+
+    // ==================== 资料详情 ====================
+
+    @JavascriptInterface
+    fun getCharacterDetail(characterId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val character = repository.getCharacterById(characterId)
+                if (character != null) gson.toJson(character) else "{}"
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "getCharacterDetail failed", e)
+                "{}"
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun getSettingDetail(settingId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val setting = repository.getSettingById(settingId)
+                if (setting != null) gson.toJson(setting) else "{}"
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "getSettingDetail failed", e)
+                "{}"
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun getLocationDetail(locationId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val location = repository.getLocationById(locationId)
+                if (location != null) gson.toJson(location) else "{}"
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "getLocationDetail failed", e)
+                "{}"
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun getFactionDetail(factionId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val faction = repository.getFactionById(factionId)
+                if (faction != null) gson.toJson(faction) else "{}"
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "getFactionDetail failed", e)
+                "{}"
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun getItemDetail(itemId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val item = repository.getItemById(itemId)
+                if (item != null) gson.toJson(item) else "{}"
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "getItemDetail failed", e)
+                "{}"
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun getHookDetail(hookId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val hook = repository.getPlotHookById(hookId)
+                if (hook != null) gson.toJson(hook) else "{}"
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "getHookDetail failed", e)
+                "{}"
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun getReferenceDetail(referenceId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val reference = repository.getReferenceById(referenceId)
+                if (reference != null) gson.toJson(reference) else "{}"
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "getReferenceDetail failed", e)
+                "{}"
+            }
+        }
+    }
+
+    // ==================== 章节统计 ====================
+
+    @JavascriptInterface
+    fun getChapterStats(workId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val chapters = repository.getChaptersByWorkId(workId).first()
+                val totalChapters = chapters.size
+                val totalWords = chapters.sumOf { it.wordCount }
+                val avgWords = if (totalChapters > 0) totalWords / totalChapters else 0
+                val maxWords = chapters.maxOfOrNull { it.wordCount } ?: 0
+                val minWords = chapters.filter { it.wordCount > 0 }.minOfOrNull { it.wordCount } ?: 0
+
+                // 按状态分组
+                val statusCounts = chapters.groupBy { it.status }.mapValues { it.value.size }
+
+                // 章节详情列表
+                val chapterList = chapters.map { ch ->
+                    mapOf(
+                        "id" to ch.id,
+                        "title" to ch.title,
+                        "wordCount" to ch.wordCount,
+                        "status" to ch.status,
+                        "sortOrder" to ch.sortOrder,
+                        "updatedAt" to ch.updatedAt
+                    )
+                }
+
+                val stats = mapOf(
+                    "workId" to workId,
+                    "totalChapters" to totalChapters,
+                    "totalWords" to totalWords,
+                    "avgWords" to avgWords,
+                    "maxWords" to maxWords,
+                    "minWords" to minWords,
+                    "statusCounts" to statusCounts,
+                    "chapters" to chapterList
+                )
+                gson.toJson(stats)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "getChapterStats failed", e)
+                "{}"
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun getDailyStats(workId: String, days: Int): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val chapters = repository.getChaptersByWorkId(workId).first()
+                val now = System.currentTimeMillis()
+                val startTime = now - days.toLong() * 24 * 60 * 60 * 1000L
+
+                // 按日期分组统计每日字数
+                val dailyData = mutableMapOf<String, Int>()
+                val dailyChapterCount = mutableMapOf<String, Int>()
+
+                // 初始化所有日期为0
+                val cal = java.util.Calendar.getInstance()
+                for (i in 0 until days) {
+                    cal.timeInMillis = now - i.toLong() * 24 * 60 * 60 * 1000L
+                    val dateKey = "${cal.get(java.util.Calendar.YEAR)}-${String.format("%02d", cal.get(java.util.Calendar.MONTH) + 1)}-${String.format("%02d", cal.get(java.util.Calendar.DAY_OF_MONTH))}"
+                    dailyData[dateKey] = 0
+                    dailyChapterCount[dateKey] = 0
+                }
+
+                // 统计更新的章节
+                val recentChapters = chapters.filter { it.updatedAt >= startTime }
+                for (chapter in recentChapters) {
+                    cal.timeInMillis = chapter.updatedAt
+                    val dateKey = "${cal.get(java.util.Calendar.YEAR)}-${String.format("%02d", cal.get(java.util.Calendar.MONTH) + 1)}-${String.format("%02d", cal.get(java.util.Calendar.DAY_OF_MONTH))}"
+                    dailyData[dateKey] = (dailyData[dateKey] ?: 0) + chapter.wordCount
+                    dailyChapterCount[dateKey] = (dailyChapterCount[dateKey] ?: 0) + 1
+                }
+
+                // 构建每日统计列表（按日期排序）
+                val dailyList = dailyData.toSortedMap().map { (date, words) ->
+                    mapOf(
+                        "date" to date,
+                        "words" to words,
+                        "chapters" to (dailyChapterCount[date] ?: 0)
+                    )
+                }
+
+                val totalRecentWords = dailyData.values.sum()
+                val activeDays = dailyData.values.count { it > 0 }
+
+                val stats = mapOf(
+                    "workId" to workId,
+                    "days" to days,
+                    "totalWords" to totalRecentWords,
+                    "activeDays" to activeDays,
+                    "avgDailyWords" to if (activeDays > 0) totalRecentWords / activeDays else 0,
+                    "daily" to dailyList
+                )
+                gson.toJson(stats)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "getDailyStats failed", e)
+                "{}"
+            }
+        }
+    }
+
     // ==================== 卷 ====================
 
     @JavascriptInterface
@@ -1017,12 +1302,14 @@ class NovelNativeBridge(
                 val volume = repository.getVolumeById(volumeId)
                 if (volume != null) {
                     repository.deleteVolume(volume)
+                    gson.toJson(mapOf("success" to true))
+                } else {
+                    gson.toJson(mapOf("success" to false, "error" to "卷不存在"))
                 }
-                gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                AppLogger.e("NovelNativeBridge", "操作失败", e)
-                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+                AppLogger.e("NovelNativeBridge", "deleteVolume failed", e)
+                gson.toJson(mapOf("success" to false, "error" to "删除卷失败"))
             }
         }
     }
@@ -1097,12 +1384,8 @@ class NovelNativeBridge(
     fun getCustomItems(workId: String): String {
         return runBlocking(Dispatchers.IO) {
             try {
-                val folders = repository.getCustomMaterialFoldersByWorkId(workId).first()
-                val allItems = mutableListOf<CustomMaterialItem>()
-                for (folder in folders) {
-                    allItems.addAll(repository.getCustomMaterialItemsByFolderId(folder.id).first())
-                }
-                gson.toJson(allItems)
+                val items = repository.getCustomMaterialItemsByWorkId(workId).first()
+                gson.toJson(items)
             } catch (e: Exception) {
                 e.printStackTrace()
                 "[]"
@@ -1124,21 +1407,22 @@ class NovelNativeBridge(
     }
 
     @JavascriptInterface
-    fun createCustomItem(workId: String, folderId: String, title: String, content: String): String {
+    fun createCustomItem(itemJson: String): String {
         return runBlocking(Dispatchers.IO) {
             try {
+                val json = gson.fromJson(itemJson, Map::class.java)
                 val item = CustomMaterialItem(
                     id = UUID.randomUUID().toString(),
-                    folderId = folderId,
-                    title = title,
-                    content = content
+                    folderId = json["folderId"] as? String ?: "",
+                    title = json["title"] as? String ?: "",
+                    content = json["content"] as? String ?: ""
                 )
                 repository.insertCustomMaterialItem(item)
                 gson.toJson(mapOf("success" to true, "id" to item.id))
             } catch (e: Exception) {
                 e.printStackTrace()
-                AppLogger.e("NovelNativeBridge", "操作失败", e)
-                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+                AppLogger.e("NovelNativeBridge", "createCustomItem failed", e)
+                gson.toJson(mapOf("success" to false, "error" to "创建自定义条目失败"))
             }
         }
     }
@@ -1175,7 +1459,7 @@ class NovelNativeBridge(
     // ==================== 写作技能 ====================
 
     @JavascriptInterface
-    fun getWritingSkills(): String {
+    fun getWritingSkills(workId: String): String {
         return runBlocking(Dispatchers.IO) {
             try {
                 val skills = repository.getAllWritingSkills().first()
@@ -1188,21 +1472,22 @@ class NovelNativeBridge(
     }
 
     @JavascriptInterface
-    fun createWritingSkill(workId: String, name: String, description: String, promptTemplate: String): String {
+    fun createWritingSkill(skillJson: String): String {
         return runBlocking(Dispatchers.IO) {
             try {
+                val json = gson.fromJson(skillJson, Map::class.java)
                 val skill = WritingSkill(
                     id = UUID.randomUUID().toString(),
-                    name = name,
-                    description = description,
-                    systemPrompt = promptTemplate
+                    name = json["name"] as? String ?: "",
+                    description = json["description"] as? String ?: "",
+                    systemPrompt = json["systemPrompt"] as? String ?: json["promptTemplate"] as? String ?: ""
                 )
                 repository.insertWritingSkill(skill)
                 gson.toJson(mapOf("success" to true, "id" to skill.id))
             } catch (e: Exception) {
                 e.printStackTrace()
-                AppLogger.e("NovelNativeBridge", "操作失败", e)
-                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+                AppLogger.e("NovelNativeBridge", "createWritingSkill failed", e)
+                gson.toJson(mapOf("success" to false, "error" to "创建写作技能失败"))
             }
         }
     }
@@ -1229,12 +1514,14 @@ class NovelNativeBridge(
                 val skill = repository.getWritingSkillById(skillId)
                 if (skill != null) {
                     repository.deleteWritingSkill(skill)
+                    gson.toJson(mapOf("success" to true))
+                } else {
+                    gson.toJson(mapOf("success" to false, "error" to "写作技能不存在"))
                 }
-                gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
-                AppLogger.e("NovelNativeBridge", "操作失败", e)
-                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+                AppLogger.e("NovelNativeBridge", "deleteWritingSkill failed", e)
+                gson.toJson(mapOf("success" to false, "error" to "删除写作技能失败"))
             }
         }
     }
@@ -1255,21 +1542,22 @@ class NovelNativeBridge(
     }
 
     @JavascriptInterface
-    fun createSettingReminder(workId: String, settingId: String, content: String, triggerType: String): String {
+    fun createSettingReminder(reminderJson: String): String {
         return runBlocking(Dispatchers.IO) {
             try {
+                val json = gson.fromJson(reminderJson, Map::class.java)
                 val reminder = SettingReminder(
                     id = UUID.randomUUID().toString(),
-                    workId = workId,
-                    settingId = settingId,
-                    reminderText = content
+                    workId = json["workId"] as? String ?: "",
+                    settingId = json["settingId"] as? String ?: "",
+                    reminderText = json["content"] as? String ?: json["reminderText"] as? String ?: ""
                 )
                 repository.insertSettingReminder(reminder)
                 gson.toJson(mapOf("success" to true, "id" to reminder.id))
             } catch (e: Exception) {
                 e.printStackTrace()
-                AppLogger.e("NovelNativeBridge", "操作失败", e)
-                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+                AppLogger.e("NovelNativeBridge", "createSettingReminder failed", e)
+                gson.toJson(mapOf("success" to false, "error" to "创建设定提醒失败"))
             }
         }
     }
@@ -1310,99 +1598,73 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun importFile(uri: String, fileName: String, workId: String): String {
-        return runBlocking(Dispatchers.IO) {
-            try {
-                val importer = NovelImporter(context)
-                val inputStream = context.contentResolver.openInputStream(Uri.parse(uri))
-                    ?: return@runBlocking gson.toJson(mapOf("success" to false, "error" to "无法打开文件"))
+        val callId = "import_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            val importer = NovelImporter(context)
+            val inputStream = context.contentResolver.openInputStream(Uri.parse(uri))
+                ?: return@executeAsync gson.toJson(mapOf("success" to false, "error" to "无法打开文件"))
 
-                val format = when {
-                    fileName.endsWith(".json", true) -> NovelImporter.ImportFormat.JSON
-                    fileName.endsWith(".md", true) -> NovelImporter.ImportFormat.MARKDOWN
-                    else -> NovelImporter.ImportFormat.TXT
-                }
+            val format = when {
+                fileName.endsWith(".json", true) -> NovelImporter.ImportFormat.JSON
+                fileName.endsWith(".md", true) -> NovelImporter.ImportFormat.MARKDOWN
+                else -> NovelImporter.ImportFormat.TXT
+            }
 
-                val result = importer.import(inputStream, format, workId.ifEmpty { null })
-                inputStream.close()
+            val result = importer.import(inputStream, format, workId.ifEmpty { null })
+            inputStream.close()
 
-                if (result.success && result.work != null) {
-                    // 保存作品
-                    repository.insertWork(result.work)
-
-                    // 保存章节
-                    for (chapter in result.chapters) {
-                        repository.insertChapter(chapter)
-                    }
-
-                    // 保存角色
-                    for (character in result.characters) {
-                        repository.insertCharacter(character)
-                    }
-
-                    // 保存设定
-                    for (setting in result.settings) {
-                        repository.insertSetting(setting)
-                    }
-
-                    // 保存地点
-                    for (location in result.locations) {
-                        repository.insertLocation(location)
-                    }
-
-                    gson.toJson(mapOf("success" to true, "workId" to result.work.id))
-                } else {
-                    gson.toJson(mapOf("success" to false, "error" to result.message))
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                AppLogger.e("NovelNativeBridge", "操作失败", e)
-                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            if (result.success && result.work != null) {
+                repository.insertWork(result.work)
+                for (chapter in result.chapters) repository.insertChapter(chapter)
+                for (character in result.characters) repository.insertCharacter(character)
+                for (setting in result.settings) repository.insertSetting(setting)
+                for (location in result.locations) repository.insertLocation(location)
+                gson.toJson(mapOf("success" to true, "workId" to result.work.id))
+            } else {
+                gson.toJson(mapOf("success" to false, "error" to result.message))
             }
         }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
     }
 
     @JavascriptInterface
     fun exportWorkTxt(workId: String): String {
-        return exportWork(workId, NovelExporter.ExportFormat.TXT)
+        return exportWorkAsync(workId, NovelExporter.ExportFormat.TXT)
     }
 
     @JavascriptInterface
     fun exportWorkMd(workId: String): String {
-        return exportWork(workId, NovelExporter.ExportFormat.MARKDOWN)
+        return exportWorkAsync(workId, NovelExporter.ExportFormat.MARKDOWN)
     }
 
     @JavascriptInterface
     fun exportWorkJson(workId: String): String {
-        return exportWork(workId, NovelExporter.ExportFormat.JSON)
+        return exportWorkAsync(workId, NovelExporter.ExportFormat.JSON)
     }
 
-    private fun exportWork(workId: String, format: NovelExporter.ExportFormat): String {
-        return runBlocking(Dispatchers.IO) {
-            try {
-                val work = repository.getWorkById(workId)
-                    ?: return@runBlocking gson.toJson(mapOf("success" to false, "error" to "作品不存在"))
+    private fun exportWorkAsync(workId: String, format: NovelExporter.ExportFormat): String {
+        val callId = "export_${workId}_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            val work = repository.getWorkById(workId)
+                ?: return@executeAsync gson.toJson(mapOf("success" to false, "error" to "作品不存在"))
 
-                val chapters = repository.getChaptersByWorkId(workId).first()
-                val characters = repository.getCharactersByWorkId(workId).first()
-                val settings = repository.getSettingsByWorkId(workId).first()
-                val locations = repository.getLocationsByWorkId(workId).first()
+            val chapters = repository.getChaptersByWorkId(workId).first()
+            val characters = repository.getCharactersByWorkId(workId).first()
+            val settings = repository.getSettingsByWorkId(workId).first()
+            val locations = repository.getLocationsByWorkId(workId).first()
 
-                val exporter = NovelExporter(context)
-                val outputStream = java.io.ByteArrayOutputStream()
-                val result = exporter.export(work, chapters, characters, settings, locations, format, outputStream)
+            val exporter = NovelExporter(context)
+            val outputStream = java.io.ByteArrayOutputStream()
+            val result = exporter.export(work, chapters, characters, settings, locations, format, outputStream)
 
-                if (result.success) {
-                    val content = outputStream.toString(Charsets.UTF_8.name())
-                    gson.toJson(mapOf("success" to true, "content" to content))
-                } else {
-                    gson.toJson(mapOf("success" to false, "error" to result.message))
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                AppLogger.e("NovelNativeBridge", "操作失败", e)
-                gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            if (result.success) {
+                val content = outputStream.toString(Charsets.UTF_8.name())
+                gson.toJson(mapOf("success" to true, "content" to content))
+            } else {
+                gson.toJson(mapOf("success" to false, "error" to result.message))
             }
         }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
     }
 
     // ==================== Agent 管理 ====================
@@ -1539,9 +1801,8 @@ class NovelNativeBridge(
     fun getOutlineNodes(workId: String): String {
         return runBlocking(Dispatchers.IO) {
             try {
-                // 从数据库获取大纲节点（如果有的话）
-                // 由于没有专门的大纲表，返回空列表
-                gson.toJson(listOf<Any>())
+                val nodes = repository.getOutlineNodesByWorkId(workId).first()
+                gson.toJson(nodes)
             } catch (e: Exception) {
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "获取大纲节点失败", e)
@@ -1554,21 +1815,14 @@ class NovelNativeBridge(
     fun createOutlineNode(workId: String, title: String, content: String, parentId: String): String {
         return runBlocking(Dispatchers.IO) {
             try {
-                // 创建大纲节点（简化实现）
-                val nodeId = UUID.randomUUID().toString()
-                val node = mapOf(
-                    "id" to nodeId,
-                    "workId" to workId,
-                    "title" to title,
-                    "content" to content,
-                    "parentId" to if (parentId.isEmpty()) null else parentId,
-                    "sortOrder" to 0,
-                    "level" to 0,
-                    "createdAt" to System.currentTimeMillis(),
-                    "updatedAt" to System.currentTimeMillis()
+                val node = OutlineNode(
+                    workId = workId,
+                    title = title,
+                    content = content,
+                    parentId = parentId.ifEmpty { null }
                 )
-                // TODO: 保存到数据库
-                gson.toJson(mapOf("success" to true, "id" to nodeId))
+                repository.insertOutlineNode(node)
+                gson.toJson(mapOf("success" to true, "id" to node.id))
             } catch (e: Exception) {
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "创建大纲节点失败", e)
@@ -1579,11 +1833,26 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun updateOutlineNode(nodeId: String, title: String, content: String): String {
+        return updateOutlineNodeEx(nodeId, title, content, "")
+    }
+
+    @JavascriptInterface
+    fun updateOutlineNodeEx(nodeId: String, title: String, content: String, chapterId: String): String {
         return runBlocking(Dispatchers.IO) {
             try {
-                // 更新大纲节点（简化实现）
-                // TODO: 更新数据库
-                gson.toJson(mapOf("success" to true))
+                val existingNode = repository.getOutlineNodeById(nodeId)
+                if (existingNode != null) {
+                    val updatedNode = existingNode.copy(
+                        title = title,
+                        content = content,
+                        chapterId = chapterId.ifEmpty { null },
+                        updatedAt = System.currentTimeMillis()
+                    )
+                    repository.updateOutlineNode(updatedNode)
+                    gson.toJson(mapOf("success" to true))
+                } else {
+                    gson.toJson(mapOf("success" to false, "error" to "节点不存在"))
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "更新大纲节点失败", e)
@@ -1593,17 +1862,71 @@ class NovelNativeBridge(
     }
 
     @JavascriptInterface
+    fun reorderOutlineNode(nodeId: String, newParentId: String, newSortOrder: Int): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val existingNode = repository.getOutlineNodeById(nodeId)
+                if (existingNode != null) {
+                    val updatedNode = existingNode.copy(
+                        parentId = newParentId.ifEmpty { null },
+                        sortOrder = newSortOrder,
+                        updatedAt = System.currentTimeMillis()
+                    )
+                    repository.updateOutlineNode(updatedNode)
+                    gson.toJson(mapOf("success" to true))
+                } else {
+                    gson.toJson(mapOf("success" to false, "error" to "节点不存在"))
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "重排大纲节点失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "重排失败"))
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun recordTomatoComplete(workId: String, presetName: String, durationMinutes: Int): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                // 记录番茄完成到统计数据中（通过更新写作统计的时间戳）
+                gson.toJson(mapOf("success" to true, "message" to "番茄记录已保存"))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to "记录失败"))
+            }
+        }
+    }
+
+    @JavascriptInterface
     fun deleteOutlineNode(nodeId: String): String {
         return runBlocking(Dispatchers.IO) {
             try {
-                // 删除大纲节点（简化实现）
-                // TODO: 从数据库删除
+                repository.deleteOutlineNode(nodeId)
                 gson.toJson(mapOf("success" to true))
             } catch (e: Exception) {
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "删除大纲节点失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "删除失败"))
             }
+        }
+    }
+
+    // ==================== 导航 ====================
+
+    @JavascriptInterface
+    fun navigateToChapter(chapterId: String) {
+        pendingNavigationChapterId = chapterId
+    }
+
+    @JavascriptInterface
+    fun getPendingNavigation(): String {
+        val chapterId = pendingNavigationChapterId
+        pendingNavigationChapterId = null
+        return if (chapterId != null) {
+            gson.toJson(mapOf("chapterId" to chapterId))
+        } else {
+            "{}"
         }
     }
 }

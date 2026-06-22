@@ -1,21 +1,9 @@
 import type { ComposeDslContext, ComposeNode } from "../../../../types/compose-dsl";
+import StatsPage from "./novel_stats_page.js";
 
 export default function Screen(ctx: ComposeDslContext): ComposeNode {
   const { UI } = ctx;
+  const params = ctx.routeParams ?? {};
 
-  return UI.Box(
-    { fillMaxSize: true },
-    UI.WebView({
-      key: "novel_stats_webview",
-      fillMaxSize: true,
-      url: "file:///android_asset/packages/novelide/resources/webapp/网文写作.html#stats",
-      javaScriptEnabled: true,
-      domStorageEnabled: true,
-      allowFileAccess: true,
-      allowContentAccess: true,
-      supportZoom: true,
-      useWideViewPort: true,
-      loadWithOverviewMode: true,
-    })
-  );
+  return StatsPage(ctx);
 }

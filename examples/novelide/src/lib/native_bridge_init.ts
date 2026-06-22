@@ -7,72 +7,72 @@ declare global {
       // 作品
       getNovelWorks(): string;
       createWork(title: string, genre: string, description: string): string;
-      updateWork(workJson: string): boolean;
-      deleteWork(workId: string): boolean;
+      updateWork(workJson: string): string;
+      deleteWork(workId: string): string;
 
       // 章节
       getChapters(workId: string): string;
       createChapter(workId: string, title: string, order: number): string;
       getChapterContent(chapterId: string): string;
-      saveChapterContent(chapterId: string, content: string, wordCount: number): boolean;
-      deleteChapter(chapterId: string): boolean;
-      reorderChapters(workId: string, chapterIdsJson: string): boolean;
+      saveChapterContent(chapterId: string, content: string, wordCount: number): string;
+      deleteChapter(chapterId: string): string;
+      reorderChapters(workId: string, chapterIdsJson: string): string;
 
       // 资料
       getCharacters(workId: string): string;
       createCharacter(workId: string, name: string, role: string): string;
-      updateCharacter(characterJson: string): boolean;
-      deleteCharacter(characterId: string): boolean;
+      updateCharacter(characterJson: string): string;
+      deleteCharacter(characterId: string): string;
 
       getSettings(workId: string): string;
       createSetting(workId: string, name: string, content: string): string;
-      updateSetting(settingJson: string): boolean;
-      deleteSetting(settingId: string): boolean;
+      updateSetting(settingJson: string): string;
+      deleteSetting(settingId: string): string;
 
       getLocations(workId: string): string;
       createLocation(workId: string, name: string, description: string): string;
-      updateLocation(locationJson: string): boolean;
-      deleteLocation(locationId: string): boolean;
+      updateLocation(locationJson: string): string;
+      deleteLocation(locationId: string): string;
 
       getFactions(workId: string): string;
       createFaction(workId: string, name: string, leader: string): string;
-      updateFaction(factionJson: string): boolean;
-      deleteFaction(factionId: string): boolean;
+      updateFaction(factionJson: string): string;
+      deleteFaction(factionId: string): string;
 
       getItems(workId: string): string;
       createItem(workId: string, name: string, description: string): string;
-      updateItem(itemJson: string): boolean;
-      deleteItem(itemId: string): boolean;
+      updateItem(itemJson: string): string;
+      deleteItem(itemId: string): string;
 
       getPlotHooks(workId: string): string;
       createPlotHook(workId: string, content: string): string;
-      updatePlotHook(hookJson: string): boolean;
-      deletePlotHook(hookId: string): boolean;
+      updatePlotHook(hookJson: string): string;
+      deletePlotHook(hookId: string): string;
 
       getReferences(workId: string): string;
       createReference(workId: string, title: string, content: string): string;
-      updateReference(referenceJson: string): boolean;
-      deleteReference(referenceId: string): boolean;
+      updateReference(referenceJson: string): string;
+      deleteReference(referenceId: string): string;
 
       getTodos(workId: string): string;
       createTodo(workId: string, content: string, priority: number): string;
-      updateTodo(todoJson: string): boolean;
-      deleteTodo(todoId: string): boolean;
+      updateTodo(todoJson: string): string;
+      deleteTodo(todoId: string): string;
 
       // 关系图
       getCharacterRelationships(workId: string): string;
       createCharacterRelationship(workId: string, sourceId: string, targetId: string, relationType: string): string;
-      updateCharacterRelationship(relationshipJson: string): boolean;
-      deleteCharacterRelationship(relationshipId: string): boolean;
+      updateCharacterRelationship(relationshipJson: string): string;
+      deleteCharacterRelationship(relationshipId: string): string;
 
       getNovelEvents(workId: string): string;
       createNovelEvent(workId: string, title: string, description: string): string;
-      updateNovelEvent(eventJson: string): boolean;
-      deleteNovelEvent(eventId: string): boolean;
+      updateNovelEvent(eventJson: string): string;
+      deleteNovelEvent(eventId: string): string;
 
       getEventParticipants(eventId: string): string;
-      addEventParticipant(eventId: string, characterId: string, role: string): boolean;
-      removeEventParticipant(eventId: string, characterId: string): boolean;
+      addEventParticipant(eventId: string, characterId: string, role: string): string;
+      removeEventParticipant(eventId: string, characterId: string): string;
 
       // 番茄
       getTomatoPresets(): string;
@@ -84,41 +84,140 @@ declare global {
       // 卷管理
       getVolumes(workId: string): string;
       createVolume(workId: string, name: string, sortOrder: number): string;
-      updateVolume(volumeJson: string): boolean;
-      deleteVolume(volumeId: string): boolean;
+      updateVolume(volumeJson: string): string;
+      deleteVolume(volumeId: string): string;
 
       // 自定义资料夹
       getCustomFolders(workId: string): string;
       createCustomFolder(workId: string, name: string, icon: string): string;
-      updateCustomFolder(folderJson: string): boolean;
-      deleteCustomFolder(folderId: string): boolean;
+      updateCustomFolder(folderJson: string): string;
+      deleteCustomFolder(folderId: string): string;
 
       // 自定义资料条目
       getCustomItems(workId: string): string;
       getItemsByFolder(folderId: string): string;
       createCustomItem(itemJson: string): string;
-      updateCustomItem(itemJson: string): boolean;
-      deleteCustomItem(itemId: string): boolean;
+      updateCustomItem(itemJson: string): string;
+      deleteCustomItem(itemId: string): string;
 
       // 写作技能
       getWritingSkills(workId: string): string;
       createWritingSkill(skillJson: string): string;
-      updateWritingSkill(skillJson: string): boolean;
-      deleteWritingSkill(skillId: string): boolean;
+      updateWritingSkill(skillJson: string): string;
+      deleteWritingSkill(skillId: string): string;
 
       // 设定提醒
       getSettingReminders(workId: string): string;
       createSettingReminder(reminderJson: string): string;
-      updateSettingReminder(reminderJson: string): boolean;
-      deleteSettingReminder(reminderId: string): boolean;
+      updateSettingReminder(reminderJson: string): string;
+      deleteSettingReminder(reminderId: string): string;
 
       // 导入导出
       importFile(uri: string, fileName: string, workId: string): string;
       exportWorkTxt(workId: string): string;
       exportWorkMd(workId: string): string;
       exportWorkJson(workId: string): string;
+
+      // 大纲（扩展）
+      updateOutlineNodeEx(nodeId: string, title: string, content: string, chapterId: string): string;
+      reorderOutlineNode(nodeId: string, newParentId: string, newSortOrder: number): string;
+
+      // 番茄（扩展）
+      recordTomatoComplete(workId: string, presetName: string, durationMinutes: number): string;
+
+      // 资料详情方法
+      getCharacterDetail(characterId: string): string;
+      getSettingDetail(settingId: string): string;
+      getLocationDetail(locationId: string): string;
+      getFactionDetail(factionId: string): string;
+      getItemDetail(itemId: string): string;
+      getHookDetail(hookId: string): string;
+      getReferenceDetail(referenceId: string): string;
+
+      // 统计扩展
+      getChapterStats(workId: string): string;
+      getDailyStats(workId: string, days: number): string;
+
+      // 作品详情
+      getWork(workId: string): string;
+
+      // 章节导航
+      navigateToChapter(chapterId: string): void;
+      getPendingNavigation(): string;
+
+      // 异步操作
+      getAsyncResult(callId: string): string;
     };
   }
+}
+
+/** 解析 NativeBridge 返回的 JSON 字符串，提取 success 字段 */
+function parseSuccess(result: string): boolean {
+  try {
+    const parsed = JSON.parse(result);
+    return parsed?.success === true;
+  } catch {
+    return !!result;
+  }
+}
+
+// 异步回调处理
+const asyncCallbacks = new Map<string, { resolve: (value: any) => void; reject: (reason?: any) => void }>();
+
+// 注册全局回调处理函数（Kotlin 通过 evaluateJavascript 调用）
+(window as any).__onNovelBridgeResult = function(callId: string, result: string) {
+  const callback = asyncCallbacks.get(callId);
+  if (callback) {
+    asyncCallbacks.delete(callId);
+    try {
+      const parsed = typeof result === "string" ? JSON.parse(result) : result;
+      callback.resolve(parsed);
+    } catch {
+      callback.resolve(result);
+    }
+  }
+};
+
+/** 等待异步操作完成，支持回调和轮询两种模式 */
+async function waitForAsyncResult(callId: string, timeoutMs: number = 30000): Promise<any> {
+  return new Promise((resolve, reject) => {
+    // 注册回调
+    asyncCallbacks.set(callId, { resolve, reject });
+
+    // 设置超时
+    const timer = setTimeout(() => {
+      asyncCallbacks.delete(callId);
+      reject(new Error("异步操作超时"));
+    }, timeoutMs);
+
+    // 同时启动轮询作为后备方案
+    const pollInterval = setInterval(() => {
+      try {
+        const result = window.NativeBridge.getAsyncResult(callId);
+        if (result) {
+          clearInterval(pollInterval);
+          clearTimeout(timer);
+          asyncCallbacks.delete(callId);
+          try {
+            resolve(JSON.parse(result));
+          } catch {
+            resolve(result);
+          }
+        }
+      } catch {
+        // 忽略轮询错误
+      }
+    }, 200);
+
+    // 清理：当回调被触发时停止轮询
+    const originalResolve = resolve;
+    const wrappedResolve = (value: any) => {
+      clearInterval(pollInterval);
+      clearTimeout(timer);
+      originalResolve(value);
+    };
+    asyncCallbacks.set(callId, { resolve: wrappedResolve, reject });
+  });
 }
 
 // 封装调用方法，提供 Promise 接口
@@ -134,11 +233,13 @@ export const NovelBridge = {
   },
 
   async updateWork(work: any): Promise<boolean> {
-    return window.NativeBridge.updateWork(JSON.stringify(work));
+    const result = window.NativeBridge.updateWork(JSON.stringify(work));
+    return parseSuccess(result);
   },
 
   async deleteWork(workId: string): Promise<boolean> {
-    return window.NativeBridge.deleteWork(workId);
+    const result = window.NativeBridge.deleteWork(workId);
+    return parseSuccess(result);
   },
 
   // 章节
@@ -156,11 +257,13 @@ export const NovelBridge = {
   },
 
   async saveChapterContent(chapterId: string, content: string, wordCount: number): Promise<boolean> {
-    return window.NativeBridge.saveChapterContent(chapterId, content, wordCount);
+    const result = window.NativeBridge.saveChapterContent(chapterId, content, wordCount);
+    return parseSuccess(result);
   },
 
   async deleteChapter(chapterId: string): Promise<boolean> {
-    return window.NativeBridge.deleteChapter(chapterId);
+    const result = window.NativeBridge.deleteChapter(chapterId);
+    return parseSuccess(result);
   },
 
   // 资料
@@ -174,11 +277,13 @@ export const NovelBridge = {
   },
 
   async updateCharacter(character: any): Promise<boolean> {
-    return window.NativeBridge.updateCharacter(JSON.stringify(character));
+    const result = window.NativeBridge.updateCharacter(JSON.stringify(character));
+    return parseSuccess(result);
   },
 
   async deleteCharacter(characterId: string): Promise<boolean> {
-    return window.NativeBridge.deleteCharacter(characterId);
+    const result = window.NativeBridge.deleteCharacter(characterId);
+    return parseSuccess(result);
   },
 
   // 设定
@@ -192,11 +297,13 @@ export const NovelBridge = {
   },
 
   async updateSetting(setting: any): Promise<boolean> {
-    return window.NativeBridge.updateSetting(JSON.stringify(setting));
+    const result = window.NativeBridge.updateSetting(JSON.stringify(setting));
+    return parseSuccess(result);
   },
 
   async deleteSetting(settingId: string): Promise<boolean> {
-    return window.NativeBridge.deleteSetting(settingId);
+    const result = window.NativeBridge.deleteSetting(settingId);
+    return parseSuccess(result);
   },
 
   // 地点
@@ -210,11 +317,13 @@ export const NovelBridge = {
   },
 
   async updateLocation(location: any): Promise<boolean> {
-    return window.NativeBridge.updateLocation(JSON.stringify(location));
+    const result = window.NativeBridge.updateLocation(JSON.stringify(location));
+    return parseSuccess(result);
   },
 
   async deleteLocation(locationId: string): Promise<boolean> {
-    return window.NativeBridge.deleteLocation(locationId);
+    const result = window.NativeBridge.deleteLocation(locationId);
+    return parseSuccess(result);
   },
 
   // 势力
@@ -228,11 +337,13 @@ export const NovelBridge = {
   },
 
   async updateFaction(faction: any): Promise<boolean> {
-    return window.NativeBridge.updateFaction(JSON.stringify(faction));
+    const result = window.NativeBridge.updateFaction(JSON.stringify(faction));
+    return parseSuccess(result);
   },
 
   async deleteFaction(factionId: string): Promise<boolean> {
-    return window.NativeBridge.deleteFaction(factionId);
+    const result = window.NativeBridge.deleteFaction(factionId);
+    return parseSuccess(result);
   },
 
   // 道具
@@ -246,11 +357,13 @@ export const NovelBridge = {
   },
 
   async updateItem(item: any): Promise<boolean> {
-    return window.NativeBridge.updateItem(JSON.stringify(item));
+    const result = window.NativeBridge.updateItem(JSON.stringify(item));
+    return parseSuccess(result);
   },
 
   async deleteItem(itemId: string): Promise<boolean> {
-    return window.NativeBridge.deleteItem(itemId);
+    const result = window.NativeBridge.deleteItem(itemId);
+    return parseSuccess(result);
   },
 
   // 伏笔
@@ -264,11 +377,13 @@ export const NovelBridge = {
   },
 
   async updatePlotHook(hook: any): Promise<boolean> {
-    return window.NativeBridge.updatePlotHook(JSON.stringify(hook));
+    const result = window.NativeBridge.updatePlotHook(JSON.stringify(hook));
+    return parseSuccess(result);
   },
 
   async deletePlotHook(hookId: string): Promise<boolean> {
-    return window.NativeBridge.deletePlotHook(hookId);
+    const result = window.NativeBridge.deletePlotHook(hookId);
+    return parseSuccess(result);
   },
 
   // 参考资料
@@ -282,11 +397,13 @@ export const NovelBridge = {
   },
 
   async updateReference(reference: any): Promise<boolean> {
-    return window.NativeBridge.updateReference(JSON.stringify(reference));
+    const result = window.NativeBridge.updateReference(JSON.stringify(reference));
+    return parseSuccess(result);
   },
 
   async deleteReference(referenceId: string): Promise<boolean> {
-    return window.NativeBridge.deleteReference(referenceId);
+    const result = window.NativeBridge.deleteReference(referenceId);
+    return parseSuccess(result);
   },
 
   // 写作待办
@@ -300,11 +417,13 @@ export const NovelBridge = {
   },
 
   async updateTodo(todo: any): Promise<boolean> {
-    return window.NativeBridge.updateTodo(JSON.stringify(todo));
+    const result = window.NativeBridge.updateTodo(JSON.stringify(todo));
+    return parseSuccess(result);
   },
 
   async deleteTodo(todoId: string): Promise<boolean> {
-    return window.NativeBridge.deleteTodo(todoId);
+    const result = window.NativeBridge.deleteTodo(todoId);
+    return parseSuccess(result);
   },
 
   // 关系图
@@ -318,11 +437,13 @@ export const NovelBridge = {
   },
 
   async updateCharacterRelationship(relationship: any): Promise<boolean> {
-    return window.NativeBridge.updateCharacterRelationship(JSON.stringify(relationship));
+    const result = window.NativeBridge.updateCharacterRelationship(JSON.stringify(relationship));
+    return parseSuccess(result);
   },
 
   async deleteCharacterRelationship(relationshipId: string): Promise<boolean> {
-    return window.NativeBridge.deleteCharacterRelationship(relationshipId);
+    const result = window.NativeBridge.deleteCharacterRelationship(relationshipId);
+    return parseSuccess(result);
   },
 
   // 事件
@@ -336,11 +457,13 @@ export const NovelBridge = {
   },
 
   async updateNovelEvent(event: any): Promise<boolean> {
-    return window.NativeBridge.updateNovelEvent(JSON.stringify(event));
+    const result = window.NativeBridge.updateNovelEvent(JSON.stringify(event));
+    return parseSuccess(result);
   },
 
   async deleteNovelEvent(eventId: string): Promise<boolean> {
-    return window.NativeBridge.deleteNovelEvent(eventId);
+    const result = window.NativeBridge.deleteNovelEvent(eventId);
+    return parseSuccess(result);
   },
 
   // 事件参与者
@@ -350,11 +473,13 @@ export const NovelBridge = {
   },
 
   async addEventParticipant(eventId: string, characterId: string, role: string): Promise<boolean> {
-    return window.NativeBridge.addEventParticipant(eventId, characterId, role);
+    const result = window.NativeBridge.addEventParticipant(eventId, characterId, role);
+    return parseSuccess(result);
   },
 
   async removeEventParticipant(eventId: string, characterId: string): Promise<boolean> {
-    return window.NativeBridge.removeEventParticipant(eventId, characterId);
+    const result = window.NativeBridge.removeEventParticipant(eventId, characterId);
+    return parseSuccess(result);
   },
 
   // 番茄预设
@@ -385,11 +510,13 @@ export const NovelBridge = {
   },
 
   async updateVolume(volume: any): Promise<boolean> {
-    return window.NativeBridge.updateVolume(JSON.stringify(volume));
+    const result = window.NativeBridge.updateVolume(JSON.stringify(volume));
+    return parseSuccess(result);
   },
 
   async deleteVolume(volumeId: string): Promise<boolean> {
-    return window.NativeBridge.deleteVolume(volumeId);
+    const result = window.NativeBridge.deleteVolume(volumeId);
+    return parseSuccess(result);
   },
 
   // 自定义资料夹
@@ -403,11 +530,13 @@ export const NovelBridge = {
   },
 
   async updateCustomFolder(folder: any): Promise<boolean> {
-    return window.NativeBridge.updateCustomFolder(JSON.stringify(folder));
+    const result = window.NativeBridge.updateCustomFolder(JSON.stringify(folder));
+    return parseSuccess(result);
   },
 
   async deleteCustomFolder(folderId: string): Promise<boolean> {
-    return window.NativeBridge.deleteCustomFolder(folderId);
+    const result = window.NativeBridge.deleteCustomFolder(folderId);
+    return parseSuccess(result);
   },
 
   // 自定义资料条目
@@ -426,11 +555,13 @@ export const NovelBridge = {
   },
 
   async updateCustomItem(item: any): Promise<boolean> {
-    return window.NativeBridge.updateCustomItem(JSON.stringify(item));
+    const result = window.NativeBridge.updateCustomItem(JSON.stringify(item));
+    return parseSuccess(result);
   },
 
   async deleteCustomItem(itemId: string): Promise<boolean> {
-    return window.NativeBridge.deleteCustomItem(itemId);
+    const result = window.NativeBridge.deleteCustomItem(itemId);
+    return parseSuccess(result);
   },
 
   // 写作技能
@@ -444,11 +575,13 @@ export const NovelBridge = {
   },
 
   async updateWritingSkill(skill: any): Promise<boolean> {
-    return window.NativeBridge.updateWritingSkill(JSON.stringify(skill));
+    const result = window.NativeBridge.updateWritingSkill(JSON.stringify(skill));
+    return parseSuccess(result);
   },
 
   async deleteWritingSkill(skillId: string): Promise<boolean> {
-    return window.NativeBridge.deleteWritingSkill(skillId);
+    const result = window.NativeBridge.deleteWritingSkill(skillId);
+    return parseSuccess(result);
   },
 
   // 设定提醒
@@ -462,31 +595,119 @@ export const NovelBridge = {
   },
 
   async updateSettingReminder(reminder: any): Promise<boolean> {
-    return window.NativeBridge.updateSettingReminder(JSON.stringify(reminder));
+    const result = window.NativeBridge.updateSettingReminder(JSON.stringify(reminder));
+    return parseSuccess(result);
   },
 
   async deleteSettingReminder(reminderId: string): Promise<boolean> {
-    return window.NativeBridge.deleteSettingReminder(reminderId);
+    const result = window.NativeBridge.deleteSettingReminder(reminderId);
+    return parseSuccess(result);
   },
 
-  // 导入导出
+  // 导入导出（异步操作，通过回调返回结果）
   async importFile(uri: string, fileName: string, workId: string): Promise<any> {
     const result = window.NativeBridge.importFile(uri, fileName, workId);
-    return JSON.parse(result);
+    const parsed = JSON.parse(result);
+    if (parsed.async && parsed.callId) {
+      return waitForAsyncResult(parsed.callId, 60000); // 导入可能较慢，60秒超时
+    }
+    return parsed;
   },
 
   async exportWorkTxt(workId: string): Promise<any> {
     const result = window.NativeBridge.exportWorkTxt(workId);
-    return JSON.parse(result);
+    const parsed = JSON.parse(result);
+    if (parsed.async && parsed.callId) {
+      return waitForAsyncResult(parsed.callId, 30000);
+    }
+    return parsed;
   },
 
   async exportWorkMd(workId: string): Promise<any> {
     const result = window.NativeBridge.exportWorkMd(workId);
-    return JSON.parse(result);
+    const parsed = JSON.parse(result);
+    if (parsed.async && parsed.callId) {
+      return waitForAsyncResult(parsed.callId, 30000);
+    }
+    return parsed;
   },
 
   async exportWorkJson(workId: string): Promise<any> {
     const result = window.NativeBridge.exportWorkJson(workId);
+    const parsed = JSON.parse(result);
+    if (parsed.async && parsed.callId) {
+      return waitForAsyncResult(parsed.callId, 30000);
+    }
+    return parsed;
+  },
+
+  // 大纲扩展
+  async updateOutlineNodeEx(nodeId: string, title: string, content: string, chapterId: string): Promise<any> {
+    const result = window.NativeBridge.updateOutlineNodeEx(nodeId, title, content, chapterId);
+    return JSON.parse(result);
+  },
+
+  async reorderOutlineNode(nodeId: string, newParentId: string, newSortOrder: number): Promise<any> {
+    const result = window.NativeBridge.reorderOutlineNode(nodeId, newParentId, newSortOrder);
+    return JSON.parse(result);
+  },
+
+  // 番茄扩展
+  async recordTomatoComplete(workId: string, presetName: string, durationMinutes: number): Promise<any> {
+    const result = window.NativeBridge.recordTomatoComplete(workId, presetName, durationMinutes);
+    return JSON.parse(result);
+  },
+
+  // 资料详情方法
+  async getCharacterDetail(characterId: string): Promise<any> {
+    const result = window.NativeBridge.getCharacterDetail(characterId);
+    return JSON.parse(result);
+  },
+
+  async getSettingDetail(settingId: string): Promise<any> {
+    const result = window.NativeBridge.getSettingDetail(settingId);
+    return JSON.parse(result);
+  },
+
+  async getLocationDetail(locationId: string): Promise<any> {
+    const result = window.NativeBridge.getLocationDetail(locationId);
+    return JSON.parse(result);
+  },
+
+  async getFactionDetail(factionId: string): Promise<any> {
+    const result = window.NativeBridge.getFactionDetail(factionId);
+    return JSON.parse(result);
+  },
+
+  async getItemDetail(itemId: string): Promise<any> {
+    const result = window.NativeBridge.getItemDetail(itemId);
+    return JSON.parse(result);
+  },
+
+  async getHookDetail(hookId: string): Promise<any> {
+    const result = window.NativeBridge.getHookDetail(hookId);
+    return JSON.parse(result);
+  },
+
+  async getReferenceDetail(referenceId: string): Promise<any> {
+    const result = window.NativeBridge.getReferenceDetail(referenceId);
+    return JSON.parse(result);
+  },
+
+  // 统计扩展
+  async getChapterStats(workId: string): Promise<any> {
+    const result = window.NativeBridge.getChapterStats(workId);
+    return JSON.parse(result);
+  },
+
+  async getDailyStats(workId: string, days: number = 30): Promise<any> {
+    const result = window.NativeBridge.getDailyStats(workId, days);
+    return JSON.parse(result);
+  },
+
+  // 作品详情
+  async getWork(workId: string): Promise<any> {
+    const result = window.NativeBridge.getWork(workId);
     return JSON.parse(result);
   },
 };

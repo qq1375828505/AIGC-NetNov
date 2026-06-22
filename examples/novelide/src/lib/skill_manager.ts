@@ -73,8 +73,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   },
   {
     id: "urban_shenyi",
@@ -87,8 +87,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   },
   {
     id: "urban_zhanshen",
@@ -101,8 +101,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   },
   {
     id: "xiancheng_zhenxing",
@@ -115,8 +115,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   },
   {
     id: "qingxu_fafeng",
@@ -129,8 +129,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   },
   {
     id: "changsheng_jiazu",
@@ -143,8 +143,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   },
   {
     id: "dushi_shouye",
@@ -157,8 +157,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   },
   {
     id: "zhiye_xt",
@@ -171,8 +171,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   },
   {
     id: "moyu_bailan",
@@ -185,8 +185,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   },
   {
     id: "zhibo_nixi",
@@ -199,8 +199,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   },
 
   // ==================== 玄幻流 (6个) ====================
@@ -215,8 +215,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   },
   {
     id: "fantasy_renwu",
@@ -229,8 +229,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   },
   {
     id: "fantasy_wudi",
@@ -243,8 +243,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   },
   {
     id: "xiuxian_zc",
@@ -257,8 +257,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   },
   {
     id: "tianming_fanpai",
@@ -271,8 +271,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   },
   {
     id: "honghuang_bianji",
@@ -285,8 +285,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   },
 
   // ==================== 穿越流 (3个) ====================
@@ -301,8 +301,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   },
   {
     id: "chuanyue_niandai",
@@ -315,8 +315,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   },
   {
     id: "niandai_qinqing",
@@ -329,8 +329,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   },
 
   // ==================== 悬疑流 (4个) ====================
@@ -345,8 +345,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   },
   {
     id: "xuanyi_daomu",
@@ -359,8 +359,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   },
   {
     id: "guize_guaitan",
@@ -373,8 +373,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   },
   {
     id: "nvxing_xingzhen",
@@ -387,8 +387,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   },
 
   // ==================== 女频流 (2个) ====================
@@ -403,8 +403,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   },
   {
     id: "edu_nvpei",
@@ -417,8 +417,8 @@ const TOMATO_SKILLS: SkillConfig[] = [
     workMinutes: 25,
     breakMinutes: 5,
     isBuiltin: true,
-    createdAt: Date.now(),
-    updatedAt: Date.now()
+    createdAt: 0,
+    updatedAt: 0
   }
 ];
 
@@ -535,7 +535,7 @@ export class SkillManager {
    */
   async syncFromBackend(): Promise<void> {
     try {
-      const presetsJson = await window.NativeBridge.getTomatoPresets();
+      const presetsJson = await Tools.callNative("getTomatoPresets", []);
       const presets = JSON.parse(presetsJson);
 
       if (Array.isArray(presets)) {
@@ -578,10 +578,10 @@ export class SkillManager {
             });
           }
         });
-        console.log(`从后端同步了 ${presets.length} 个番茄预设 Skill`);
+        console.log(`[NovelIDE] [INFO] 从后端同步了 ${presets.length} 个番茄预设 Skill`);
       }
     } catch (error) {
-      console.error("从后端同步 Skill 失败:", error);
+      console.error("[NovelIDE] [ERROR] 从后端同步 Skill 失败:", error);
     }
   }
 

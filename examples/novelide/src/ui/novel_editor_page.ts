@@ -14,27 +14,37 @@ export default function EditorPage(ctx: ComposeDslContext): ComposeNode {
   const [wordCount, setWordCount] = ctx.useState("wordCount", 0);
   const [saving, setSaving] = ctx.useState("saving", false);
   const [showChapterList, setShowChapterList] = ctx.useState("showChapterList", true);
-
-  let saveTimer: any = null;
+  const [saveTimer, setSaveTimer] = ctx.useState("saveTimer", null);
+  const [contentCache, setContentCache] = ctx.useState<Record<string, string>>("contentCache", {});
 
   // 加载章节列表
   async function loadChapters() {
     try {
-      const result = await window.NativeBridge.getChapters(workId);
+      const result = await Tools.callNative("getChapters", [workId]);
       setChapters(JSON.parse(result));
     } catch (error) {
-      console.error("加载章节失败:", error);
+      console.error("[NovelIDE] [ERROR] 加载章节失败:", error);
     }
   }
 
-  // 加载章节内容
+  // 加载章节内容（带缓存）
   async function loadChapterContent(chapterId: string) {
+    // 先检查缓存
+    if (contentCache[chapterId]) {
+      const cached = contentCache[chapterId];
+      setContent(cached);
+      setWordCount(cached.length);
+      return;
+    }
+
     try {
-      const result = await window.NativeBridge.getChapterContent(chapterId);
+      const result = await Tools.callNative("getChapterContent", [chapterId]);
       setContent(result);
       setWordCount(result.length);
+      // 更新缓存
+      setContentCache({ ...contentCache, [chapterId]: result });
     } catch (error) {
-      console.error("加载章节内容失败:", error);
+      console.error("[NovelIDE] [ERROR] 加载章节内容失败:", error);
     }
   }
 
@@ -50,36 +60,40 @@ export default function EditorPage(ctx: ComposeDslContext): ComposeNode {
     setContent(newContent);
     setWordCount(newContent.length);
 
+    // 清除之前的定时器
     if (saveTimer) {
       clearTimeout(saveTimer);
     }
 
-    saveTimer = setTimeout(async () => {
+    const timer = setTimeout(async () => {
       if (currentChapter) {
         setSaving(true);
         try {
-          await window.NativeBridge.saveChapterContent(
+          await Tools.callNative("saveChapterContent", [
             currentChapter.id,
             newContent,
             newContent.length
-          );
+          ]);
+          // 更新缓存
+          setContentCache({ ...contentCache, [currentChapter.id]: newContent });
         } catch (error) {
-          console.error("保存失败:", error);
+          console.error("[NovelIDE] [ERROR] 保存失败:", error);
         } finally {
           setSaving(false);
         }
       }
     }, 3000);
+    setSaveTimer(timer);
   }
 
   // 创建新章节
   async function createChapter() {
     const title = `第 ${chapters.length + 1} 章`;
     try {
-      await window.NativeBridge.createChapter(workId, title, chapters.length);
+      await Tools.callNative("createChapter", [workId, title, chapters.length]);
       await loadChapters();
     } catch (error) {
-      console.error("创建章节失败:", error);
+      console.error("[NovelIDE] [ERROR] 创建章节失败:", error);
     }
   }
 
@@ -150,10 +164,10 @@ export default function EditorPage(ctx: ComposeDslContext): ComposeNode {
       ? UI.WebView({
           key: `editor_${currentChapter.id}`,
           fillMaxSize: true,
-          url: `file:///android_asset/packages/novelide/resources/webapp/editor.html?chapterId=${currentChapter.id}`,
+          url: `file:///android_asset/packages/novelide/resources/webapp/editor.html?chapterId=${encodeURIComponent(currentChapter.id)}`,
           javaScriptEnabled: true,
           domStorageEnabled: true,
-          allowFileAccess: true
+          allowFileAccess: false
         })
       : UI.Box({
           fillMaxSize: true,

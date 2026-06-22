@@ -332,6 +332,14 @@ interface NovelDao {
     @Query("DELETE FROM novel_custom_material_items WHERE id = :itemId")
     suspend fun deleteCustomMaterialItemById(itemId: String)
 
+    @Query("""
+        SELECT i.* FROM novel_custom_material_items i
+        INNER JOIN novel_custom_material_folders f ON i.folderId = f.id
+        WHERE f.workId = :workId
+        ORDER BY f.orderIndex, i.orderIndex
+    """)
+    fun getCustomMaterialItemsByWorkId(workId: String): Flow<List<CustomMaterialItem>>
+
     // ==================== 角色关系 ====================
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCharacterRelationship(relationship: CharacterRelationship)

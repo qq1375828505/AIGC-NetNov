@@ -2,18 +2,10 @@
 
 export class NovelDBBridge {
   /**
-   * 调用 NativeBridge 方法
+   * 调用 NativeBridge 方法（统一通过 Tools.callNative）
    */
   static async callNative(method: string, args: any[]): Promise<any> {
-    return new Promise((resolve, reject) => {
-      try {
-        // @ts-ignore
-        const result = window.NativeBridge[method](...args);
-        resolve(result);
-      } catch (error) {
-        reject(error);
-      }
-    });
+    return Tools.callNative(method, args);
   }
 
   // ==================== 作品 ====================

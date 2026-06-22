@@ -143,8 +143,8 @@ export class ThoughtRenderer {
       html += this.renderThinkingHtml(thinkingContent, thinkingExpanded);
     }
     
-    // 渲染主要内容
-    html += `<div class="message-content">${mainContent}</div>`;
+    // 渲染主要内容（转义HTML防止XSS）
+    html += `<div class="message-content">${this.escapeHtml(mainContent)}</div>`;
     
     return html;
   }

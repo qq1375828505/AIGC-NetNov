@@ -34,12 +34,12 @@ export default function IOPage(ctx: ComposeDslContext, workId: string): ComposeN
     setShowImportDialog(false);
     setImporting(true);
     try {
-      const result = await window.NativeBridge.importFile(importUri, importFileName, workId);
+      const result = await Tools.callNative("importFile", [importUri, importFileName, workId]);
       if (result) {
         showMessage("导入成功");
       }
     } catch (error) {
-      console.error("导入失败:", error);
+      console.error("[NovelIDE] [ERROR] 导入失败:", error);
       showMessage("导入失败: " + (error as Error).message);
     } finally {
       setImporting(false);
@@ -55,22 +55,22 @@ export default function IOPage(ctx: ComposeDslContext, workId: string): ComposeN
       let result;
       switch (selectedFormat) {
         case "txt":
-          result = await window.NativeBridge.exportWorkTxt(workId);
+          result = await Tools.callNative("exportWorkTxt", [workId]);
           break;
         case "md":
-          result = await window.NativeBridge.exportWorkMd(workId);
+          result = await Tools.callNative("exportWorkMd", [workId]);
           break;
         case "json":
-          result = await window.NativeBridge.exportWorkJson(workId);
+          result = await Tools.callNative("exportWorkJson", [workId]);
           break;
         default:
-          result = await window.NativeBridge.exportWorkTxt(workId);
+          result = await Tools.callNative("exportWorkTxt", [workId]);
       }
       if (result) {
         showMessage("导出成功");
       }
     } catch (error) {
-      console.error("导出失败:", error);
+      console.error("[NovelIDE] [ERROR] 导出失败:", error);
       showMessage("导出失败: " + (error as Error).message);
     } finally {
       setExporting(false);
@@ -81,12 +81,12 @@ export default function IOPage(ctx: ComposeDslContext, workId: string): ComposeN
   async function backupData() {
     setBacking(true);
     try {
-      const result = await window.NativeBridge.exportWorkJson(workId);
+      const result = await Tools.callNative("exportWorkJson", [workId]);
       if (result) {
         showMessage("备份成功");
       }
     } catch (error) {
-      console.error("备份失败:", error);
+      console.error("[NovelIDE] [ERROR] 备份失败:", error);
       showMessage("备份失败: " + (error as Error).message);
     } finally {
       setBacking(false);
@@ -106,12 +106,12 @@ export default function IOPage(ctx: ComposeDslContext, workId: string): ComposeN
     setShowImportDialog(false);
     setRestoring(true);
     try {
-      const result = await window.NativeBridge.importFile(importUri, importFileName, workId);
+      const result = await Tools.callNative("importFile", [importUri, importFileName, workId]);
       if (result) {
         showMessage("恢复成功");
       }
     } catch (error) {
-      console.error("恢复失败:", error);
+      console.error("[NovelIDE] [ERROR] 恢复失败:", error);
       showMessage("恢复失败: " + (error as Error).message);
     } finally {
       setRestoring(false);

@@ -455,6 +455,37 @@ body {
   </div>
 </div>
 
+<!-- ===== Node Edit Dialog ===== -->
+<div id="nodeEditDialog" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;align-items:center;justify-content:center">
+  <div style="background:#1a1b1e;border:1px solid #222325;border-radius:16px;padding:24px;width:360px;max-width:90vw">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <h3 style="font-size:16px;color:#f7f8f8;margin:0">编辑角色</h3>
+      <span style="cursor:pointer;color:#5c5e66;font-size:20px" onclick="closeNodeEditDialog()">✕</span>
+    </div>
+    
+    <div style="margin-bottom:12px">
+      <label style="font-size:12px;color:#5c5e66;display:block;margin-bottom:4px">角色名称</label>
+      <input id="editNodeName" type="text" style="width:100%;background:#010102;border:1px solid #222325;border-radius:8px;padding:8px 12px;color:#f7f8f8;font-size:14px;outline:none">
+    </div>
+    
+    <div style="margin-bottom:12px">
+      <label style="font-size:12px;color:#5c5e66;display:block;margin-bottom:4px">节点颜色</label>
+      <input id="editNodeColor" type="color" style="width:60px;height:36px;border:none;border-radius:8px;cursor:pointer;background:transparent">
+    </div>
+    
+    <div style="margin-bottom:16px">
+      <label style="font-size:12px;color:#5c5e66;display:block;margin-bottom:4px">相关关系</label>
+      <div id="editNodeRelations" style="max-height:120px;overflow-y:auto;padding:8px;background:#010102;border-radius:8px"></div>
+    </div>
+    
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-danger" onclick="deleteSelectedNode()">删除角色</button>
+      <button class="btn btn-secondary" onclick="closeNodeEditDialog()">取消</button>
+      <button class="btn btn-primary" onclick="saveNodeEdit()">保存</button>
+    </div>
+  </div>
+</div>
+
 <!-- ===== Hidden SVG for export ===== -->
 <div id="svgExport" style="position:absolute;left:-9999px;top:-9999px"></div>
 
@@ -511,6 +542,7 @@ function init() {
   canvas.addEventListener('mousemove', onMouseMove);
   canvas.addEventListener('mouseup', onMouseUp);
   canvas.addEventListener('mouseleave', onMouseUp);
+  canvas.addEventListener('dblclick', onDoubleClick);
   canvas.addEventListener('wheel', onWheel, { passive: false });
   canvas.addEventListener('contextmenu', e => e.preventDefault());
 
@@ -832,20 +864,24 @@ function draw() {
   // Draw nodes
   nodes.forEach(n => {
     const r = n.radius;
+    const isHighlighted = n.highlighted;
+    const isHovered = n === dragNode || (mouseX && mouseY && findNode((mouseX - offsetX) / scale, (mouseY - offsetY) / scale) === n);
 
-    // Shadow
-    ctx.beginPath();
-    ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
-    ctx.fillStyle = n.color + '22';
-    ctx.fill();
+    // Shadow / highlight glow
+    if (isHighlighted) {
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, r + 8, 0, Math.PI * 2);
+      ctx.fillStyle = n.color + '44';
+      ctx.fill();
+    }
 
     // Circle bg
     ctx.beginPath();
     ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
-    ctx.fillStyle = n.color + '33';
+    ctx.fillStyle = isHighlighted ? n.color + '55' : (isHovered ? n.color + '44' : n.color + '33');
     ctx.fill();
-    ctx.strokeStyle = n.color;
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = isHighlighted ? '#fff' : n.color;
+    ctx.lineWidth = isHighlighted ? 3 : 2;
     ctx.stroke();
 
     // Avatar text
@@ -856,7 +892,7 @@ function draw() {
     ctx.fillText(n.name.charAt(0), n.x, n.y);
 
     // Name label
-    ctx.fillStyle = '#f7f8f8';
+    ctx.fillStyle = isHighlighted ? '#fff' : '#f7f8f8';
     ctx.font = `500 ${config.fontSize}px sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
@@ -1073,8 +1109,176 @@ function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+// ===== Node Click & Edit =====
+let selectedNodeForEdit = null;
+let editDialogVisible = false;
+
+function onNodeClick(node) {
+  selectedNodeForEdit = node;
+  showNodeEditDialog(node);
+}
+
+function showNodeEditDialog(node) {
+  const dialog = document.getElementById('nodeEditDialog');
+  if (!dialog) return;
+  
+  document.getElementById('editNodeName').value = node.name;
+  document.getElementById('editNodeColor').value = node.color;
+  
+  // 显示相关关系
+  const rels = edges.filter(e => e.from === node.name || e.to === node.name);
+  const relList = document.getElementById('editNodeRelations');
+  relList.innerHTML = rels.map(r => 
+    `<div style="padding:4px 0;font-size:12px;color:#c9d1d9">
+      <span style="color:${r.color}">●</span> 
+      ${r.from} → ${r.to} <span style="color:#5c5e66">(${r.type})</span>
+    </div>`
+  ).join('');
+  
+  dialog.style.display = 'flex';
+  editDialogVisible = true;
+}
+
+function closeNodeEditDialog() {
+  const dialog = document.getElementById('nodeEditDialog');
+  if (dialog) dialog.style.display = 'none';
+  editDialogVisible = false;
+  selectedNodeForEdit = null;
+}
+
+function saveNodeEdit() {
+  if (!selectedNodeForEdit) return;
+  
+  const newName = document.getElementById('editNodeName').value.trim();
+  const newColor = document.getElementById('editNodeColor').value;
+  
+  if (!newName) return;
+  
+  // 更新节点数据
+  const oldName = selectedNodeForEdit.name;
+  if (newName !== oldName) {
+    // 更新 characters map
+    const charData = characters.get(oldName);
+    characters.delete(oldName);
+    characters.set(newName, charData);
+    
+    // 更新 relations
+    relations.forEach(r => {
+      if (r.from === oldName) r.from = newName;
+      if (r.to === oldName) r.to = newName;
+    });
+    
+    // 更新 nodes
+    selectedNodeForEdit.name = newName;
+  }
+  
+  selectedNodeForEdit.color = newColor;
+  characters.get(newName).bgColor = newColor;
+  
+  renderTable();
+  updateAvatarSelect();
+  generateGraph();
+  closeNodeEditDialog();
+}
+
+function deleteSelectedNode() {
+  if (!selectedNodeForEdit) return;
+  
+  const name = selectedNodeForEdit.name;
+  if (!confirm(`确定删除角色「${name}」及其所有关系？`)) return;
+  
+  // 删除相关关系
+  relations = relations.filter(r => r.from !== name && r.to !== name);
+  
+  // 删除角色
+  characters.delete(name);
+  
+  renderTable();
+  updateAvatarSelect();
+  generateGraph();
+  closeNodeEditDialog();
+}
+
+// ===== Double Click to Edit =====
+function onDoubleClick(e) {
+  const pos = getCanvasPos(e);
+  const node = findNode(pos.x, pos.y);
+  if (node) {
+    onNodeClick(node);
+  }
+}
+
 // ===== Start =====
 window.onload = init;
+
+// ===== Bridge Command Handler =====
+function handleBridgeCommand(cmd) {
+  try {
+    const data = JSON.parse(cmd);
+    switch (data.action) {
+      case 'addRelation':
+        relations.push({ 
+          from: data.from, 
+          to: data.to, 
+          type: data.type || '', 
+          color: data.color || randomColor() 
+        });
+        if (data.from && !characters.has(data.from)) characters.set(data.from, { avatar: null, bgColor: randomColor() });
+        if (data.to && !characters.has(data.to)) characters.set(data.to, { avatar: null, bgColor: randomColor() });
+        renderTable();
+        updateAvatarSelect();
+        generateGraph();
+        break;
+      case 'removeRelation':
+        const idx = relations.findIndex(r => r.from === data.from && r.to === data.to);
+        if (idx >= 0) relations.splice(idx, 1);
+        renderTable();
+        generateGraph();
+        break;
+      case 'highlightNode':
+        const targetNode = nodes.find(n => n.name === data.name);
+        if (targetNode) {
+          scale = 1.5;
+          offsetX = canvasWrap.clientWidth / 2 - targetNode.x * scale;
+          offsetY = canvasWrap.clientHeight / 2 - targetNode.y * scale;
+        }
+        break;
+      case 'exportNetwork':
+        if (data.format === 'svg') downloadSVG();
+        else if (data.format === 'png') downloadPNG();
+        break;
+      case 'filterByType':
+        // 筛选关系类型
+        if (data.type === 'all') {
+          edges = relations.filter(r => r.from && r.to).map(r => ({ from: r.from, to: r.to, type: r.type, color: r.color }));
+        } else {
+          edges = relations.filter(r => r.from && r.to && r.type === data.type).map(r => ({ from: r.from, to: r.to, type: r.type, color: r.color }));
+        }
+        draw();
+        break;
+      case 'searchCharacter':
+        // 高亮搜索的角色
+        const searchName = data.query;
+        nodes.forEach(n => {
+          n.highlighted = n.name.includes(searchName);
+        });
+        draw();
+        break;
+      case 'resetView':
+        resetView();
+        break;
+      case 'refreshData':
+        // 重新加载数据
+        break;
+      case 'toggleGraphToolbar':
+        const toolbar = document.querySelector('.graph-toolbar');
+        if (toolbar) toolbar.style.display = data.visible ? 'flex' : 'none';
+        break;
+    }
+  } catch (e) {
+    console.error('Bridge command error:', e);
+  }
+}
 
 // ===== NativeBridge Integration =====
 function loadFromNativeBridge() {

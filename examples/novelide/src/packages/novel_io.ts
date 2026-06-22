@@ -1,5 +1,7 @@
 // 导入导出工具
 
+import { Logger, safeNativeJsonCall, requireString } from "./novel_utils";
+
 export function registerTools() {
   // 通用导入（支持 TXT/Markdown/JSON）
   Tools.register("novelide:import_file", {
@@ -14,9 +16,17 @@ export function registerTools() {
       required: ["uri", "fileName"]
     },
     execute: async (params: any) => {
-      const { uri, fileName, workId } = params;
-      const result = JSON.parse((window as any).NativeBridge.importFile(uri, fileName, workId || ""));
-      return { success: true, result };
+      const uri = requireString(params.uri, "uri");
+      const fileName = requireString(params.fileName, "fileName");
+      const { workId = "" } = params;
+      try {
+        const result = await safeNativeJsonCall<any>("importFile", [uri, fileName, workId]);
+        Logger.info(`导入文件成功: ${fileName}`);
+        return { success: true, result };
+      } catch (error) {
+        Logger.error("导入文件失败", error);
+        return { success: false, error: (error as Error).message || "导入文件失败" };
+      }
     }
   });
 
@@ -31,9 +41,15 @@ export function registerTools() {
       required: ["workId"]
     },
     execute: async (params: any) => {
-      const { workId } = params;
-      const result = JSON.parse((window as any).NativeBridge.exportWorkTxt(workId));
-      return { success: true, result };
+      const workId = requireString(params.workId, "workId");
+      try {
+        const result = await safeNativeJsonCall<any>("exportWorkTxt", [workId]);
+        Logger.info(`导出 TXT 成功: ${workId}`);
+        return { success: true, result };
+      } catch (error) {
+        Logger.error("导出 TXT 失败", error);
+        return { success: false, error: (error as Error).message || "导出 TXT 失败" };
+      }
     }
   });
 
@@ -48,9 +64,15 @@ export function registerTools() {
       required: ["workId"]
     },
     execute: async (params: any) => {
-      const { workId } = params;
-      const result = JSON.parse((window as any).NativeBridge.exportWorkMd(workId));
-      return { success: true, result };
+      const workId = requireString(params.workId, "workId");
+      try {
+        const result = await safeNativeJsonCall<any>("exportWorkMd", [workId]);
+        Logger.info(`导出 Markdown 成功: ${workId}`);
+        return { success: true, result };
+      } catch (error) {
+        Logger.error("导出 Markdown 失败", error);
+        return { success: false, error: (error as Error).message || "导出 Markdown 失败" };
+      }
     }
   });
 
@@ -65,9 +87,15 @@ export function registerTools() {
       required: ["workId"]
     },
     execute: async (params: any) => {
-      const { workId } = params;
-      const result = JSON.parse((window as any).NativeBridge.exportWorkJson(workId));
-      return { success: true, result };
+      const workId = requireString(params.workId, "workId");
+      try {
+        const result = await safeNativeJsonCall<any>("exportWorkJson", [workId]);
+        Logger.info(`导出 JSON 成功: ${workId}`);
+        return { success: true, result };
+      } catch (error) {
+        Logger.error("导出 JSON 失败", error);
+        return { success: false, error: (error as Error).message || "导出 JSON 失败" };
+      }
     }
   });
 }

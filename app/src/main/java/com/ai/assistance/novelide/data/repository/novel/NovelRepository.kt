@@ -1,10 +1,11 @@
 package com.ai.assistance.novelide.data.repository.novel
 
 import com.ai.assistance.novelide.data.dao.novel.NovelDao
+import com.ai.assistance.novelide.data.dao.novel.OutlineDao
 import com.ai.assistance.novelide.data.model.novel.*
 import kotlinx.coroutines.flow.Flow
 
-class NovelRepository(private val dao: NovelDao) {
+class NovelRepository(private val dao: NovelDao, private val outlineDao: OutlineDao) {
 
     // ==================== 作品 ====================
     fun getAllWorks(): Flow<List<NovelWork>> = dao.getAllWorks()
@@ -211,6 +212,8 @@ class NovelRepository(private val dao: NovelDao) {
 
     suspend fun deleteCustomMaterialItem(itemId: String) = dao.deleteCustomMaterialItemById(itemId)
 
+    fun getCustomMaterialItemsByWorkId(workId: String): Flow<List<CustomMaterialItem>> = dao.getCustomMaterialItemsByWorkId(workId)
+
     // ==================== 角色关系 ====================
     fun getCharacterRelationshipsByWorkId(workId: String): Flow<List<CharacterRelationship>> = dao.getCharacterRelationshipsByWorkId(workId)
 
@@ -247,4 +250,15 @@ class NovelRepository(private val dao: NovelDao) {
     suspend fun deleteNovelEventParticipant(eventId: String, characterId: String) = dao.deleteNovelEventParticipant(eventId, characterId)
 
     suspend fun deleteAllNovelEventParticipantsByEventId(eventId: String) = dao.deleteAllNovelEventParticipantsByEventId(eventId)
+
+    // ==================== 大纲节点 ====================
+    fun getOutlineNodesByWorkId(workId: String): Flow<List<OutlineNode>> = outlineDao.getOutlineNodesByWorkId(workId)
+
+    suspend fun getOutlineNodeById(nodeId: String): OutlineNode? = outlineDao.getOutlineNodeById(nodeId)
+
+    suspend fun insertOutlineNode(node: OutlineNode) = outlineDao.insertOutlineNode(node)
+
+    suspend fun updateOutlineNode(node: OutlineNode) = outlineDao.updateOutlineNode(node)
+
+    suspend fun deleteOutlineNode(nodeId: String) = outlineDao.deleteOutlineNodeById(nodeId)
 }

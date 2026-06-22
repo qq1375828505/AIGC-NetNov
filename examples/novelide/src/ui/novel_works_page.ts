@@ -11,15 +11,18 @@ export default function WorksPage(ctx: ComposeDslContext): ComposeNode {
   const [showCreateDialog, setShowCreateDialog] = ctx.useState("showCreateDialog", false);
   const [newTitle, setNewTitle] = ctx.useState("newTitle", "");
   const [newGenre, setNewGenre] = ctx.useState("newGenre", "");
+  const [showDeleteDialog, setShowDeleteDialog] = ctx.useState("showDeleteDialog", false);
+  const [deleteTargetId, setDeleteTargetId] = ctx.useState("deleteTargetId", "");
+  const [deleteTargetTitle, setDeleteTargetTitle] = ctx.useState("deleteTargetTitle", "");
 
   // 加载作品列表
   async function loadWorks() {
     setLoading(true);
     try {
-      const result = await window.NativeBridge.getNovelWorks();
+      const result = await Tools.callNative("getNovelWorks", []);
       setWorks(JSON.parse(result));
     } catch (error) {
-      console.error("加载作品失败:", error);
+      console.error("[NovelIDE] [ERROR] 加载作品失败:", error);
     } finally {
       setLoading(false);
     }
@@ -27,25 +30,37 @@ export default function WorksPage(ctx: ComposeDslContext): ComposeNode {
 
   // 创建作品
   async function createWork() {
-    if (!newTitle.trim()) return;
+    const title = newTitle.trim();
+    if (!title) return;
     try {
-      await window.NativeBridge.createWork(newTitle, newGenre, "");
+      await Tools.callNative("createWork", [title, newGenre || "", ""]);
       setShowCreateDialog(false);
       setNewTitle("");
       setNewGenre("");
       await loadWorks();
     } catch (error) {
-      console.error("创建作品失败:", error);
+      console.error("[NovelIDE] [ERROR] 创建作品失败:", error);
     }
   }
 
-  // 删除作品
-  async function deleteWork(workId: string) {
+  // 显示删除确认对话框
+  function confirmDeleteWork(workId: string, workTitle: string) {
+    setDeleteTargetId(workId);
+    setDeleteTargetTitle(workTitle || "未命名作品");
+    setShowDeleteDialog(true);
+  }
+
+  // 执行删除作品
+  async function executeDeleteWork() {
+    if (!deleteTargetId) return;
+    setShowDeleteDialog(false);
     try {
-      await window.NativeBridge.deleteWork(workId);
+      await Tools.callNative("deleteWork", [deleteTargetId]);
+      setDeleteTargetId("");
+      setDeleteTargetTitle("");
       await loadWorks();
     } catch (error) {
-      console.error("删除作品失败:", error);
+      console.error("[NovelIDE] [ERROR] 删除作品失败:", error);
     }
   }
 
@@ -115,7 +130,7 @@ export default function WorksPage(ctx: ComposeDslContext): ComposeNode {
         // 删除按钮
         UI.IconButton({
           icon: "delete",
-          onClick: () => deleteWork(work.id),
+          onClick: () => confirmDeleteWork(work.id, work.title),
           tint: colors.error
         })
       ])
@@ -153,6 +168,33 @@ export default function WorksPage(ctx: ComposeDslContext): ComposeNode {
     content,
 
     // 创建对话框
-    createDialog
+    createDialog,
+
+    // 删除确认对话框
+    showDeleteDialog
+      ? UI.Dialog({
+          onDismiss: () => setShowDeleteDialog(false),
+          title: "确认删除",
+          content: UI.Column({ spacing: 16, paddingHorizontal: 16 }, [
+            UI.Text({
+              text: `确定要删除作品「${deleteTargetTitle}」吗？`,
+              style: "bodyLarge"
+            }),
+            UI.Text({
+              text: "此操作不可撤销，所有章节和资料将被永久删除。",
+              style: "bodySmall",
+              color: colors.error
+            })
+          ]),
+          confirmButton: UI.Button(
+            { onClick: executeDeleteWork, background: colors.error },
+            "删除"
+          ),
+          dismissButton: UI.Button(
+            { onClick: () => setShowDeleteDialog(false) },
+            "取消"
+          )
+        })
+      : null
   ]);
 }

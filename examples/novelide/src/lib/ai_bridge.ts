@@ -35,13 +35,14 @@ export class NovelAIBridge {
     let context = "";
     if (workId) {
       try {
-        const works = JSON.parse(await window.NativeBridge.getNovelWorks());
+        const worksRaw = await Tools.callNative("getNovelWorks", []);
+        const works = JSON.parse(worksRaw);
         const work = works.find((w: any) => w.id === workId);
         if (work) {
           context += `作品：${work.title}\n类型：${work.genre}\n`;
         }
       } catch (e) {
-        // 忽略错误
+        console.warn("[NovelIDE] [WARN] 获取作品上下文失败:", e);
       }
     }
 
@@ -61,13 +62,14 @@ export class NovelAIBridge {
     let context = "";
     if (workId) {
       try {
-        const works = JSON.parse(await window.NativeBridge.getNovelWorks());
+        const worksRaw = await Tools.callNative("getNovelWorks", []);
+        const works = JSON.parse(worksRaw);
         const work = works.find((w: any) => w.id === workId);
         if (work) {
           context = `作品：${work.title}，类型：${work.genre}`;
         }
       } catch (e) {
-        // 忽略错误
+        console.warn("[NovelIDE] [WARN] 获取作品上下文失败:", e);
       }
     }
 

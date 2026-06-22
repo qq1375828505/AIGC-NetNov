@@ -148,6 +148,9 @@ export default function MaterialsPage(ctx: ComposeDslContext): ComposeNode {
   const [showForm, setShowForm] = ctx.useState("showForm", false);
   const [formFields, setFormFields] = ctx.useState<Record<string, string>>("formFields", {});
   const [searchQuery, setSearchQuery] = ctx.useState("searchQuery", "");
+  const [showDeleteDialog, setShowDeleteDialog] = ctx.useState("showDeleteDialog", false);
+  const [deleteTargetId, setDeleteTargetId] = ctx.useState("deleteTargetId", "");
+  const [deleteTargetName, setDeleteTargetName] = ctx.useState("deleteTargetName", "");
 
   const category = CATEGORIES[activeTab];
 
@@ -164,10 +167,10 @@ export default function MaterialsPage(ctx: ComposeDslContext): ComposeNode {
   async function loadItems() {
     setLoading(true);
     try {
-      const result = await (window.NativeBridge as any)[category.bridgeGet](workId);
+      const result = await Tools.callNative(category.bridgeGet, [workId]);
       setItems(JSON.parse(result));
     } catch (error) {
-      console.error(`加载${category.label}失败:`, error);
+      console.error(`[NovelIDE] [ERROR] 加载${category.label}失败:`, error);
       setItems([]);
     } finally {
       setLoading(false);
@@ -179,38 +182,38 @@ export default function MaterialsPage(ctx: ComposeDslContext): ComposeNode {
       if (editingItem) {
         // 编辑模式：调用 update 方法
         const payload = { id: editingItem.id, ...formFields };
-        await (window.NativeBridge as any)[category.bridgeUpdate](JSON.stringify(payload));
+        await Tools.callNative(category.bridgeUpdate, [JSON.stringify(payload)]);
       } else {
         // 新增模式：调用 create 方法（根据类别传递不同参数）
         const payload = { ...formFields };
         switch (category.key) {
           case "characters":
-            await (window.NativeBridge as any).createCharacter(workId, payload.name || "", payload.role || "");
+            await Tools.callNative("createCharacter", [workId, payload.name || "", payload.role || ""]);
             break;
           case "settings":
-            await (window.NativeBridge as any).createSetting(workId, payload.name || "", payload.description || "");
+            await Tools.callNative("createSetting", [workId, payload.name || "", payload.description || ""]);
             break;
           case "locations":
-            await (window.NativeBridge as any).createLocation(workId, payload.name || "", payload.description || "");
+            await Tools.callNative("createLocation", [workId, payload.name || "", payload.description || ""]);
             break;
           case "factions":
-            await (window.NativeBridge as any).createFaction(workId, payload.name || "", payload.leader || "");
+            await Tools.callNative("createFaction", [workId, payload.name || "", payload.leader || ""]);
             break;
           case "items":
-            await (window.NativeBridge as any).createItem(workId, payload.name || "", payload.description || "");
+            await Tools.callNative("createItem", [workId, payload.name || "", payload.description || ""]);
             break;
           case "plot_hooks":
-            await (window.NativeBridge as any).createPlotHook(workId, payload.description || "");
+            await Tools.callNative("createPlotHook", [workId, payload.description || ""]);
             break;
           case "references":
-            await (window.NativeBridge as any).createReference(workId, payload.title || "", payload.notes || "");
+            await Tools.callNative("createReference", [workId, payload.title || "", payload.notes || ""]);
             break;
           case "todos":
-            await (window.NativeBridge as any).createTodo(workId, payload.title || "", parseInt(payload.priority || "0"));
+            await Tools.callNative("createTodo", [workId, payload.title || "", parseInt(payload.priority || "0")]);
             break;
           default:
             // 默认使用 JSON 字符串方式
-            await (window.NativeBridge as any)[category.bridgeCreate](workId, JSON.stringify(payload));
+            await Tools.callNative(category.bridgeCreate, [workId, JSON.stringify(payload)]);
         }
       }
       setShowForm(false);
@@ -218,16 +221,28 @@ export default function MaterialsPage(ctx: ComposeDslContext): ComposeNode {
       setFormFields({});
       await loadItems();
     } catch (error) {
-      console.error(`保存${category.label}失败:`, error);
+      console.error(`[NovelIDE] [ERROR] 保存${category.label}失败:`, error);
     }
   }
 
-  async function deleteItem(itemId: string) {
+  // 显示删除确认对话框
+  function confirmDeleteItem(itemId: string, itemName: string) {
+    setDeleteTargetId(itemId);
+    setDeleteTargetName(itemName || "未命名");
+    setShowDeleteDialog(true);
+  }
+
+  // 执行删除
+  async function executeDeleteItem() {
+    if (!deleteTargetId) return;
+    setShowDeleteDialog(false);
     try {
-      await (window.NativeBridge as any)[category.bridgeDelete](itemId);
+      await Tools.callNative(category.bridgeDelete, [deleteTargetId]);
+      setDeleteTargetId("");
+      setDeleteTargetName("");
       await loadItems();
     } catch (error) {
-      console.error(`删除${category.label}失败:`, error);
+      console.error(`[NovelIDE] [ERROR] 删除${category.label}失败:`, error);
     }
   }
 
@@ -347,7 +362,7 @@ export default function MaterialsPage(ctx: ComposeDslContext): ComposeNode {
                   }),
                   UI.IconButton({
                     icon: "delete",
-                    onClick: () => deleteItem(item.id),
+                    onClick: () => confirmDeleteItem(item.id, item.name || item.title),
                     tint: colors.error,
                   }),
                 ]),
@@ -391,6 +406,33 @@ export default function MaterialsPage(ctx: ComposeDslContext): ComposeNode {
       )
     : null;
 
+  // 删除确认对话框
+  const deleteDialog = showDeleteDialog
+    ? UI.Dialog({
+        onDismiss: () => setShowDeleteDialog(false),
+        title: `删除${category.label}`,
+        content: UI.Column({ spacing: 16, paddingHorizontal: 16 }, [
+          UI.Text({
+            text: `确定要删除「${deleteTargetName}」吗？`,
+            style: "bodyLarge"
+          }),
+          UI.Text({
+            text: "此操作不可撤销。",
+            style: "bodySmall",
+            color: colors.error
+          })
+        ]),
+        confirmButton: UI.Button(
+          { onClick: executeDeleteItem, background: colors.error },
+          "删除"
+        ),
+        dismissButton: UI.Button(
+          { onClick: () => setShowDeleteDialog(false) },
+          "取消"
+        )
+      })
+    : null;
+
   // 主布局
   return UI.Box({ fillMaxSize: true }, [
     UI.Row({ fillMaxSize: true }, [
@@ -398,5 +440,6 @@ export default function MaterialsPage(ctx: ComposeDslContext): ComposeNode {
       UI.Box({ weight: 1, fillMaxHeight: true }, [listView]),
       formView,
     ]),
+    deleteDialog,
   ]);
 }
