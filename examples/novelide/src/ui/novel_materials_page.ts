@@ -7,7 +7,8 @@ interface MaterialCategory {
   label: string;
   icon: string;
   bridgeGet: string;
-  bridgeSave: string;
+  bridgeCreate: string;
+  bridgeUpdate: string;
   bridgeDelete: string;
   fields: { key: string; label: string; multiline?: boolean }[];
 }
@@ -17,9 +18,10 @@ const CATEGORIES: MaterialCategory[] = [
     key: "characters",
     label: "角色",
     icon: "person",
-    bridgeGet: "getNovelCharacters",
-    bridgeSave: "saveNovelCharacter",
-    bridgeDelete: "deleteNovelCharacter",
+    bridgeGet: "getCharacters",
+    bridgeCreate: "createCharacter",
+    bridgeUpdate: "updateCharacter",
+    bridgeDelete: "deleteCharacter",
     fields: [
       { key: "name", label: "姓名" },
       { key: "gender", label: "性别" },
@@ -33,9 +35,10 @@ const CATEGORIES: MaterialCategory[] = [
     key: "settings",
     label: "设定",
     icon: "settings",
-    bridgeGet: "getNovelSettings",
-    bridgeSave: "saveNovelSetting",
-    bridgeDelete: "deleteNovelSetting",
+    bridgeGet: "getSettings",
+    bridgeCreate: "createSetting",
+    bridgeUpdate: "updateSetting",
+    bridgeDelete: "deleteSetting",
     fields: [
       { key: "name", label: "设定名称" },
       { key: "category", label: "分类" },
@@ -46,9 +49,10 @@ const CATEGORIES: MaterialCategory[] = [
     key: "locations",
     label: "地点",
     icon: "place",
-    bridgeGet: "getNovelLocations",
-    bridgeSave: "saveNovelLocation",
-    bridgeDelete: "deleteNovelLocation",
+    bridgeGet: "getLocations",
+    bridgeCreate: "createLocation",
+    bridgeUpdate: "updateLocation",
+    bridgeDelete: "deleteLocation",
     fields: [
       { key: "name", label: "地点名称" },
       { key: "type", label: "类型" },
@@ -59,9 +63,10 @@ const CATEGORIES: MaterialCategory[] = [
     key: "factions",
     label: "势力",
     icon: "group",
-    bridgeGet: "getNovelFactions",
-    bridgeSave: "saveNovelFaction",
-    bridgeDelete: "deleteNovelFaction",
+    bridgeGet: "getFactions",
+    bridgeCreate: "createFaction",
+    bridgeUpdate: "updateFaction",
+    bridgeDelete: "deleteFaction",
     fields: [
       { key: "name", label: "势力名称" },
       { key: "leader", label: "首领" },
@@ -72,9 +77,10 @@ const CATEGORIES: MaterialCategory[] = [
     key: "items",
     label: "道具",
     icon: "inventory_2",
-    bridgeGet: "getNovelItems",
-    bridgeSave: "saveNovelItem",
-    bridgeDelete: "deleteNovelItem",
+    bridgeGet: "getItems",
+    bridgeCreate: "createItem",
+    bridgeUpdate: "updateItem",
+    bridgeDelete: "deleteItem",
     fields: [
       { key: "name", label: "道具名称" },
       { key: "type", label: "类型" },
@@ -85,9 +91,10 @@ const CATEGORIES: MaterialCategory[] = [
     key: "plot_hooks",
     label: "伏笔",
     icon: "extension",
-    bridgeGet: "getNovelPlotHooks",
-    bridgeSave: "saveNovelPlotHook",
-    bridgeDelete: "deleteNovelPlotHook",
+    bridgeGet: "getPlotHooks",
+    bridgeCreate: "createPlotHook",
+    bridgeUpdate: "updatePlotHook",
+    bridgeDelete: "deletePlotHook",
     fields: [
       { key: "title", label: "伏笔标题" },
       { key: "status", label: "状态" },
@@ -100,9 +107,10 @@ const CATEGORIES: MaterialCategory[] = [
     key: "references",
     label: "参考资料",
     icon: "menu_book",
-    bridgeGet: "getNovelReferences",
-    bridgeSave: "saveNovelReference",
-    bridgeDelete: "deleteNovelReference",
+    bridgeGet: "getReferences",
+    bridgeCreate: "createReference",
+    bridgeUpdate: "updateReference",
+    bridgeDelete: "deleteReference",
     fields: [
       { key: "title", label: "标题" },
       { key: "source", label: "来源" },
@@ -114,9 +122,10 @@ const CATEGORIES: MaterialCategory[] = [
     key: "todos",
     label: "写作待办",
     icon: "checklist",
-    bridgeGet: "getNovelTodos",
-    bridgeSave: "saveNovelTodo",
-    bridgeDelete: "deleteNovelTodo",
+    bridgeGet: "getTodos",
+    bridgeCreate: "createTodo",
+    bridgeUpdate: "updateTodo",
+    bridgeDelete: "deleteTodo",
     fields: [
       { key: "title", label: "待办内容" },
       { key: "priority", label: "优先级" },
@@ -156,10 +165,15 @@ export default function MaterialsPage(ctx: ComposeDslContext): ComposeNode {
 
   async function saveItem() {
     try {
-      const payload = editingItem
-        ? { id: editingItem.id, ...formFields }
-        : { ...formFields };
-      await (window.NativeBridge as any)[category.bridgeSave](workId, JSON.stringify(payload));
+      if (editingItem) {
+        // 编辑模式：调用 update 方法
+        const payload = { id: editingItem.id, ...formFields };
+        await (window.NativeBridge as any)[category.bridgeUpdate](JSON.stringify(payload));
+      } else {
+        // 新增模式：调用 create 方法
+        const payload = { ...formFields };
+        await (window.NativeBridge as any)[category.bridgeCreate](workId, JSON.stringify(payload));
+      }
       setShowForm(false);
       setEditingItem(null);
       setFormFields({});

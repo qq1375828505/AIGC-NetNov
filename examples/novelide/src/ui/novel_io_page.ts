@@ -22,7 +22,9 @@ export default function IOPage(ctx: ComposeDslContext): ComposeNode {
   async function importFile() {
     setImporting(true);
     try {
-      const result = await window.NativeBridge.importNovel(selectedFormat);
+      // 注意：实际使用时需要从文件选择器获取 uri 和 fileName
+      // 这里暂时使用空字符串作为占位符
+      const result = await window.NativeBridge.importFile("", "", "");
       if (result) {
         showMessage("导入成功");
       }
@@ -38,7 +40,20 @@ export default function IOPage(ctx: ComposeDslContext): ComposeNode {
   async function exportFile() {
     setExporting(true);
     try {
-      const result = await window.NativeBridge.exportNovel(selectedFormat);
+      let result;
+      switch (selectedFormat) {
+        case "txt":
+          result = await window.NativeBridge.exportWorkTxt("");
+          break;
+        case "md":
+          result = await window.NativeBridge.exportWorkMd("");
+          break;
+        case "json":
+          result = await window.NativeBridge.exportWorkJson("");
+          break;
+        default:
+          result = await window.NativeBridge.exportWorkTxt("");
+      }
       if (result) {
         showMessage("导出成功");
       }
@@ -50,11 +65,11 @@ export default function IOPage(ctx: ComposeDslContext): ComposeNode {
     }
   }
 
-  // 备份数据
+  // 备份数据（暂用 JSON 导出代替）
   async function backupData() {
     setBacking(true);
     try {
-      const result = await window.NativeBridge.backupNovelData();
+      const result = await window.NativeBridge.exportWorkJson("");
       if (result) {
         showMessage("备份成功");
       }
@@ -66,11 +81,13 @@ export default function IOPage(ctx: ComposeDslContext): ComposeNode {
     }
   }
 
-  // 恢复数据
+  // 恢复数据（暂用导入代替）
   async function restoreData() {
     setRestoring(true);
     try {
-      const result = await window.NativeBridge.restoreNovelData();
+      // 注意：实际使用时需要从文件选择器获取 uri 和 fileName
+      // 这里暂时使用空字符串作为占位符
+      const result = await window.NativeBridge.importFile("", "", "");
       if (result) {
         showMessage("恢复成功");
       }
@@ -130,7 +147,7 @@ export default function IOPage(ctx: ComposeDslContext): ComposeNode {
     return UI.Button({
       onClick,
       enabled: !loading,
-      modifier: UI.Modifier.fillMaxWidth().padding({ vertical: 4 }),
+      modifier: UI.Modifier.fillMaxWidth().padding(vertical: 4),
       background: color || colors.primary
     }, loading ? `${label}中...` : `${icon === "upload" ? "↑" : icon === "download" ? "↓" : icon === "backup" ? "↗" : "↙"} ${label}`);
   }
@@ -147,7 +164,7 @@ export default function IOPage(ctx: ComposeDslContext): ComposeNode {
       message
         ? UI.Card({
             background: colors.tertiaryContainer,
-            modifier: UI.Modifier.padding({ bottom: 8 })
+            modifier: UI.Modifier.padding(bottom: 8)
           }, UI.Row({
             padding: 12,
             fillMaxWidth: true,
@@ -164,13 +181,13 @@ export default function IOPage(ctx: ComposeDslContext): ComposeNode {
         : null,
 
       // 格式选择
-      UI.Text({ text: "选择格式", style: "titleMedium", modifier: UI.Modifier.padding({ vertical: 8 }) }),
+      UI.Text({ text: "选择格式", style: "titleMedium", modifier: UI.Modifier.padding(vertical: 8) }),
       formatCard("txt", "TXT 纯文本", "通用文本格式，兼容性最好", "description"),
       formatCard("md", "Markdown", "支持标题、加粗等格式标记", "text_format"),
       formatCard("json", "JSON", "保留完整结构化数据", "data_object"),
 
       // 导入导出操作
-      UI.Text({ text: "导入导出", style: "titleMedium", modifier: UI.Modifier.padding({ top: 16, bottom: 8 }) }),
+      UI.Text({ text: "导入导出", style: "titleMedium", modifier: UI.Modifier.padding(top: 16, bottom: 8) }),
       UI.Card({
         modifier: UI.Modifier.padding(4)
       }, UI.Column({
@@ -191,7 +208,7 @@ export default function IOPage(ctx: ComposeDslContext): ComposeNode {
       ])),
 
       // 备份恢复
-      UI.Text({ text: "备份与恢复", style: "titleMedium", modifier: UI.Modifier.padding({ top: 16, bottom: 8 }) }),
+      UI.Text({ text: "备份与恢复", style: "titleMedium", modifier: UI.Modifier.padding(top: 16, bottom: 8) }),
       UI.Card({
         modifier: UI.Modifier.padding(4)
       }, UI.Column({
