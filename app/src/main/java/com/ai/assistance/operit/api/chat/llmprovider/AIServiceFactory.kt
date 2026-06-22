@@ -374,19 +374,7 @@ object AIServiceFactory {
                     enableToolCall = enableToolCall
                 )
 
-            // MNN本地推理引擎
-            ApiProviderType.MNN ->
-                MNNProvider(
-                    context = context,
-                    modelName = config.modelName,
-                    forwardType = config.mnnForwardType,
-                    threadCount = config.mnnThreadCount,
-                    providerType = providerType,
-                    enableToolCall = enableToolCall,
-                    supportsVision = supportsVision,
-                    supportsAudio = supportsAudio,
-                    supportsVideo = supportsVideo
-                )
+
 
 
 

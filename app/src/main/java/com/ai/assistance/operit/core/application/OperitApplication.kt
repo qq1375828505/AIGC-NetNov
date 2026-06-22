@@ -60,7 +60,7 @@ import com.ai.assistance.operit.util.WaifuMessageProcessor
 import com.ai.assistance.operit.core.tools.agent.ShowerController
 import com.ai.assistance.operit.ui.common.displays.VirtualDisplayOverlay
 import com.tom_roush.pdfbox.android.PDFBoxResourceLoader
-import com.ai.assistance.operit.core.tools.system.shower.OperitShowerShellRunner
+
 
 import java.io.File
 import java.util.Locale
