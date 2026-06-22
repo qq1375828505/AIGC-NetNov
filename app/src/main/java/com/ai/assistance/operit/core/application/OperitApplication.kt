@@ -29,7 +29,6 @@ import com.ai.assistance.operit.plugins.PluginRegistry
 import com.ai.assistance.operit.plugins.lifecycle.AppLifecycleEvent
 import com.ai.assistance.operit.plugins.lifecycle.AppLifecycleHookParams
 import com.ai.assistance.operit.plugins.lifecycle.AppLifecycleHookPluginRegistry
-import com.ai.assistance.operit.core.config.SystemPromptConfig
 import com.ai.assistance.operit.core.tools.AIToolHandler
 import com.ai.assistance.operit.core.tools.system.AndroidShellExecutor
 import com.ai.assistance.operit.core.tools.system.Terminal
@@ -67,6 +66,7 @@ import java.util.Locale
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -291,7 +291,7 @@ class OperitApplication : Application(), ImageLoaderFactory, WorkConfiguration.P
         // 启动后重任务统一后台串行执行，避免多个大任务同时跑导致首屏掉帧
         applicationScope.launch(Dispatchers.Default) {
             // 给 UI 一个缓冲时间先完成首屏渲染
-            kotlinx.coroutines.delay(800)
+            delay(800)
 
             val imagePreloadStartTime = System.currentTimeMillis()
             withContext(Dispatchers.IO) { ImagePoolManager.preloadFromDisk() }
