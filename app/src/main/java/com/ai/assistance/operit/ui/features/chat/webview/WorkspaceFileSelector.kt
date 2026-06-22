@@ -574,8 +574,8 @@ private fun buildMentionPackageOptions(
             packageName,
             MentionPackageSuggestion(
                 packageName = packageName,
-                title = toolPackage.displayName.resolve(context).ifBlank { packageName },
-                description = toolPackage.description.resolve(context),
+                title = toolPackage.displayName.resolve(java.util.Locale.getDefault().getLanguage()).ifBlank { packageName },
+                description = toolPackage.description.resolve(java.util.Locale.getDefault().getLanguage()),
                 kind = MentionPackageKind.PACKAGE,
             ),
         )

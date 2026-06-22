@@ -36,7 +36,7 @@ open class StandardUITools(protected val context: Context) : ToolImplementations
     }
     
     open suspend fun runUiSubAgent(tool: AITool): ToolResult {
-        return ToolResult(tool.toolName, false, StringResultData("Not implemented in stub"))
+        return ToolResult(tool.name, false, StringResultData("Not implemented in stub"))
     }
     
     protected open suspend fun captureScreenshotToFile(tool: AITool): Pair<String?, Pair<Int, Int>?> {
@@ -44,23 +44,23 @@ open class StandardUITools(protected val context: Context) : ToolImplementations
     }
     
     override suspend fun tap(tool: AITool): ToolResult {
-        return ToolResult(tool.toolName, false, StringResultData("Not implemented in stub"))
+        return ToolResult(tool.name, false, StringResultData("Not implemented in stub"))
     }
     
     override suspend fun longPress(tool: AITool): ToolResult {
-        return ToolResult(tool.toolName, false, StringResultData("Not implemented in stub"))
+        return ToolResult(tool.name, false, StringResultData("Not implemented in stub"))
     }
     
     override suspend fun setInputText(tool: AITool): ToolResult {
-        return ToolResult(tool.toolName, false, StringResultData("Not implemented in stub"))
+        return ToolResult(tool.name, false, StringResultData("Not implemented in stub"))
     }
     
     override suspend fun swipe(tool: AITool): ToolResult {
-        return ToolResult(tool.toolName, false, StringResultData("Not implemented in stub"))
+        return ToolResult(tool.name, false, StringResultData("Not implemented in stub"))
     }
     
     override suspend fun pressKey(tool: AITool): ToolResult {
-        return ToolResult(tool.toolName, false, StringResultData("Not implemented in stub"))
+        return ToolResult(tool.name, false, StringResultData("Not implemented in stub"))
     }
     
     override suspend fun captureScreenshot(tool: AITool): Pair<String?, Pair<Int, Int>?> {

@@ -171,12 +171,12 @@ object RoomDatabaseBackupManager {
         val grouped = candidates.groupBy { it.name }
 
         val deduped = grouped.mapNotNull { (_, files) ->
-            val sorted = files.sortedWith(compareByDescending<File> { it.lastModified() }.thenByDescending { it.absolutePath })
+            val sorted = files.sortedWith(compareByDescending<File> { it.lastModified().toString() }.thenByDescending { it.absolutePath })
             sorted.drop(1).forEach { it.delete() }
             sorted.firstOrNull()
         }
 
-        val sorted = deduped.sortedWith(compareByDescending<File> { it.lastModified() }.thenByDescending { it.name })
+        val sorted = deduped.sortedWith(compareByDescending<File> { it.lastModified().toString() }.thenByDescending { it.name })
         sorted.drop(safeKeepLatest).forEach { it.delete() }
     }
 

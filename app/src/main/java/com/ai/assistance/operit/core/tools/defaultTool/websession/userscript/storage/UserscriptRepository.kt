@@ -440,7 +440,7 @@ internal class UserscriptRepository private constructor(
                     localPath = fetched.file.absolutePath,
                     mimeType = fetched.mimeType,
                     etag = fetched.etag,
-                    lastModifiedHeader = fetched.lastModified,
+                    lastModifiedHeader = fetched.lastModified.toString(),
                     updatedAt = System.currentTimeMillis()
                 )
             }
@@ -463,7 +463,7 @@ internal class UserscriptRepository private constructor(
                     localPath = fetched.file.absolutePath,
                     mimeType = fetched.mimeType,
                     etag = fetched.etag,
-                    lastModifiedHeader = fetched.lastModified,
+                    lastModifiedHeader = fetched.lastModified.toString(),
                     updatedAt = System.currentTimeMillis()
                 )
             }

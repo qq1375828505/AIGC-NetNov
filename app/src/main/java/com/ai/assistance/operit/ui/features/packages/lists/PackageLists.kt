@@ -28,10 +28,10 @@ fun PackagesList(
     ) {
         items(items = packages.entries.toList(), key = { (name, _) -> name }) { (name, pack) ->
             val isImported = importedPackages.contains(name)
-            val displayName = pack.displayName.resolve(context).ifBlank { name }
+            val displayName = pack.displayName.resolve(java.util.Locale.getDefault().getLanguage()).ifBlank { name }
             PackageItem(
                     name = displayName,
-                    description = pack.description.resolve(context),
+                    description = pack.description.resolve(java.util.Locale.getDefault().getLanguage()),
                     isImported = isImported,
                     onClick = { onPackageClick(name) },
                     onToggleImport = { checked -> onToggleImport(name, checked) }
@@ -54,10 +54,10 @@ fun AvailablePackagesList(
             contentPadding = PaddingValues(bottom = 80.dp)
     ) {
         items(items = packages.entries.toList(), key = { (name, _) -> name }) { (name, pack) ->
-            val displayName = pack.displayName.resolve(context).ifBlank { name }
+            val displayName = pack.displayName.resolve(java.util.Locale.getDefault().getLanguage()).ifBlank { name }
             PackageItem(
                     name = displayName,
-                    description = pack.description.resolve(context),
+                    description = pack.description.resolve(java.util.Locale.getDefault().getLanguage()),
                     isImported = false,
                     onClick = { onPackageClick(name) },
                     onToggleImport = { if (it) onImportClick(name) }
@@ -80,10 +80,10 @@ fun ImportedPackagesList(
             contentPadding = PaddingValues(bottom = 80.dp)
     ) {
         items(items = packages, key = { name -> name }) { name ->
-            val displayName = availablePackages[name]?.displayName?.resolve(context).orEmpty().ifBlank { name }
+            val displayName = availablePackages[name]?.displayName?.resolve(java.util.Locale.getDefault().getLanguage()).orEmpty().ifBlank { name }
             PackageItem(
                     name = displayName,
-                    description = availablePackages[name]?.description?.resolve(context) ?: "",
+                    description = availablePackages[name]?.description?.resolve(java.util.Locale.getDefault().getLanguage()) ?: "",
                     isImported = true,
                     onClick = { onPackageClick(name) },
                     onToggleImport = { if (!it) onRemoveClick(name) }

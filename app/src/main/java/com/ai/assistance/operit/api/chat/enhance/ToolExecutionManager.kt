@@ -612,7 +612,7 @@ object ToolExecutionManager {
                 permittedInvocations.map { invocation ->
                     injectPackageCallContext(
                         invocation = invocation,
-                        jsPackageNames = jsPackageNames,
+                        jsPackageNames = jsPackageNames.toSet(),
                         callerName = callerName,
                         callerChatId = callerChatId,
                         callerCardId = callerCardId

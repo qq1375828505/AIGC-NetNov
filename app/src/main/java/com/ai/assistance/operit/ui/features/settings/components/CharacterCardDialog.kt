@@ -1048,7 +1048,7 @@ private fun buildCharacterCardPackageToolAccessOptions(
             val description = runCatching {
                 toolPackage.description.resolve(preferredLanguage)
             }.getOrElse {
-                toolPackage.description.resolve(context)
+                toolPackage.description.resolve(java.util.Locale.getDefault().getLanguage())
             }
             CharacterCardToolAccessOption(
                 key = packageName,

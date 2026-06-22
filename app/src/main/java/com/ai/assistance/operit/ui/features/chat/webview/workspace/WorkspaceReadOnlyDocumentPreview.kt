@@ -128,7 +128,7 @@ internal fun rememberWorkspacePreviewFileState(
     return produceState(
         initialValue = WorkspacePreviewFileState(),
         key1 = fileInfo.path,
-        key2 = fileInfo.lastModified,
+        key2 = fileInfo.lastModified.toString(),
         key3 = workspaceEnv
     ) {
         value = withContext(Dispatchers.IO) {
@@ -149,7 +149,7 @@ private fun WorkspaceHtmlDocumentPreview(
     val htmlPreviewState by produceState(
         initialValue = WorkspaceHtmlPreviewState(),
         key1 = sourceFile?.absolutePath,
-        key2 = sourceFile?.lastModified(),
+        key2 = sourceFile?.lastModified().toString(),
         key3 = fileInfo.resolvedMimeType
     ) {
         value = withContext(Dispatchers.IO) {
@@ -188,7 +188,7 @@ private fun WorkspacePdfPreview(
     val pdfPreviewState by produceState(
         initialValue = WorkspacePdfPreviewState(),
         key1 = sourceFile?.absolutePath,
-        key2 = sourceFile?.lastModified()
+        key2 = sourceFile?.lastModified().toString()
     ) {
         value = withContext(Dispatchers.IO) {
             resolvePdfPreviewState(sourceFile)
@@ -234,7 +234,7 @@ private fun WorkspacePdfPage(
     val bitmap by produceState<Bitmap?>(
         initialValue = null,
         key1 = sourceFile?.absolutePath,
-        key2 = sourceFile?.lastModified(),
+        key2 = sourceFile?.lastModified().toString(),
         key3 = pageIndex
     ) {
         value = withContext(Dispatchers.IO) {
@@ -373,7 +373,7 @@ private fun resolvePreviewSourceFile(
         val extension = fileInfo.name.substringAfterLast('.', "bin").ifBlank { "bin" }
         val previewFile = File(
             previewDir,
-            "${fileInfo.path.hashCode()}_${fileInfo.lastModified}.$extension"
+            "${fileInfo.path.hashCode()}_${fileInfo.lastModified.toString()}.$extension"
         )
         FileOutputStream(previewFile).use { output ->
             output.write(bytes)
@@ -404,7 +404,7 @@ private fun buildHtmlPreviewState(
         val htmlDir = File(context.cacheDir, "workspace_document_html").apply { mkdirs() }
         val htmlFile = File(
             htmlDir,
-            "${sourceFile.absolutePath.hashCode()}_${sourceFile.lastModified()}.html"
+            "${sourceFile.absolutePath.hashCode()}_${sourceFile.lastModified().toString()}.html"
         )
 
         val extension = sourceFile.extension.lowercase(Locale.ROOT)

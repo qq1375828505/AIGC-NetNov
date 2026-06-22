@@ -87,7 +87,7 @@ class LinuxFileSystemTools(context: Context) : StandardFileSystemTools(context) 
                     isDirectory = fileInfo.isDirectory,
                     size = fileInfo.size,
                     permissions = fileInfo.permissions,
-                    lastModified = fileInfo.lastModified
+                    lastModified = fileInfo.lastModified.toString()
                 )
             }
 
@@ -1089,7 +1089,7 @@ class LinuxFileSystemTools(context: Context) : StandardFileSystemTools(context) 
                 appendLine("Size: ${fileInfo.size} bytes")
                 appendLine("Type: $fileType")
                 appendLine("Permissions: ${fileInfo.permissions}")
-                appendLine("Last Modified: ${fileInfo.lastModified}")
+                appendLine("Last Modified: ${fileInfo.lastModified.toString()}")
             }
 
             return ToolResult(
@@ -1103,7 +1103,7 @@ class LinuxFileSystemTools(context: Context) : StandardFileSystemTools(context) 
                     permissions = fileInfo.permissions,
                     owner = "",
                     group = "",
-                    lastModified = fileInfo.lastModified,
+                    lastModified = fileInfo.lastModified.toString(),
                     rawStatOutput = rawInfo,
                     env = "linux"
                 ),

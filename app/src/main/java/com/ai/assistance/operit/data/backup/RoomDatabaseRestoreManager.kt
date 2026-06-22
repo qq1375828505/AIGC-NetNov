@@ -52,7 +52,7 @@ object RoomDatabaseRestoreManager {
             .toList()
 
         return backups
-            .sortedWith(compareByDescending<File> { it.lastModified() }.thenByDescending { it.name })
+            .sortedWith(compareByDescending<File> { it.lastModified().toString() }.thenByDescending { it.name })
             .take(limit)
     }
 

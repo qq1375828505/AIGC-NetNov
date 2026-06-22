@@ -670,7 +670,7 @@ class VitsVoiceProvider(
     }
 
     private fun extractZipPackage(zipFile: File): File {
-        val signature = "${zipFile.absolutePath}|${zipFile.length()}|${zipFile.lastModified()}"
+        val signature = "${zipFile.absolutePath}|${zipFile.length()}|${zipFile.lastModified().toString()}"
         val packageDir = File(context.filesDir, "vits_tts_packages")
         val target = File(packageDir, sha256(signature).take(16))
         val marker = File(target, ".source")

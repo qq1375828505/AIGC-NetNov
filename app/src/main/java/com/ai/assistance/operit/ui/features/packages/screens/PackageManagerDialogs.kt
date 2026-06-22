@@ -235,7 +235,7 @@ fun PackageEnvironmentVariablesDialog(
                                                 }
                                             }
                                         }
-                                        val description = envVar.description.resolve(context)
+                                        val description = envVar.description.resolve(java.util.Locale.getDefault().getLanguage())
                                         if (description.isNotBlank()) {
                                             Text(
                                                 text = description,

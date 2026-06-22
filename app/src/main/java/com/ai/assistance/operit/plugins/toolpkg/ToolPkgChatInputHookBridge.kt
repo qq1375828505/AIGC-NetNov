@@ -1,5 +1,7 @@
 package com.ai.assistance.operit.plugins.toolpkg
 
+typealias ToolPkgContainerRuntime = com.ai.assistance.operit.core.tools.packTool.PackageManager.ToolPkgContainerRuntime
+
 import com.ai.assistance.operit.core.tools.packTool.PackageManager
 import com.ai.assistance.operit.core.tools.packTool.TOOLPKG_EVENT_CHAT_INPUT
 import com.ai.assistance.operit.core.tools.packTool.ToolPkgContainerRuntime

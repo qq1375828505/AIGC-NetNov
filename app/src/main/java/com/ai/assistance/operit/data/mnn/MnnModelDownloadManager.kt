@@ -599,7 +599,7 @@ class MnnModelDownloadManager private constructor(private val context: Context) 
         // 返回所有模型文件夹（不是临时文件）
         return MODEL_DIR.listFiles { file ->
             file.isDirectory && !file.name.endsWith(TEMP_SUFFIX)
-        }?.sortedByDescending { it.lastModified() } ?: emptyList()
+        }?.sortedByDescending { it.lastModified().toString() } ?: emptyList()
     }
     
     fun isModelDownloaded(modelName: String): Boolean {

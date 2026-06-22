@@ -165,7 +165,7 @@ fun ScriptExecutionDialog(
                                 },
                                 modifier = Modifier.fillMaxWidth(),
                                 singleLine = true,
-                                placeholder = { Text(param.description.resolve(context)) }
+                                placeholder = { Text(param.description.resolve(java.util.Locale.getDefault().getLanguage())) }
                             )
                             Spacer(modifier = Modifier.height(6.dp))
                         }

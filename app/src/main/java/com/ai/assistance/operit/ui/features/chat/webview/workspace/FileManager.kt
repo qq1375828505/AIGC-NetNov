@@ -214,7 +214,7 @@ fun FileBrowser(
                                         name = it.name,
                                         isDirectory = it.isDirectory,
                                         size = it.size,
-                                        lastModified = it.lastModified,
+                                        lastModified = it.lastModified.toString(),
                                         permissions = it.permissions
                                 )
                             }
@@ -373,7 +373,7 @@ fun FileBrowser(
             isLoading = true
             try {
                 val mimeType = workspaceMimeTypeForPath(filePath)
-                val lastModified = if (isSafEnv) System.currentTimeMillis() else File(filePath).lastModified()
+                val lastModified = if (isSafEnv) System.currentTimeMillis() else File(filePath).lastModified().toString()
 
                 if (workspaceShouldOpenAsDirectPreview(filePath)) {
                     onFileOpen?.invoke(
@@ -952,7 +952,7 @@ private fun getSortedFileList(fileList: List<DirectoryEntry>, sortMode: Int): Li
     return when (sortMode) {
         0 -> fileList.sortedWith(compareBy({ !it.isDirectory }, { it.name.lowercase() }))
         1 -> fileList.sortedWith(compareBy({ !it.isDirectory }, { -it.size }))
-        2 -> fileList.sortedWith(compareBy({ !it.isDirectory }, { -parseLastModified(it.lastModified) }))
+        2 -> fileList.sortedWith(compareBy({ !it.isDirectory }, { -parseLastModified(it.lastModified.toString()) }))
         else -> fileList.sortedWith(compareBy({ !it.isDirectory }, { it.name.lowercase() }))
     }
 }

@@ -433,7 +433,7 @@ data class DirectoryListingData(
             sb.appendLine(
                     "$typeIndicator${entry.permissions} ${
                     entry.size.toString().padStart(8)
-                } ${entry.lastModified} ${entry.name}"
+                } ${entry.lastModified.toString()} ${entry.name}"
             )
         }
         return sb.toString()
@@ -748,6 +748,55 @@ data class AppUsageTimeResultData(
         if (minutes > 0) parts.add("${minutes}m")
         if (seconds > 0 || parts.isEmpty()) parts.add("${seconds}s")
         return parts.joinToString(" ")
+    }
+}
+
+/**
+ * Media information data class for audio/video files.
+ * This is a stub implementation to fix compilation errors.
+ */
+@Serializable
+data class MediaInfo(
+    val format: String = "",
+    val duration: Double = 0.0,
+    val bitrate: Int = 0,
+    val audioStreams: List<AudioMediaInfo> = emptyList(),
+    val videoStreams: List<VideoMediaInfo> = emptyList()
+) : ToolResultData() {
+    override fun toString(): String {
+        return "MediaInfo(format=$format, duration=$duration, bitrate=$bitrate, audioStreams=${audioStreams.size}, videoStreams=${videoStreams.size})"
+    }
+}
+
+/**
+ * Video stream information.
+ */
+@Serializable
+data class VideoMediaInfo(
+    val codec: String = "",
+    val width: Int = 0,
+    val height: Int = 0,
+    val framerate: Double = 0.0,
+    val bitrate: Int = 0
+) : ToolResultData() {
+    override fun toString(): String {
+        return "VideoStream(codec=$codec, ${width}x$height, framerate=$framerate, bitrate=$bitrate)"
+    }
+}
+
+/**
+ * Audio stream information.
+ */
+@Serializable
+data class AudioMediaInfo(
+    val codec: String = "",
+    val sampleRate: Int = 0,
+    val channels: Int = 0,
+    val bitrate: Int = 0,
+    val language: String = ""
+) : ToolResultData() {
+    override fun toString(): String {
+        return "AudioStream(codec=$codec, sampleRate=$sampleRate, channels=$channels, bitrate=$bitrate, language=$language)"
     }
 }
 

@@ -10,17 +10,19 @@ class SourceManager(private val context: Context) {
     
     /**
      * 获取当前选中的源
+     * @param type 包管理器类型（可选）
      * @return String 源名称
      */
-    fun getSelectedSource(): String {
+    fun getSelectedSource(type: Any? = null): String {
         return "default"
     }
     
     /**
      * 获取APT源更改命令
+     * @param source 源名称
      * @return String APT源更改命令
      */
-    fun getAptSourceChangeCommand(): String {
+    fun getAptSourceChangeCommand(source: String? = null): String {
         return ""
     }
     

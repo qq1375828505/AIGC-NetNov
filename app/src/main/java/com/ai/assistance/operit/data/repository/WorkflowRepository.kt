@@ -158,7 +158,7 @@ class WorkflowRepository(private val context: Context) {
 
             val allFiles = dir.listFiles { f -> f.isFile && f.extension == "json" }?.toList().orEmpty()
             if (allFiles.size > MAX_EXECUTION_LOG_FILES_PER_WORKFLOW) {
-                allFiles.sortedBy { it.lastModified() }
+                allFiles.sortedBy { it.lastModified().toString() }
                     .take(allFiles.size - MAX_EXECUTION_LOG_FILES_PER_WORKFLOW)
                     .forEach { oldFile ->
                         runCatching { oldFile.delete() }
@@ -223,7 +223,7 @@ class WorkflowRepository(private val context: Context) {
             }
             val latestFile =
                 dir.listFiles { f -> f.isFile && f.extension == "json" }
-                    ?.maxByOrNull { it.lastModified() }
+                    ?.maxByOrNull { it.lastModified().toString() }
                     ?: return@withContext Result.success(null)
 
             val content = latestFile.readText()

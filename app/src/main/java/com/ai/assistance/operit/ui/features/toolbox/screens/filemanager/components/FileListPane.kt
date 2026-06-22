@@ -65,7 +65,7 @@ fun FileListPane(
                                         name = entry.name,
                                         isDirectory = entry.isDirectory,
                                         size = entry.size,
-                                        lastModified = entry.lastModified.toLongOrNull() ?: 0
+                                        lastModified = entry.lastModified.toString().toLongOrNull() ?: 0
                                 )
                             }
                     files = listOf(FileItem("..", true, 0, 0)) + fileList

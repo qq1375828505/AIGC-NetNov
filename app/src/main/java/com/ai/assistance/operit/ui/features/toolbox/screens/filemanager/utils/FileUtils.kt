@@ -124,7 +124,7 @@ fun parseFileList(result: String): List<FileItem> {
                     name = entry.name,
                     isDirectory = entry.isDirectory,
                     size = entry.size,
-                    lastModified = entry.lastModified.toLongOrNull() ?: 0
+                    lastModified = entry.lastModified.toString().toLongOrNull() ?: 0
             )
         }
     } catch (e: Exception) {

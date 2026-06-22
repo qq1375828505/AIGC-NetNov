@@ -284,7 +284,7 @@ private fun MCPPackageToolCard(
                         fontWeight = FontWeight.Medium
                     )
                     Text(
-                        text = tool.description.resolve(context).ifBlank {
+                        text = tool.description.resolve(java.util.Locale.getDefault().getLanguage()).ifBlank {
                             context.getString(R.string.mcp_no_description)
                         },
                         style = MaterialTheme.typography.bodySmall,
@@ -421,7 +421,7 @@ private fun MCPToolExecutionDialog(
                         )
                     ) {
                         Text(
-                            text = tool.description.resolve(context).ifBlank {
+                            text = tool.description.resolve(java.util.Locale.getDefault().getLanguage()).ifBlank {
                                 context.getString(R.string.mcp_no_description)
                             },
                             style = MaterialTheme.typography.bodyMedium,
@@ -475,7 +475,7 @@ private fun MCPToolExecutionDialog(
                                     singleLine = !expectsStructuredValue,
                                     minLines = if (expectsStructuredValue) 3 else 1,
                                     maxLines = if (expectsStructuredValue) 6 else 1,
-                                    placeholder = { Text(param.description.resolve(context)) }
+                                    placeholder = { Text(param.description.resolve(java.util.Locale.getDefault().getLanguage())) }
                                 )
                             }
                         }

@@ -236,7 +236,7 @@ class WorkspaceDocumentsProvider : DocumentsProvider() {
         row.add(DocumentsContract.Document.COLUMN_DOCUMENT_ID, docId)
         row.add(DocumentsContract.Document.COLUMN_MIME_TYPE, mimeType)
         row.add(DocumentsContract.Document.COLUMN_DISPLAY_NAME, displayName)
-        row.add(DocumentsContract.Document.COLUMN_LAST_MODIFIED, file.lastModified())
+        row.add(DocumentsContract.Document.COLUMN_LAST_MODIFIED, file.lastModified().toString())
         row.add(DocumentsContract.Document.COLUMN_FLAGS, flags)
         row.add(DocumentsContract.Document.COLUMN_SIZE, file.length())
     }

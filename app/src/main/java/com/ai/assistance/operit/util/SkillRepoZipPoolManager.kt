@@ -57,7 +57,7 @@ object SkillRepoZipPoolManager {
         if (files.size <= maxPoolSize) return
 
         val removeCount = files.size - maxPoolSize
-        val sorted = files.sortedBy { it.lastModified() }
+        val sorted = files.sortedBy { it.lastModified().toString() }
         for (i in 0 until removeCount) {
             val f = sorted.getOrNull(i) ?: continue
             runCatching { f.delete() }

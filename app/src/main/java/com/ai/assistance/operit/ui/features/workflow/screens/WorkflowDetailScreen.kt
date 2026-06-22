@@ -788,13 +788,13 @@ fun NodeDialog(
                     }
 
                     val matchedTool = effectivePackage?.tools?.find { it.name == packageToolName }
-                    description = matchedTool?.description?.resolve(context)
+                    description = matchedTool?.description?.resolve(java.util.Locale.getDefault().getLanguage())
                     schemas =
                         matchedTool?.parameters?.map { param ->
                             ToolParameterSchema(
                                 name = param.name,
                                 type = param.type,
-                                description = param.description.resolve(context),
+                                description = param.description.resolve(java.util.Locale.getDefault().getLanguage()),
                                 required = param.required,
                                 default = null
                             )

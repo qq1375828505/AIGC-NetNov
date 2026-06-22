@@ -477,16 +477,16 @@ data class ToolPackage(
      fun describePackage(): String {
          val sb = StringBuilder()
          sb.appendLine("Package: ${toolPackage.name}")
-         sb.appendLine("Description: ${toolPackage.description.resolve(context)}")
+         sb.appendLine("Description: ${toolPackage.description.resolve(java.util.Locale.getDefault().getLanguage())}")
          sb.appendLine("Tools:")
  
          toolPackage.tools.forEach { tool ->
-             sb.appendLine("  - ${tool.name}: ${tool.description.resolve(context)}")
+             sb.appendLine("  - ${tool.name}: ${tool.description.resolve(java.util.Locale.getDefault().getLanguage())}")
              if (tool.parameters.isNotEmpty()) {
                  sb.appendLine("    Parameters:")
                  tool.parameters.forEach { param ->
                      val required = if (param.required) " (required)" else " (optional)"
-                     sb.appendLine("      - ${param.name}: ${param.description.resolve(context)} [${param.type}]$required")
+                     sb.appendLine("      - ${param.name}: ${param.description.resolve(java.util.Locale.getDefault().getLanguage())} [${param.type}]$required")
                  }
              }
          }

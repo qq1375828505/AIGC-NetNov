@@ -1,5 +1,7 @@
 package com.ai.assistance.operit.core.tools.packTool
 
+typealias ToolPkgContainerRuntime = com.ai.assistance.operit.core.tools.packTool.PackageManager.ToolPkgContainerRuntime
+
 import android.content.Context
 import android.provider.DocumentsContract
 import com.ai.assistance.operit.core.tools.LocalizedText

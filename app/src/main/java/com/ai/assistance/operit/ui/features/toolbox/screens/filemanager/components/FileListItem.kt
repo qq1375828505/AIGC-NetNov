@@ -142,7 +142,7 @@ fun FileListItem(
                             Spacer(modifier = Modifier.width(baseSpacing * itemSize))
 
                             Text(
-                                text = formatDate(file.lastModified),
+                                text = formatDate(file.lastModified.toString()),
                                 style = MaterialTheme.typography.bodyMedium.copy(
                                     fontSize = baseTextSize * 0.85f * itemSize
                                 ),
@@ -222,7 +222,7 @@ fun FileListItem(
                             Spacer(modifier = Modifier.width(baseSpacing * itemSize))
 
                             Text(
-                                text = formatDate(file.lastModified),
+                                text = formatDate(file.lastModified.toString()),
                                 style = MaterialTheme.typography.bodyMedium.copy(
                                     fontSize = baseTextSize * 0.85f * itemSize
                                 ),

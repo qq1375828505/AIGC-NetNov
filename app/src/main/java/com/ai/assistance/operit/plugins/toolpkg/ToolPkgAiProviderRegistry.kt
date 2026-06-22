@@ -2,6 +2,9 @@ package com.ai.assistance.operit.plugins.toolpkg
 
 import com.ai.assistance.operit.core.tools.packTool.PackageManager
 import com.ai.assistance.operit.core.tools.packTool.ToolPkgContainerRuntime
+
+// Type alias to fix type mismatch
+typealias ToolPkgContainerRuntime = com.ai.assistance.operit.core.tools.packTool.PackageManager.ToolPkgContainerRuntime
 import java.util.concurrent.atomic.AtomicBoolean
 
 internal object ToolPkgAiProviderRegistry {

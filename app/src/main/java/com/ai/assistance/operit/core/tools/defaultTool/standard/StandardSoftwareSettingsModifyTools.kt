@@ -174,8 +174,8 @@ class StandardSoftwareSettingsModifyTools(private val context: Context) {
                     val enabled = enabledSet.contains(packageName)
                     SandboxPackageResultItem(
                         packageName = packageName,
-                        displayName = pkg.displayName.resolve(context),
-                        description = pkg.description.resolve(context),
+                        displayName = pkg.displayName.resolve(java.util.Locale.getDefault().getLanguage()),
+                        description = pkg.description.resolve(java.util.Locale.getDefault().getLanguage()),
                         isBuiltIn = pkg.isBuiltIn,
                         enabledByDefault = pkg.enabledByDefault,
                         enabled = enabled,

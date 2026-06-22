@@ -48,10 +48,22 @@ class PackageManager private constructor(
         val description: LocalizedText = LocalizedText(),
         val packageName: String = "",
         val version: String = "",
+        val author: String = "",
         val displayName: LocalizedText = LocalizedText(),
         val isBuiltIn: Boolean = false,
         val enabledByDefault: Boolean = false,
-        val tools: List<PackageTool> = emptyList()
+        val tools: List<PackageTool> = emptyList(),
+        val mainEntry: String = "",
+        val uiRoutes: List<ToolPkgUiRoute> = emptyList(),
+        val navigationEntries: List<ToolPkgNavigationEntry> = emptyList(),
+        val resourceCount: Int = 0,
+        val workflowTemplateCount: Int = 0,
+        val workspaceTemplateCount: Int = 0,
+        val uiModuleCount: Int = 0,
+        val toolboxUiModules: List<ToolPkgToolboxUiModule> = emptyList(),
+        val subpackages: List<ToolPkgSubpackageInfo> = emptyList(),
+        val workflowTemplates: List<ToolPkgWorkflowTemplate> = emptyList(),
+        val workspaceTemplates: List<ToolPkgWorkspaceTemplate> = emptyList()
     )
     
     data class PackageLoadErrorInfo(
@@ -63,19 +75,39 @@ class PackageManager private constructor(
     data class ToolPkgWorkflowTemplate(
         val id: String = "",
         val name: String = "",
-        val description: String = ""
+        val description: String = "",
+        val containerPackageName: String = "",
+        val toolPkgId: String = "",
+        val templateId: String = "",
+        val displayName: String = "",
+        val resourceKey: String = ""
     )
     
     data class ToolPkgWorkspaceTemplate(
         val id: String = "",
         val name: String = "",
-        val description: String = ""
+        val description: String = "",
+        val containerPackageName: String = "",
+        val toolPkgId: String = "",
+        val templateId: String = "",
+        val displayName: String = "",
+        val resourceKey: String = "",
+        val projectType: String = ""
     )
     
     data class ToolPkgToolboxUiModule(
         val id: String = "",
         val name: String = "",
-        val description: String = ""
+        val description: String = "",
+        val containerPackageName: String = "",
+        val toolPkgId: String = "",
+        val routeId: String = "",
+        val uiModuleId: String = "",
+        val runtime: String = "",
+        val screen: String = "",
+        val title: String = "",
+        val keepAlive: Boolean = false,
+        val moduleSpec: Map<String, Any> = emptyMap()
     )
     
     data class ToolPkgDesktopWidget(
@@ -115,7 +147,13 @@ class PackageManager private constructor(
         val title: String = "",
         val description: String = "",
         val icon: String? = null,
+        val order: Int = 0,
         val action: Map<String, Any?> = emptyMap()
+    )
+    
+    data class ToolPkgNavigationActionHook(
+        val functionName: String = "",
+        val functionSource: String = ""
     )
     
     fun interface ToolPkgRuntimeChangeListener {
@@ -124,8 +162,15 @@ class PackageManager private constructor(
     
     data class ToolPkgContainerRuntime(
         val packageName: String = "",
-        val isActive: Boolean = false
+        val isActive: Boolean = false,
+        val displayName: LocalizedText = LocalizedText(),
+        val description: LocalizedText = LocalizedText(),
+        val uiRoutes: List<ToolPkgUiRoute> = emptyList(),
+        val navigationEntries: List<ToolPkgNavigationEntry> = emptyList()
     )
+    
+    // Internal storage for package containers
+    val toolPkgContainersInternal: MutableMap<String, ToolPkgContainerDetails> = mutableMapOf()
     
     // Package management methods
     fun getEnabledPackageNames(): List<String> = emptyList()
@@ -158,9 +203,56 @@ class PackageManager private constructor(
     
     fun exists(packageName: String): Boolean = false
     
-    fun getToolPkgContainersInternal(): List<ToolPkgContainerDetails> = emptyList()
+    fun getToolPkgContainersInternal(): List<ToolPkgContainerDetails> = toolPkgContainersInternal.values.toList()
     
     fun getEnabledPackageNameSet(): Set<String> = emptySet()
+    
+    // Stub methods for internal tool package resolution
+    fun resolveToolPkgSubpackageRuntimeInternal(subpackageId: String): ToolPkgContainerRuntime? = null
+    
+    fun getActivePackageStateId(): String? = null
+    
+    fun findToolPkgExecutionEngine(contextKey: String): JsEngine? = null
+    
+    fun getToolPkgMainScriptInternal(packageName: String): String? = null
+    
+    fun getToolPkgResourceOutputFileName(packageName: String, resourceKey: String): String? = null
+    
+    fun copyToolPkgResourceToFile(packageName: String, resourceKey: String, outputPath: String): Boolean = false
+    
+    fun copyToolPkgResourceToFileBySubpackageId(subpackageId: String, resourceKey: String, outputPath: String): Boolean = false
+    
+    fun getPluginConfigDirPath(): String = ""
+    
+    fun refreshExternalPackagesForDebug() {}
+    
+    fun installDebugToolPkg(filePath: String): Result<Any?> = Result.success(null)
+    
+    fun readToolPkgResourceBytes(packageName: String, resourceKey: String): ByteArray? = null
+    
+    fun resolveToolPkgResourceFile(packageName: String, resourceKey: String): String? = null
+    
+    fun exportToolPkgResource(packageName: String, resourceKey: String, outputPath: String): Boolean = false
+    
+    fun unregisterPackageTools(packageName: String) {}
+    
+    fun saveEnabledPackageNames(enabledSet: Set<String>) {}
+    
+    fun saveToolPkgSubpackageStates(states: Map<String, Boolean>) {}
+    
+    fun getToolPkgSubpackageStatesInternal(): Map<String, Boolean> = emptyMap()
+    
+    fun toolPkgSubpackageByPackageNameInternal(packageName: String): List<ToolPkgSubpackageInfo> = emptyList()
+    
+    data class ToolPkgSubpackageInfo(
+        val packageName: String = "",
+        val subpackageId: String = "",
+        val displayName: LocalizedText = LocalizedText(),
+        val description: String = "",
+        val enabledByDefault: Boolean = false,
+        val toolCount: Int = 0,
+        val enabled: Boolean = false
+    )
     
     /**
      * 获取已禁用的包列表
@@ -291,6 +383,48 @@ class PackageManager private constructor(
         containerPackageName: String,
         templateId: String
     ): Result<Any?> = Result.success(null)
+    
+    data class ToolPkgNavigationActionHook(
+        val functionName: String = "",
+        val functionSource: String = ""
+    ) {
+        override fun toString(): String {
+            return "ToolPkgNavigationActionHook(function=$functionName)"
+        }
+    }
+    
+    data class ToolPkgWorkspaceTemplateImportResult(
+        val success: Boolean = false,
+        val templateId: String = "",
+        val templateName: String = "",
+        val importedPath: String = "",
+        val errorMessage: String? = null,
+        val containerPackageName: String = "",
+        val toolPkgId: String = "",
+        val workspacePath: String = "",
+        val workspaceConfig: Any? = null
+    ) {
+        override fun toString(): String {
+            return if (success) {
+                "Import success: $templateName (ID: $templateId) to $importedPath"
+            } else {
+                "Import failed: ${errorMessage ?: "Unknown error"}"
+            }
+        }
+    }
+    
+    data class PublishablePackageSource(
+        val id: String = "",
+        val name: String = "",
+        val description: String = "",
+        val sourceType: String = "",
+        val sourceUrl: String = "",
+        val isEnabled: Boolean = false
+    ) {
+        override fun toString(): String {
+            return "PublishablePackageSource(name=$name, type=$sourceType, enabled=$isEnabled)"
+        }
+    }
     
     fun getEnabledToolPkgContainerRuntimes(): List<ToolPkgContainerRuntime> = emptyList()
 }

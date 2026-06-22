@@ -1,5 +1,7 @@
 package com.ai.assistance.operit.plugins.toolpkg
 
+typealias ToolPkgContainerRuntime = com.ai.assistance.operit.core.tools.packTool.PackageManager.ToolPkgContainerRuntime
+
 import android.content.Context
 import androidx.compose.ui.graphics.Color
 import com.ai.assistance.novelide.R

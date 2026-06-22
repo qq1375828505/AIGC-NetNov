@@ -634,7 +634,7 @@ class WorkspaceBackupManager(private val context: Context) {
 
         val info = fileInfoProvider(filePath, workspaceEnv)
         val infoSize = info?.size
-        val infoLastModifiedMs = info?.lastModified?.let { parseLastModifiedToMillis(it) }
+        val infoLastModifiedMs = info?.lastModified.toString()?.let { parseLastModifiedToMillis(it) }
         val stat =
             if (infoSize != null && infoLastModifiedMs != null) {
                 FileStat(size = infoSize, lastModified = infoLastModifiedMs)

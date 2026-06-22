@@ -1298,14 +1298,14 @@ class MCPRepository(private val context: Context) {
             val schemaParams = it.parameters.map { param ->
                 mapOf(
                     "name" to param.name,
-                    "description" to param.description.resolve(context),
+                    "description" to param.description.resolve(java.util.Locale.getDefault().getLanguage()),
                     "type" to param.type,
                     "required" to param.required
                 )
             }
             UnifiedToolInfo(
                 name = it.name,
-                description = it.description.resolve(context),
+                description = it.description.resolve(java.util.Locale.getDefault().getLanguage()),
                 inputSchema = Gson().toJson(schemaParams) // 假设 MCPToolExecutor 可以处理
             )
         }

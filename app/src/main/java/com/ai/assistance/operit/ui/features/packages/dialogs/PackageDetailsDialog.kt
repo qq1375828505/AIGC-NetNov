@@ -101,7 +101,7 @@ fun PackageDetailsDialog(
         toolPkgDetails?.displayName?.takeIf { it.isNotBlank() }
             ?: metaPackage
                 ?.displayName
-                ?.resolve(context)
+                ?.resolve(java.util.Locale.getDefault().getLanguage())
                 ?.trim()
                 ?.takeIf { it.isNotBlank() }
             ?: packageName
@@ -930,7 +930,7 @@ private fun ToolCard(
                         fontWeight = FontWeight.Medium
                     )
                     Text(
-                        text = tool.description.resolve(context),
+                        text = tool.description.resolve(java.util.Locale.getDefault().getLanguage()),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,

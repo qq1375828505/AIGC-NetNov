@@ -150,7 +150,7 @@ open class StandardFileSystemTools(protected val context: Context) {
             AppLogger.d(TAG, "Using local terminal file system provider")
             lastLinuxFileSystemProviderLabel = "local"
         }
-        return terminalManager.getFileSystemProvider()
+        return terminalManager.getFileSystemProvider() ?: error("No FileSystemProvider available")
     }
 
     // Linux文件系统工具实例
@@ -1366,7 +1366,7 @@ open class StandardFileSystemTools(protected val context: Context) {
                             permissions = getFilePermissions(file),
                             lastModified =
                             dateFormat.format(
-                                Date(file.lastModified())
+                                Date(file.lastModified().toString())
                             )
                         )
                     )
@@ -3904,7 +3904,7 @@ open class StandardFileSystemTools(protected val context: Context) {
             // Last modified time
             val lastModified =
                 SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US)
-                    .format(Date(file.lastModified()))
+                    .format(Date(file.lastModified().toString()))
 
             // Size
             val size = if (file.isFile) file.length() else 0

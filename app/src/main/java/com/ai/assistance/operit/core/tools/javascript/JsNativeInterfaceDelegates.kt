@@ -253,6 +253,7 @@ internal object JsNativeInterfaceDelegates {
         return guard("package import failed", "Error importing package from JS: $packageName") {
             val normalized = normalizeNonBlank(packageName) ?: return@guard "Package name is required"
             packageManager.enablePackage(normalized)
+            "OK"
         }
     }
 
@@ -260,6 +261,7 @@ internal object JsNativeInterfaceDelegates {
         return guard("package removal failed", "Error removing package from JS: $packageName") {
             val normalized = normalizeNonBlank(packageName) ?: return@guard "Package name is required"
             packageManager.disablePackage(normalized)
+            "OK"
         }
     }
 
