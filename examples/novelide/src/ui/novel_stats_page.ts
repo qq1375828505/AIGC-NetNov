@@ -221,7 +221,7 @@ export default function StatsPage(ctx: ComposeDslContext): ComposeNode {
           fillMaxSize: true,
           horizontalArrangement: "space-between",
           contentAlignment: "bottom",
-          modifier: UI.Modifier.padding(left: 40)
+          modifier: UI.Modifier.padding({left: 40})
         }, history.map((day) => {
           const ratio = day.words / maxWords;
           const barHeight = Math.max(ratio * 160, 2);
