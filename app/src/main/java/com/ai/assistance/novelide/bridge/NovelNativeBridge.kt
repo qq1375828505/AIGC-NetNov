@@ -78,7 +78,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -92,7 +91,6 @@ class NovelNativeBridge(
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
-            }
             }
         }
     }
@@ -129,7 +127,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -157,7 +154,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -171,7 +167,6 @@ class NovelNativeBridge(
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
-            }
             }
         }
     }
@@ -192,7 +187,6 @@ class NovelNativeBridge(
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
-            }
             }
         }
     }
@@ -229,7 +223,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -245,7 +238,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -259,7 +251,6 @@ class NovelNativeBridge(
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
-            }
             }
         }
     }
@@ -296,7 +287,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -312,7 +302,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -326,7 +315,6 @@ class NovelNativeBridge(
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
-            }
             }
         }
     }
@@ -363,7 +351,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -379,7 +366,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -393,7 +379,6 @@ class NovelNativeBridge(
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
-            }
             }
         }
     }
@@ -430,7 +415,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -446,7 +430,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -460,7 +443,6 @@ class NovelNativeBridge(
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
-            }
             }
         }
     }
@@ -497,7 +479,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -513,7 +494,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -527,7 +507,6 @@ class NovelNativeBridge(
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
-            }
             }
         }
     }
@@ -563,7 +542,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -579,7 +557,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -593,7 +570,6 @@ class NovelNativeBridge(
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
-            }
             }
         }
     }
@@ -630,7 +606,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -646,7 +621,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -660,7 +634,6 @@ class NovelNativeBridge(
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
-            }
             }
         }
     }
@@ -697,7 +670,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -713,7 +685,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -727,7 +698,6 @@ class NovelNativeBridge(
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
-            }
             }
         }
     }
@@ -765,7 +735,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -781,7 +750,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -795,7 +763,6 @@ class NovelNativeBridge(
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
-            }
             }
         }
     }
@@ -832,7 +799,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -848,7 +814,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -862,7 +827,6 @@ class NovelNativeBridge(
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
-            }
             }
         }
     }
@@ -899,7 +863,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -913,7 +876,6 @@ class NovelNativeBridge(
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
-            }
             }
         }
     }
@@ -1030,7 +992,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -1045,7 +1006,6 @@ class NovelNativeBridge(
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
-            }
             }
         }
     }
@@ -1063,7 +1023,6 @@ class NovelNativeBridge(
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
-            }
             }
         }
     }
@@ -1100,7 +1059,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -1116,7 +1074,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -1130,7 +1087,6 @@ class NovelNativeBridge(
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
-            }
             }
         }
     }
@@ -1184,7 +1140,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -1200,7 +1155,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -1214,7 +1168,6 @@ class NovelNativeBridge(
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
-            }
             }
         }
     }
@@ -1251,7 +1204,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -1266,7 +1218,6 @@ class NovelNativeBridge(
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
-            }
             }
         }
     }
@@ -1284,7 +1235,6 @@ class NovelNativeBridge(
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
-            }
             }
         }
     }
@@ -1321,7 +1271,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -1336,7 +1285,6 @@ class NovelNativeBridge(
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
-            }
             }
         }
     }
@@ -1354,7 +1302,6 @@ class NovelNativeBridge(
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
-            }
             }
         }
     }
@@ -1411,7 +1358,6 @@ class NovelNativeBridge(
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
             }
-            }
         }
     }
 
@@ -1455,7 +1401,6 @@ class NovelNativeBridge(
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
-            }
             }
         }
     }
