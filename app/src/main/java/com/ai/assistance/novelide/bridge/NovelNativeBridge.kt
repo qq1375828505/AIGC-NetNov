@@ -1459,4 +1459,132 @@ class NovelNativeBridge(
             }
         }
     }
+
+    // ==================== Agent 管理 ====================
+
+    @JavascriptInterface
+    fun getAvailableAgents(): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val agents = listOf(
+                    mapOf("id" to "continue_writing", "name" to "续写助手", "description" to "根据前文内容自动续写后续情节"),
+                    mapOf("id" to "polish", "name" to "文本精修器", "description" to "8维度精修文本"),
+                    mapOf("id" to "expand", "name" to "扩写助手", "description" to "将简短内容扩展为更详细的描写"),
+                    mapOf("id" to "deai", "name" to "去AI味处理器", "description" to "消除AI机械感"),
+                    mapOf("id" to "outline", "name" to "大纲生成器", "description" to "生成结构清晰的大纲"),
+                    mapOf("id" to "character", "name" to "角色设计师", "description" to "生成详细的角色设定卡"),
+                    mapOf("id" to "pleasure", "name" to "爽点检查器", "description" to "分析爽点密度和节奏")
+                )
+                gson.toJson(agents)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "获取Agent列表失败", e)
+                gson.toJson(listOf<Any>())
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun createAgentSession(agentId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val sessionId = "session_${agentId}_${System.currentTimeMillis()}"
+                gson.toJson(mapOf("success" to true, "sessionId" to sessionId, "agentId" to agentId))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "创建Agent会话失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "创建会话失败"))
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun sendAgentTask(agentId: String, task: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                // Agent任务通过AI桥接层处理
+                // 此方法返回任务已接收的状态
+                gson.toJson(mapOf(
+                    "success" to true,
+                    "agentId" to agentId,
+                    "status" to "received",
+                    "message" to "任务已接收，正在处理中"
+                ))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "发送Agent任务失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "发送任务失败"))
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun getAgentResult(agentId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                // Agent结果通过AI桥接层获取
+                gson.toJson(mapOf(
+                    "success" to true,
+                    "agentId" to agentId,
+                    "status" to "idle",
+                    "result" to ""
+                ))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "获取Agent结果失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "获取结果失败"))
+            }
+        }
+    }
+
+    // ==================== Skill 管理 ====================
+
+    @JavascriptInterface
+    fun getAvailableSkills(): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val presets = repository.getAllTomatoPresets().first()
+                val skills = presets.map { preset ->
+                    mapOf(
+                        "id" to preset.id,
+                        "name" to preset.name,
+                        "category" to preset.category,
+                        "description" to preset.description,
+                        "icon" to preset.icon,
+                        "systemPrompt" to preset.systemPrompt,
+                        "tags" to preset.tags
+                    )
+                }
+                gson.toJson(skills)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "获取Skill列表失败", e)
+                gson.toJson(listOf<Any>())
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun applySkill(skillId: String): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val preset = repository.getTomatoPresetById(skillId)
+                if (preset != null) {
+                    gson.toJson(mapOf(
+                        "success" to true,
+                        "skillId" to preset.id,
+                        "name" to preset.name,
+                        "systemPrompt" to preset.systemPrompt,
+                        "category" to preset.category
+                    ))
+                } else {
+                    gson.toJson(mapOf("success" to false, "error" to "Skill不存在"))
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "应用Skill失败", e)
+                gson.toJson(mapOf("success" to false, "error" to "应用Skill失败"))
+            }
+        }
+    }
 }
