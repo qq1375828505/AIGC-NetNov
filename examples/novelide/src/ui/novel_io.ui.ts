@@ -6,5 +6,5 @@ export default function Screen(ctx: ComposeDslContext): ComposeNode {
   const params = ctx.routeParams ?? {};
   const workId = params.workId ?? "";
 
-  return IOPage(ctx);
+  return IOPage(ctx, workId);
 }

@@ -2,7 +2,7 @@
 
 import type { ComposeDslContext, ComposeNode } from "../../../../types/compose-dsl";
 
-export default function IOPage(ctx: ComposeDslContext): ComposeNode {
+export default function IOPage(ctx: ComposeDslContext, workId: string): ComposeNode {
   const { UI } = ctx;
   const colors = ctx.MaterialTheme.colorScheme;
 
@@ -12,6 +12,9 @@ export default function IOPage(ctx: ComposeDslContext): ComposeNode {
   const [restoring, setRestoring] = ctx.useState("restoring", false);
   const [message, setMessage] = ctx.useState("message", "");
   const [selectedFormat, setSelectedFormat] = ctx.useState("selectedFormat", "txt");
+  const [showImportDialog, setShowImportDialog] = ctx.useState("showImportDialog", false);
+  const [importUri, setImportUri] = ctx.useState("importUri", "");
+  const [importFileName, setImportFileName] = ctx.useState("importFileName", "");
 
   function showMessage(msg: string) {
     setMessage(msg);
@@ -20,11 +23,18 @@ export default function IOPage(ctx: ComposeDslContext): ComposeNode {
 
   // 导入文件
   async function importFile() {
+    setShowImportDialog(true);
+  }
+
+  async function confirmImportFile() {
+    if (!importUri.trim() || !importFileName.trim()) {
+      showMessage("请输入文件路径和文件名");
+      return;
+    }
+    setShowImportDialog(false);
     setImporting(true);
     try {
-      // 注意：实际使用时需要从文件选择器获取 uri 和 fileName
-      // 这里暂时使用空字符串作为占位符
-      const result = await window.NativeBridge.importFile("", "", "");
+      const result = await window.NativeBridge.importFile(importUri, importFileName, workId);
       if (result) {
         showMessage("导入成功");
       }
@@ -33,6 +43,8 @@ export default function IOPage(ctx: ComposeDslContext): ComposeNode {
       showMessage("导入失败: " + (error as Error).message);
     } finally {
       setImporting(false);
+      setImportUri("");
+      setImportFileName("");
     }
   }
 
@@ -43,16 +55,16 @@ export default function IOPage(ctx: ComposeDslContext): ComposeNode {
       let result;
       switch (selectedFormat) {
         case "txt":
-          result = await window.NativeBridge.exportWorkTxt("");
+          result = await window.NativeBridge.exportWorkTxt(workId);
           break;
         case "md":
-          result = await window.NativeBridge.exportWorkMd("");
+          result = await window.NativeBridge.exportWorkMd(workId);
           break;
         case "json":
-          result = await window.NativeBridge.exportWorkJson("");
+          result = await window.NativeBridge.exportWorkJson(workId);
           break;
         default:
-          result = await window.NativeBridge.exportWorkTxt("");
+          result = await window.NativeBridge.exportWorkTxt(workId);
       }
       if (result) {
         showMessage("导出成功");
@@ -69,7 +81,7 @@ export default function IOPage(ctx: ComposeDslContext): ComposeNode {
   async function backupData() {
     setBacking(true);
     try {
-      const result = await window.NativeBridge.exportWorkJson("");
+      const result = await window.NativeBridge.exportWorkJson(workId);
       if (result) {
         showMessage("备份成功");
       }
@@ -83,11 +95,18 @@ export default function IOPage(ctx: ComposeDslContext): ComposeNode {
 
   // 恢复数据（暂用导入代替）
   async function restoreData() {
+    setShowImportDialog(true);
+  }
+
+  async function confirmRestoreData() {
+    if (!importUri.trim() || !importFileName.trim()) {
+      showMessage("请输入备份文件路径和文件名");
+      return;
+    }
+    setShowImportDialog(false);
     setRestoring(true);
     try {
-      // 注意：实际使用时需要从文件选择器获取 uri 和 fileName
-      // 这里暂时使用空字符串作为占位符
-      const result = await window.NativeBridge.importFile("", "", "");
+      const result = await window.NativeBridge.importFile(importUri, importFileName, workId);
       if (result) {
         showMessage("恢复成功");
       }
@@ -96,6 +115,8 @@ export default function IOPage(ctx: ComposeDslContext): ComposeNode {
       showMessage("恢复失败: " + (error as Error).message);
     } finally {
       setRestoring(false);
+      setImportUri("");
+      setImportFileName("");
     }
   }
 
@@ -232,6 +253,64 @@ export default function IOPage(ctx: ComposeDslContext): ComposeNode {
           ])
         ])
       ]))
-    ])
+    ]),
+
+    // 导入文件对话框
+    showImportDialog
+      ? UI.AlertDialog(
+          { onDismissRequest: () => setShowImportDialog(false) },
+          UI.Card({
+            modifier: UI.Modifier.fillMaxWidth().padding(16)
+          }, UI.Column({
+            padding: 24,
+            spacing: 16
+          }, [
+            UI.Text({
+              text: "导入文件",
+              style: "headlineSmall",
+              color: colors.onSurface
+            }),
+            UI.Text({
+              text: "请输入文件的URI路径和文件名",
+              style: "bodyMedium",
+              color: colors.onSurfaceVariant
+            }),
+            UI.TextField(
+              {
+                value: importUri,
+                onValueChange: setImportUri,
+                label: "文件路径 (URI)",
+                placeholder: "例如: content://...",
+                modifier: UI.Modifier.fillMaxWidth()
+              },
+              {}
+            ),
+            UI.TextField(
+              {
+                value: importFileName,
+                onValueChange: setImportFileName,
+                label: "文件名",
+                placeholder: "例如: novel.txt",
+                modifier: UI.Modifier.fillMaxWidth()
+              },
+              {}
+            ),
+            UI.Row({
+              fillMaxWidth: true,
+              horizontalArrangement: "end",
+              spacing: 8
+            }, [
+              UI.TextButton(
+                { onClick: () => setShowImportDialog(false) },
+                "取消"
+              ),
+              UI.Button(
+                { onClick: confirmImportFile },
+                "确认导入"
+              )
+            ])
+          ]))
+        )
+      : null
   ]);
 }

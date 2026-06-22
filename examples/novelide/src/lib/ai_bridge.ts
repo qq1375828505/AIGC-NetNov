@@ -1,19 +1,25 @@
 // AI 桥接层 - 连接 HTML 前端和 AI 能力
 
 import { PROMPT_TEMPLATES } from "./prompt_templates.js";
+import { ThoughtRenderer, ThinkingContent } from "./thought_renderer.js";
 
 /** 封装 Tools.Chat.sendMessage 调用，统一处理错误 */
 async function callAi(systemPrompt: string, prompt: string): Promise<string> {
   const fullMessage = `[系统指令] ${systemPrompt}\n\n[用户请求] ${prompt}`;
-  const result = await Tools.Chat.sendMessage(fullMessage);
-  if (!result) {
-    throw new Error("AI 调用失败：sendMessage 返回 undefined");
+  try {
+    const result = await Tools.Chat.sendMessage(fullMessage);
+    if (!result) {
+      throw new Error("AI 调用失败：sendMessage 返回 undefined");
+    }
+    const aiReply = (result.aiResponse ?? "").trim();
+    if (!aiReply) {
+      throw new Error("AI 返回了空回复");
+    }
+    return aiReply;
+  } catch (error) {
+    console.error("AI 调用失败:", error);
+    throw error;
   }
-  const aiReply = (result.aiResponse ?? "").trim();
-  if (!aiReply) {
-    throw new Error("AI 返回了空回复");
-  }
-  return aiReply;
 }
 
 export class NovelAIBridge {
@@ -159,6 +165,39 @@ export class NovelAIBridge {
     } catch {
       return { raw: result };
     }
+  }
+
+  /**
+   * 提取思维内容
+   * @param content AI 响应内容
+   * @returns 思维内容提取结果
+   */
+  static extractThinkingContent(content: string): ThinkingContent {
+    return ThoughtRenderer.extractThinkingContent(content);
+  }
+
+  /**
+   * 检测是否正在思考
+   * @param content 当前内容
+   * @returns 是否正在思考
+   */
+  static isThinkingInProgress(content: string): boolean {
+    return ThoughtRenderer.isThinkingInProgress(content);
+  }
+
+  /**
+   * 渲染完整消息（包含思考过程）
+   * @param content 完整的 AI 响应
+   * @param showThinking 是否显示思考过程
+   * @param thinkingExpanded 思考过程是否默认展开
+   * @returns 渲染后的 HTML
+   */
+  static renderFullMessage(
+    content: string,
+    showThinking: boolean = true,
+    thinkingExpanded: boolean = false
+  ): string {
+    return ThoughtRenderer.renderFullMessage(content, showThinking, thinkingExpanded);
   }
 }
 
