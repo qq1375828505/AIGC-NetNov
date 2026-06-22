@@ -105,6 +105,8 @@ class PackageManager private constructor(context: android.content.Context, toolH
     
     fun getPackageTools(packageName: String): ToolPackage? = null
     
+    fun getEffectivePackageTools(packageName: String): ToolPackage? = null
+    
     fun normalizePackageName(packageName: String): String = packageName
     
     fun exists(packageName: String): Boolean = false
@@ -151,6 +153,23 @@ class PackageManager private constructor(context: android.content.Context, toolH
     
     fun isToolPkgContainer(packageName: String): Boolean {
         return false
+    }
+    
+    fun executeUsePackageTool(toolName: String, packageName: String): com.ai.assistance.operit.data.model.ToolResult {
+        if (packageName.isBlank()) {
+            return com.ai.assistance.operit.data.model.ToolResult(
+                toolName = toolName,
+                success = false,
+                result = com.ai.assistance.operit.core.tools.StringResultData(""),
+                error = "Missing required parameter: package_name"
+            )
+        }
+        enablePackage(packageName)
+        return com.ai.assistance.operit.data.model.ToolResult(
+            toolName = toolName,
+            success = true,
+            result = com.ai.assistance.operit.core.tools.StringResultData("Package '$packageName' activated successfully")
+        )
     }
     
     fun getUiModuleId(packageName: String): String = ""

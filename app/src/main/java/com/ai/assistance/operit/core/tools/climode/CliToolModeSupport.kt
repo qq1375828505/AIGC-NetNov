@@ -292,7 +292,8 @@ object CliToolModeSupport {
 
         val mcpServers =
             packageManager.getAvailableServerPackages()
-                .filterKeys { roleCardToolAccess.isExternalSourceAllowed(it) }
+                .filter { roleCardToolAccess.isExternalSourceAllowed(it.name) }
+                .associateBy { it.name }
         val mcpLocalServer = MCPLocalServer.getInstance(context)
 
         mcpServers.forEach { (serverName, serverConfig) ->

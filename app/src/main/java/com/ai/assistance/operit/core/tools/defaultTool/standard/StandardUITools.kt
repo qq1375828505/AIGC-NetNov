@@ -12,6 +12,15 @@ import com.ai.assistance.operit.data.model.ToolResult
  */
 open class StandardUITools(protected val context: Context) : ToolImplementations {
     
+    // Stub operation overlay for visual feedback (tap, swipe indicators)
+    protected val operationOverlay = object {
+        fun hide() {}
+        fun showTap(x: Int, y: Int) {}
+        fun showSwipe(startX: Int, startY: Int, endX: Int, endY: Int) {}
+        fun showTextInput(x: Int, y: Int, text: String) {}
+        fun showLongPress(x: Int, y: Int) {}
+    }
+    
     fun getAvailableTools(): List<String> = emptyList()
     
     fun executeTool(toolName: String, params: Map<String, Any>): Any? = null
