@@ -50,7 +50,6 @@ jobs:
       - name: Download prebuilt resources
         run: |
           # 从 Google Drive 或其他存储下载预编译资源
-          # 这里需要配置 secrets 存放下载链接
           mkdir -p app/src/main/assets/models
           mkdir -p app/src/main/assets/subpack
           mkdir -p app/src/main/jniLibs
@@ -61,16 +60,30 @@ jobs:
           touch app/src/main/assets/subpack/.keep
           touch app/src/main/jniLibs/.keep
           
-          # 注意：实际使用时需要配置以下 secrets
-          # MODELS_URL, SUBPACK_URL, JNILIBS_URL, LIBS_URL
-          # wget ${{ secrets.MODELS_URL }} -O models.zip
-          # wget ${{ secrets.SUBPACK_URL }} -O subpack.zip
-          # wget ${{ secrets.JNILIBS_URL }} -O jniLibs.zip
-          # wget ${{ secrets.LIBS_URL }} -O libs.zip
-          # unzip -q models.zip -d app/src/main/assets/models/
-          # unzip -q subpack.zip -d app/src/main/assets/subpack/
-          # unzip -q jniLibs.zip -d app/src/main/jniLibs/
-          # unzip -q libs.zip -d app/libs/
+          # 下载预编译资源（需要配置 GitHub Secrets）
+          if [ -n "${{ secrets.MODELS_URL }}" ]; then
+            wget -q "${{ secrets.MODELS_URL }}" -O models.zip
+            unzip -q models.zip -d app/src/main/assets/models/
+            rm models.zip
+          fi
+          
+          if [ -n "${{ secrets.SUBPACK_URL }}" ]; then
+            wget -q "${{ secrets.SUBPACK_URL }}" -O subpack.zip
+            unzip -q subpack.zip -d app/src/main/assets/subpack/
+            rm subpack.zip
+          fi
+          
+          if [ -n "${{ secrets.JNILIBS_URL }}" ]; then
+            wget -q "${{ secrets.JNILIBS_URL }}" -O jniLibs.zip
+            unzip -q jniLibs.zip -d app/src/main/jniLibs/
+            rm jniLibs.zip
+          fi
+          
+          if [ -n "${{ secrets.LIBS_URL }}" ]; then
+            wget -q "${{ secrets.LIBS_URL }}" -O libs.zip
+            unzip -q libs.zip -d app/libs/
+            rm libs.zip
+          fi
       
       - name: Install npm dependencies
         run: npm install
