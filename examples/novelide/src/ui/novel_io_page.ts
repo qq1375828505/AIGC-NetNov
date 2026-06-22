@@ -164,7 +164,7 @@ export default function IOPage(ctx: ComposeDslContext): ComposeNode {
       message
         ? UI.Card({
             background: colors.tertiaryContainer,
-            modifier: UI.Modifier.padding(bottom: 8)
+            modifier: UI.Modifier.padding({bottom: 8})
           }, UI.Row({
             padding: 12,
             fillMaxWidth: true,
