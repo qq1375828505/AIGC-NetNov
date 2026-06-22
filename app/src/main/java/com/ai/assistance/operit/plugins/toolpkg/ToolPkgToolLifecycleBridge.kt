@@ -1,7 +1,5 @@
 package com.ai.assistance.operit.plugins.toolpkg
 
-typealias ToolPkgContainerRuntime = com.ai.assistance.operit.core.tools.packTool.PackageManager.ToolPkgContainerRuntime
-
 import com.ai.assistance.operit.core.application.OperitApplication
 import com.ai.assistance.operit.core.tools.AIToolHook
 import com.ai.assistance.operit.core.tools.AIToolHookDecision

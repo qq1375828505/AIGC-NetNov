@@ -1,7 +1,5 @@
 package com.ai.assistance.operit.plugins.toolpkg
 
-typealias ToolPkgContainerRuntime = com.ai.assistance.operit.core.tools.packTool.PackageManager.ToolPkgContainerRuntime
-
 import com.ai.assistance.operit.core.chat.hooks.PromptFinalizeHook
 import com.ai.assistance.operit.core.chat.hooks.PromptEstimateFinalizeHook
 import com.ai.assistance.operit.core.chat.hooks.PromptEstimateHistoryHook
