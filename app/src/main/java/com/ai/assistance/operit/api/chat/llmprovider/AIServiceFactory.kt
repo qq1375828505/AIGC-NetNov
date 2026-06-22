@@ -1,7 +1,7 @@
 package com.ai.assistance.operit.api.chat.llmprovider
 
 import android.content.Context
-import com.ai.assistance.llama.LlamaSession
+
 import com.ai.assistance.operit.data.model.ApiProviderType
 import com.ai.assistance.operit.data.model.ModelConfigData
 import com.ai.assistance.operit.data.preferences.ModelConfigManager
@@ -237,22 +237,7 @@ object AIServiceFactory {
         }
     }
 
-    private fun buildAndroidLlamaSessionConfig(config: ModelConfigData): LlamaSession.Config {
-        val safeThreadCount =
-            config.llamaThreadCount.coerceAtLeast(1)
-                .coerceAtMost(Runtime.getRuntime().availableProcessors().coerceAtLeast(1))
-        return LlamaSession.Config(
-            nThreads = safeThreadCount,
-            nCtx = config.llamaContextSize.coerceAtLeast(1),
-            nBatch = 512,
-            nUBatch = 512,
-            nGpuLayers = config.llamaGpuLayers.coerceAtLeast(0),
-            useMmap = false,
-            flashAttention = false,
-            kvUnified = true,
-            offloadKqv = false
-        )
-    }
+
 
     /**
      * 创建AI服务实例
@@ -403,15 +388,7 @@ object AIServiceFactory {
                     supportsVideo = supportsVideo
                 )
 
-            // llama.cpp 本地推理引擎
-            ApiProviderType.LLAMA_CPP ->
-                LlamaProvider(
-                    context = context,
-                    modelName = config.modelName,
-                    sessionConfig = buildAndroidLlamaSessionConfig(config),
-                    providerType = providerType,
-                    enableToolCall = enableToolCall
-                )
+
 
             // 阿里云（通义千问）使用QwenProvider
             ApiProviderType.ALIYUN ->
