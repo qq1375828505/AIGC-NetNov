@@ -56,7 +56,6 @@ import com.ai.assistance.operit.util.SkillRepoZipPoolManager
 import com.ai.assistance.operit.util.SerializationSetup
 import com.ai.assistance.operit.util.TextSegmenter
 import com.ai.assistance.operit.util.WaifuMessageProcessor
-import com.ai.assistance.operit.core.tools.agent.ShowerController
 import com.ai.assistance.operit.ui.common.displays.VirtualDisplayOverlay
 import com.tom_roush.pdfbox.android.PDFBoxResourceLoader
 
@@ -590,11 +589,12 @@ class OperitApplication : Application(), ImageLoaderFactory, WorkConfiguration.P
         } catch (e: Exception) {
             AppLogger.e(TAG, "终止时隐藏 VirtualDisplayOverlay 失败: ${e.message}", e)
         }
-        try {
-            ShowerController.shutdown()
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "终止时关闭 ShowerController 失败: ${e.message}", e)
-        }
+        // ShowerController已裁剪，不需要关闭
+        // try {
+        //     ShowerController.shutdown()
+        // } catch (e: Exception) {
+        //     AppLogger.e(TAG, "终止时关闭 ShowerController 失败: ${e.message}", e)
+        // }
     }
 
     override fun onLowMemory() {

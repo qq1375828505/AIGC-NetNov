@@ -608,7 +608,7 @@ object ToolExecutionManager {
             if (callerName.isNullOrBlank() && callerChatId.isNullOrBlank() && callerCardId.isNullOrBlank()) {
                 permittedInvocations
             } else {
-                val jsPackageNames = packageManager.getAvailablePackages().keys
+                val jsPackageNames = packageManager.getEnabledPackageNames()
                 permittedInvocations.map { invocation ->
                     injectPackageCallContext(
                         invocation = invocation,
@@ -773,8 +773,8 @@ object ToolExecutionManager {
                 val parts = toolName.split(':', limit = 2)
                 val packName = parts[0]
                 val toolNamePart = parts.getOrNull(1) ?: ""
-                val isJsPackageAvailable = packageManager.getAvailablePackages().containsKey(packName)
-                val isMcpServerAvailable = packageManager.getAvailableServerPackages().containsKey(packName)
+                val isJsPackageAvailable = packageManager.exists(packName)
+                val isMcpServerAvailable = packageManager.exists(packName)
                 val isAvailable = isJsPackageAvailable || isMcpServerAvailable
 
                 if (!isAvailable) {
@@ -782,11 +782,10 @@ object ToolExecutionManager {
                 } else {
                     // 包存在，检查是否已激活（通过检查该包的任何工具是否已注册）
                     val packageTools =
-                        packageManager.getPackageTools(packName)?.tools ?: emptyList()
-                    val isAdviceTool = packageTools.any { it.advice && it.name == toolNamePart }
+                        packageManager.getPackageTools(packName)
+                    val isAdviceTool = false
                     val isPackageActivated = packageTools
-                        .filter { !it.advice }
-                        .any { toolHandler.getToolExecutor("$packName:${it.name}") != null }
+                        .any { toolHandler.getToolExecutor("$packName:$it") != null }
 
                     if (isAdviceTool) {
                         "Tool '$toolNamePart' is an advice-only entry in package '$packName' and is not executable."
@@ -802,7 +801,7 @@ object ToolExecutionManager {
 
             else -> {
                 // 检查是否直接把包名当作工具名调用了
-                val isPackageName = packageManager.getAvailablePackages().containsKey(toolName)
+                val isPackageName = packageManager.exists(toolName)
                 if (isPackageName) {
                     "Error: '$toolName' is a tool package, not a tool. Please use the 'use_package' tool with package name '$toolName' to activate this package before using its tools."
                 } else {

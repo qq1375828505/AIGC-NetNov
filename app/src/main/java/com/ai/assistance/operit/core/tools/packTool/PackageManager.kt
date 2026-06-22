@@ -1,10 +1,41 @@
 package com.ai.assistance.operit.core.tools.packTool
 
+import com.ai.assistance.operit.core.tools.PackageTool
+
+data class LocalizedText(val values: Map<String, String> = emptyMap()) {
+    fun resolve(preferredLanguage: String): String {
+        return values[preferredLanguage] ?: values.values.firstOrNull() ?: ""
+    }
+    
+    override fun toString(): String {
+        return values.values.firstOrNull() ?: ""
+    }
+}
+
+data class ToolPackage(
+    val name: String = "",
+    val description: LocalizedText = LocalizedText(),
+    val tools: List<PackageTool> = emptyList()
+)
+
 /**
  * Stub implementation of PackageManager.
  * This is a placeholder to allow compilation without the actual implementation.
  */
-object PackageManager {
+class PackageManager private constructor(context: android.content.Context, toolHandler: com.ai.assistance.operit.core.tools.AIToolHandler) {
+    
+    companion object {
+        @Volatile
+        private var INSTANCE: PackageManager? = null
+        
+        fun getInstance(context: android.content.Context, toolHandler: com.ai.assistance.operit.core.tools.AIToolHandler): PackageManager {
+            return INSTANCE ?: synchronized(this) {
+                val instance = PackageManager(context, toolHandler)
+                INSTANCE = instance
+                instance
+            }
+        }
+    }
     
     // Nested data classes for package management
     data class ToolPkgContainerDetails(
@@ -72,7 +103,7 @@ object PackageManager {
     
     fun isPackageEnabled(packageName: String): Boolean = false
     
-    fun getPackageTools(packageName: String): List<String> = emptyList()
+    fun getPackageTools(packageName: String): ToolPackage? = null
     
     fun normalizePackageName(packageName: String): String = packageName
     
@@ -98,9 +129,29 @@ object PackageManager {
     
     fun getCustomSettings(packageName: String): Map<String, Any> = emptyMap()
     
-    fun runToolPkgMainHook(packageName: String, hookName: String, vararg args: Any?): Any? = null
+    fun runToolPkgMainHook(
+        containerPackageName: String,
+        functionName: String,
+        event: String,
+        eventName: String? = null,
+        pluginId: String? = null,
+        inlineFunctionSource: String? = null,
+        eventPayload: Map<String, Any?> = emptyMap(),
+        onIntermediateResult: ((Any?) -> Unit)? = null,
+        executionContextKey: String? = null,
+        runtimeKind: String? = null,
+        dispatchIntermediateOnMain: Boolean = true
+    ): Result<Any?> = Result.success(null)
     
-    fun cancelToolPkgExecutionsForChat(chatId: String) {}
+    fun cancelToolPkgExecutionsForChat(chatId: String, reason: String = "") {}
+    
+    fun usePackage(packageName: String): String {
+        return "Package usage not implemented in stub"
+    }
+    
+    fun isToolPkgContainer(packageName: String): Boolean {
+        return false
+    }
     
     fun getUiModuleId(packageName: String): String = ""
     

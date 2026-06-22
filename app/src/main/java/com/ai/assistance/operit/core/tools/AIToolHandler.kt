@@ -309,8 +309,8 @@ class AIToolHandler private constructor(private val context: Context) {
             if (packageName.isNotBlank()) {
                 try {
                     val packageManager = getOrCreatePackageManager()
-                    val isPackageAvailable = packageManager.getAvailablePackages().containsKey(packageName)
-                    val isMcpAvailable = packageManager.getAvailableServerPackages().containsKey(packageName)
+                    val isPackageAvailable = packageManager.exists(packageName)
+                    val isMcpAvailable = packageManager.getAvailableServerPackages().any { it.name == packageName }
                     if (isPackageAvailable || isMcpAvailable) {
                         AppLogger.d(TAG, "Auto-activating package '$packageName' for tool $toolName")
                         packageManager.usePackage(packageName)
@@ -328,7 +328,7 @@ class AIToolHandler private constructor(private val context: Context) {
                 try {
                     val packageManager = getOrCreatePackageManager()
                     val isMcpAvailable =
-                            packageManager.getAvailableServerPackages().containsKey(packageName)
+                            packageManager.getAvailableServerPackages().any { it.name == packageName }
                     if (isMcpAvailable && !isMcpServiceActive(packageName)) {
                         AppLogger.d(
                                 TAG,

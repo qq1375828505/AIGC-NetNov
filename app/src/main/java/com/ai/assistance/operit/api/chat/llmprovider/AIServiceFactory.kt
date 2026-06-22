@@ -548,6 +548,11 @@ object AIServiceFactory {
                     supportsVideo = supportsVideo,
                     enableToolCall = enableToolCall
                 )
+
+            // MNN and LLAMA_CPP are not supported in this build (modules removed)
+            ApiProviderType.MNN,
+            ApiProviderType.LLAMA_CPP ->
+                throw IllegalArgumentException("Provider type $providerType is not supported in this build")
         }
     }
 }

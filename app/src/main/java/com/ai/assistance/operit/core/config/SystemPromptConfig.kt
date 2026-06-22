@@ -270,9 +270,9 @@ AVAILABLE_TOOLS_SECTION""".trimIndent()
     val enabledPackages = packageManager.getEnabledPackageNames()
     val packageSystemVisible =
         toolExposureMode == ToolExposureMode.FULL && enableTools && (toolVisibility["use_package"] ?: true)
-    val mcpServers = packageManager.getAvailableServerPackages().filterKeys { serverName ->
-        allowedMcpServerNames?.contains(serverName) ?: true
-    }
+    val mcpServers = packageManager.getAvailableServerPackages().filter { server ->
+        allowedMcpServerNames?.contains(server.name) ?: true
+    }.associateBy { it.name }
     val skillPackages = try {
         SkillRepository.getInstance(
             com.ai.assistance.operit.core.application.OperitApplication.instance.applicationContext

@@ -12,7 +12,15 @@ object ActivityLifecycleManager : Application.ActivityLifecycleCallbacks {
     
     private var currentActivity: Activity? = null
     
+    fun initialize(application: Application) {
+        application.registerActivityLifecycleCallbacks(this)
+    }
+    
     fun getCurrentActivity(): Activity? = currentActivity
+    
+    fun checkAndApplyKeepScreenOn(enable: Boolean) {
+        // Stub implementation - does nothing
+    }
     
     fun register(application: Application) {
         application.registerActivityLifecycleCallbacks(this)
