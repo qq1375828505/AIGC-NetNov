@@ -28,11 +28,11 @@ open class StandardUITools(protected val context: Context) : ToolImplementations
     fun isToolAvailable(toolName: String): Boolean = false
     
     open suspend fun getPageInfo(tool: AITool): ToolResult {
-        return ToolResult(tool.toolName, false, StringResultData("Not implemented in stub"))
+        return ToolResult(tool.name, false, StringResultData("Not implemented in stub"))
     }
     
     open suspend fun clickElement(tool: AITool): ToolResult {
-        return ToolResult(tool.toolName, false, StringResultData("Not implemented in stub"))
+        return ToolResult(tool.name, false, StringResultData("Not implemented in stub"))
     }
     
     open suspend fun runUiSubAgent(tool: AITool): ToolResult {
