@@ -1,8 +1,12 @@
 package com.ai.assistance.novelide.bridge
 
+import android.content.Context
+import android.net.Uri
 import android.webkit.JavascriptInterface
 import com.ai.assistance.novelide.data.model.novel.*
 import com.ai.assistance.novelide.data.repository.novel.NovelRepository
+import com.ai.assistance.operit.data.novel.NovelExporter
+import com.ai.assistance.operit.data.novel.NovelImporter
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +23,7 @@ import java.util.UUID
  * 失败 {"success": false, "error": "错误信息"}
  */
 class NovelNativeBridge(
+    private val context: Context,
     private val repository: NovelRepository,
     private val scope: CoroutineScope
 ) {
@@ -1250,21 +1255,96 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun importFile(uri: String, fileName: String, workId: String): String {
-        return gson.toJson(mapOf("success" to false, "error" to "导入功能开发中，请在后续版本中使用"))
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val importer = NovelImporter(context)
+                val inputStream = context.contentResolver.openInputStream(Uri.parse(uri))
+                    ?: return@runBlocking gson.toJson(mapOf("success" to false, "error" to "无法打开文件"))
+
+                val format = when {
+                    fileName.endsWith(".json", true) -> NovelImporter.ImportFormat.JSON
+                    fileName.endsWith(".md", true) -> NovelImporter.ImportFormat.MARKDOWN
+                    else -> NovelImporter.ImportFormat.TXT
+                }
+
+                val result = importer.import(inputStream, format, workId.ifEmpty { null })
+                inputStream.close()
+
+                if (result.success && result.work != null) {
+                    // 保存作品
+                    repository.insertWork(result.work)
+
+                    // 保存章节
+                    for (chapter in result.chapters) {
+                        repository.insertChapter(chapter)
+                    }
+
+                    // 保存角色
+                    for (character in result.characters) {
+                        repository.insertCharacter(character)
+                    }
+
+                    // 保存设定
+                    for (setting in result.settings) {
+                        repository.insertSetting(setting)
+                    }
+
+                    // 保存地点
+                    for (location in result.locations) {
+                        repository.insertLocation(location)
+                    }
+
+                    gson.toJson(mapOf("success" to true, "workId" to result.work.id))
+                } else {
+                    gson.toJson(mapOf("success" to false, "error" to result.message))
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
+        }
     }
 
     @JavascriptInterface
     fun exportWorkTxt(workId: String): String {
-        return gson.toJson(mapOf("success" to false, "error" to "TXT 导出功能开发中"))
+        return exportWork(workId, NovelExporter.ExportFormat.TXT)
     }
 
     @JavascriptInterface
     fun exportWorkMd(workId: String): String {
-        return gson.toJson(mapOf("success" to false, "error" to "Markdown 导出功能开发中"))
+        return exportWork(workId, NovelExporter.ExportFormat.MARKDOWN)
     }
 
     @JavascriptInterface
     fun exportWorkJson(workId: String): String {
-        return gson.toJson(mapOf("success" to false, "error" to "JSON 导出功能开发中"))
+        return exportWork(workId, NovelExporter.ExportFormat.JSON)
+    }
+
+    private fun exportWork(workId: String, format: NovelExporter.ExportFormat): String {
+        return runBlocking(Dispatchers.IO) {
+            try {
+                val work = repository.getWorkById(workId)
+                    ?: return@runBlocking gson.toJson(mapOf("success" to false, "error" to "作品不存在"))
+
+                val chapters = repository.getChaptersByWorkId(workId).first()
+                val characters = repository.getCharactersByWorkId(workId).first()
+                val settings = repository.getSettingsByWorkId(workId).first()
+                val locations = repository.getLocationsByWorkId(workId).first()
+
+                val exporter = NovelExporter(context)
+                val outputStream = java.io.ByteArrayOutputStream()
+                val result = exporter.export(work, chapters, characters, settings, locations, format, outputStream)
+
+                if (result.success) {
+                    val content = outputStream.toString(Charsets.UTF_8.name())
+                    gson.toJson(mapOf("success" to true, "content" to content))
+                } else {
+                    gson.toJson(mapOf("success" to false, "error" to result.message))
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                gson.toJson(mapOf("success" to false, "error" to e.message))
+            }
+        }
     }
 }
