@@ -54,8 +54,36 @@ class TerminalManager private constructor(private val context: Context) {
         executorKey: String = "default",
         timeoutMs: Long = 120000L
     ): HiddenExecResult = HiddenExecResult()
+    
+    /**
+     * 获取文件系统提供者
+     * @return FileSystemProvider? 文件系统提供者
+     */
+    fun getFileSystemProvider(): com.ai.assistance.operit.terminal.provider.filesystem.FileSystemProvider? {
+        return null
+    }
 }
 
 data class TerminalSession(
-    val id: String = java.util.UUID.randomUUID().toString()
+    val id: String = java.util.UUID.randomUUID().toString(),
+    val title: String = "",
+    val ansiParser: AnsiParser = AnsiParser(),
+    val currentExecutingCommand: ExecutingCommand? = null
+)
+
+/**
+ * ANSI解析器
+ */
+class AnsiParser {
+    fun getScreenContent(): Array<Array<com.ai.assistance.operit.terminal.view.domain.ansi.TerminalChar>> {
+        return emptyArray()
+    }
+}
+
+/**
+ * 正在执行的命令
+ */
+data class ExecutingCommand(
+    val command: String = "",
+    val isExecuting: Boolean = false
 )

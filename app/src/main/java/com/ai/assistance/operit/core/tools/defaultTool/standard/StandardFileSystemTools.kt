@@ -1741,9 +1741,8 @@ open class StandardFileSystemTools(protected val context: Context) {
                         appendLine("- format: ${mediaInfo.format}")
                         appendLine("- duration: ${mediaInfo.duration}")
                         appendLine("- bitrate: ${mediaInfo.bitrate}")
-                        val streams = mediaInfo.streams
-                        if (!streams.isNullOrEmpty()) {
-                            val audioStreams = streams.filter { it.type.equals("audio", ignoreCase = true) }
+                        val audioStreams = mediaInfo.audioStreams
+                        if (audioStreams.isNotEmpty()) {
                             appendLine("- audio_streams: ${audioStreams.size}")
                         }
                     }
@@ -1827,11 +1826,12 @@ open class StandardFileSystemTools(protected val context: Context) {
                         appendLine("- format: ${mediaInfo.format}")
                         appendLine("- duration: ${mediaInfo.duration}")
                         appendLine("- bitrate: ${mediaInfo.bitrate}")
-                        val streams = mediaInfo.streams
-                        if (!streams.isNullOrEmpty()) {
-                            val videoStreams = streams.filter { it.type.equals("video", ignoreCase = true) }
-                            val audioStreams = streams.filter { it.type.equals("audio", ignoreCase = true) }
+                        val videoStreams = mediaInfo.videoStreams
+                        val audioStreams = mediaInfo.audioStreams
+                        if (videoStreams.isNotEmpty()) {
                             appendLine("- video_streams: ${videoStreams.size}")
+                        }
+                        if (audioStreams.isNotEmpty()) {
                             appendLine("- audio_streams: ${audioStreams.size}")
                         }
                     }

@@ -5,5 +5,6 @@ package com.ai.assistance.operit.terminal.data
  */
 data class TerminalState(
     val isRunning: Boolean = false,
-    val currentSessionId: String = ""
+    val currentSessionId: String = "",
+    val sessions: List<com.ai.assistance.operit.terminal.TerminalSession> = emptyList()
 )

@@ -9,6 +9,22 @@ data class HiddenExecResult(
     val isError: Boolean = false,
     val isTimeout: Boolean = false,
     val error: String = "",
-    val state: String = "",
+    val state: State = State.UNKNOWN,
     val rawOutputPreview: String = ""
-)
+) {
+    /**
+     * 检查是否成功
+     */
+    val isOk: Boolean
+        get() = !isError && exitCode == 0
+    
+    /**
+     * 状态枚举
+     */
+    enum class State {
+        UNKNOWN,
+        SUCCESS,
+        ERROR,
+        TIMEOUT
+    }
+}
