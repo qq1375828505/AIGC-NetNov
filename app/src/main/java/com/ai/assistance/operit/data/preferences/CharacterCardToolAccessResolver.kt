@@ -63,7 +63,7 @@ class CharacterCardToolAccessResolver private constructor(private val context: C
 
         val globalPackageNames = buildGlobalPackageNames(packageManager)
         val globalSkillNames = LinkedHashSet(skillRepository.getAiVisibleSkillPackages().keys)
-        val globalMcpServerNames = LinkedHashSet(packageManager.getAvailableServerPackages().keys)
+        val globalMcpServerNames = LinkedHashSet(packageManager.getAvailableServerPackages().map { it.packageName })
 
         val roleCardConfig = roleCardId
             ?.takeIf { it.isNotBlank() }

@@ -377,9 +377,9 @@ fun WorkspaceManager(
             }
             val updatedFiles = openFiles.map { fileInfo ->
                 val currentFile = File(fileInfo.path)
-                if (currentFile.exists() && currentFile.lastModified().toString() > fileInfo.lastModified.toString()) {
+                if (currentFile.exists() && currentFile.lastModified() > fileInfo.lastModified) {
                     if (fileInfo.isReadOnlyPreview) {
-                        return@map fileInfo.copy(lastModified = currentFile.lastModified().toString())
+                        return@map fileInfo.copy(lastModified = currentFile.lastModified())
                     }
 
                     // 文件已在外部被修改，重新加载内容
@@ -399,7 +399,7 @@ fun WorkspaceManager(
                         // 返回更新后的文件信息
                         fileInfo.copy(
                             content = newContent,
-                            lastModified = currentFile.lastModified().toString()
+                            lastModified = currentFile.lastModified()
                         )
                     } else {
                         fileInfo // 加载失败，保留旧信息

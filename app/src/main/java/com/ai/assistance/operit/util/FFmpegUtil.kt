@@ -31,7 +31,7 @@ object FFmpegUtil {
      * Get media information for a file.
      * Stub: always returns null (media processing module cut).
      */
-    fun getMediaInfo(filePath: String): com.ai.assistance.operit.core.tools.ToolResultDataClasses.MediaInfo? {
+    fun getMediaInfo(filePath: String): com.ai.assistance.operit.core.tools.MediaInfo? {
         AppLogger.w(TAG, "$STUB_MSG: getMediaInfo called for: $filePath")
         return null
     }

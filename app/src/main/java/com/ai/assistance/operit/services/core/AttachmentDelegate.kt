@@ -266,7 +266,7 @@ class AttachmentDelegate(private val context: Context, private val toolHandler: 
                 !packageManager.isToolPkgContainer(packageName)
         val isSkillPackage =
             SkillRepository.getInstance(context.applicationContext).getAiVisibleSkillPackages().containsKey(packageName)
-        val isMcpPackage = packageManager.getAvailableServerPackages().containsKey(packageName)
+        val isMcpPackage = packageManager.getAvailableServerPackages().any { it.packageName == packageName }
 
         if (!isStandardPackage && !isSkillPackage && !isMcpPackage) {
             _toastEvent.emit(context.getString(R.string.attachment_package_failed, packageName))

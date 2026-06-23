@@ -82,6 +82,8 @@ import java.io.File
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 
+private fun String.resolve(@Suppress("UNUSED_PARAMETER") language: String): String = this
+
 /** 简约风格的附件选择器组件 */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -837,7 +839,9 @@ private fun buildAttachmentPackageOptions(
         )
     }
 
-    packageManager.getAvailableServerPackages().toSortedMap().forEach { (serverName, serverConfig) ->
+    packageManager.getAvailableServerPackages()
+        .associateBy { it.packageName }
+        .toSortedMap().forEach { (serverName, serverConfig) ->
         options.putIfAbsent(
                 serverName,
                 AttachmentPackageOption(

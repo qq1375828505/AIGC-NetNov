@@ -2,6 +2,8 @@ package com.ai.assistance.operit.core.tools.defaultTool.standard
 
 import android.content.Context
 import com.ai.assistance.operit.api.chat.EnhancedAIService
+
+private fun String.resolve(@Suppress("UNUSED_PARAMETER") language: String): String = this
 import com.ai.assistance.operit.api.chat.llmprovider.ModelConfigConnectionTester
 import com.ai.assistance.operit.api.speech.SpeechServiceFactory
 import com.ai.assistance.operit.api.voice.HttpTtsResponsePipelineStep

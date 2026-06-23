@@ -52,6 +52,7 @@ sealed class Screen {
     object UserPreferencesGuide : Screen()
     object UserPreferencesSettings : Screen()
     object ChatHistorySettings : Screen()
+    object TerminalSetup : Screen()
     
     // Helper method to get title
     open fun getTitle(): String = ""

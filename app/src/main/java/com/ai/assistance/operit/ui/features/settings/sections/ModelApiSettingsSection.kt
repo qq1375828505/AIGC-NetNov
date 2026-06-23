@@ -4,17 +4,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.ai.assistance.operit.data.model.ModelConfigData
 
-/**
- * Stub implementation of ModelApiSettingsSection.
- * This is a placeholder to allow compilation without the actual implementation.
- * TODO: Replace with actual implementation
- */
-
 @Composable
 fun ModelApiSettingsSection(
     modifier: Modifier = Modifier,
     modelConfig: ModelConfigData? = null,
-    onModelConfigChange: (ModelConfigData) -> Unit = {}
+    onModelConfigChange: (ModelConfigData) -> Unit = {},
+    config: ModelConfigData = ModelConfigData(),
+    configManager: Any? = null,
+    saveCoordinator: Any? = null,
+    showNotification: (String) -> Unit = {},
+    navigateToMnnModelDownload: () -> Unit = {}
 ) {
     // Stub implementation - empty composable
 }

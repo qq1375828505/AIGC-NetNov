@@ -58,6 +58,8 @@ import kotlinx.coroutines.withContext
 
 private const val MAX_FILE_SUGGESTIONS = 10
 
+private fun String.resolve(@Suppress("UNUSED_PARAMETER") language: String): String = this
+
 private val workspaceFileSuggestionComparator =
     compareBy<WorkspaceFileSuggestion> { it.score }
         .thenBy { it.relativePath.lowercase() }
@@ -593,7 +595,9 @@ private fun buildMentionPackageOptions(
         )
     }
 
-    packageManager.getAvailableServerPackages().toSortedMap().forEach { (serverName, serverConfig) ->
+    packageManager.getAvailableServerPackages()
+        .associateBy { it.packageName }
+        .toSortedMap().forEach { (serverName, serverConfig) ->
         options.putIfAbsent(
             serverName,
             MentionPackageSuggestion(

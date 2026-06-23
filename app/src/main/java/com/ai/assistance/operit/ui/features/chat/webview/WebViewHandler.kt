@@ -30,7 +30,7 @@ import com.ai.assistance.novelide.R
 import com.ai.assistance.novelide.bridge.NovelNativeBridge
 import com.ai.assistance.novelide.data.repository.novel.NovelRepository
 import com.ai.assistance.novelide.data.dao.novel.NovelDao
-import com.ai.assistance.novelide.data.db.AppDatabase
+import com.ai.assistance.operit.data.db.AppDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

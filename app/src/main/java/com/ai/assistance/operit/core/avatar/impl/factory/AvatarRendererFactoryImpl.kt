@@ -1,21 +1,17 @@
 package com.ai.assistance.operit.core.avatar.impl.factory
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import com.ai.assistance.operit.core.avatar.common.control.AvatarController
+import com.ai.assistance.operit.core.avatar.common.factory.AvatarRendererFactory
 import com.ai.assistance.operit.core.avatar.common.model.AvatarModel
-import com.ai.assistance.operit.core.avatar.common.render.AvatarRenderer
 
-/**
- * Stub implementation of AvatarRendererFactoryImpl.
- * This is a placeholder to allow compilation without the actual implementation.
- * TODO: Replace with actual implementation
- */
-object AvatarRendererFactoryImpl {
+class AvatarRendererFactoryImpl : AvatarRendererFactory {
     @Composable
-    fun createRenderer(model: AvatarModel): (@Composable () -> Unit)? {
-        // Stub implementation - returns null
+    override fun createRenderer(model: AvatarModel): (@Composable (modifier: Modifier, controller: AvatarController) -> Unit)? {
         return null
     }
-    
+
     fun getSupportedRenderModes(): List<String> {
         return emptyList()
     }

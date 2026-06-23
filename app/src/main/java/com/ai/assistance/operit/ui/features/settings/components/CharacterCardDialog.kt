@@ -198,6 +198,7 @@ fun CharacterCardDialog(
                 )
             }
         mcpOptions = packageManager.getAvailableServerPackages()
+            .associateBy { it.packageName }
             .toSortedMap(String.CASE_INSENSITIVE_ORDER)
             .map { (serverName, serverConfig) ->
                 CharacterCardToolAccessOption(

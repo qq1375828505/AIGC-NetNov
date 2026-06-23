@@ -163,6 +163,9 @@ class PackageManager private constructor(
     
     data class ToolPkgContainerRuntime(
         val packageName: String = "",
+        val containerPackageName: String = "",
+        val subpackageId: String = "",
+        val entryPath: String = "",
         val isActive: Boolean = false,
         val displayName: String = "",
         val description: String = "",
@@ -430,7 +433,14 @@ class PackageManager private constructor(
         val sourceType: String = "",
         val sourceUrl: String = "",
         val sourcePath: String = "",
-        val isEnabled: Boolean = false
+        val isEnabled: Boolean = false,
+        val isToolPkg: Boolean = false,
+        val fileExtension: String = "",
+        val inferredVersion: String = "",
+        val displayName: String = "",
+        val isExternalSource: Boolean = false,
+        val message: String = "",
+        val isBuiltIn: Boolean = false
     ) {
         override fun toString(): String {
             return "PublishablePackageSource(packageName=$packageName, name=$name, type=$sourceType, enabled=$isEnabled)"
@@ -444,4 +454,26 @@ class PackageManager private constructor(
     fun getTopLevelAvailablePackages(): Map<String, com.ai.assistance.operit.core.tools.ToolPackage> = emptyMap()
 
     fun deletePackage(packageName: String): Boolean = false
+
+    fun findPreferredPackageNameForSubpackageId(subpackageId: String, preferEnabled: Boolean = true): String? = null
+
+    fun getPackageScript(packageName: String): String? = null
+
+    fun resolvePackageForDisplay(packageName: String): ToolPkgContainerDetails? = getContainerDetails(packageName)
+
+    fun getToolPkgContainerDetails(packageName: String, resolveContext: android.content.Context? = null): ToolPkgContainerDetails? = getContainerDetails(packageName)
+
+    fun setToolPkgSubpackageEnabled(subpackageId: String, enabled: Boolean): Boolean = false
+
+    fun getActivePackageStateId(packageName: String): String? = null
+
+    fun getToolPkgWorkspaceTemplates(context: android.content.Context): List<ToolPkgWorkspaceTemplate> = emptyList()
+
+    fun importToolPkgWorkspaceTemplate(
+        containerPackageName: String,
+        templateId: String,
+        destinationDir: java.io.File? = null
+    ): Result<ToolPkgWorkspaceTemplateImportResult> = Result.success(ToolPkgWorkspaceTemplateImportResult())
+
+    fun runQuickPluginCreatorSetup(context: android.content.Context): Result<Any?> = Result.success(null)
 }

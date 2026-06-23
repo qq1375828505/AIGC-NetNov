@@ -28,6 +28,10 @@ object ActivityLifecycleManager : Application.ActivityLifecycleCallbacks {
         }
     }
     
+    fun checkAndApplyKeepScreenOn(enabled: Boolean) {
+        forceKeepScreenOn(enabled)
+    }
+    
     fun register(application: Application) {
         application.registerActivityLifecycleCallbacks(this)
     }

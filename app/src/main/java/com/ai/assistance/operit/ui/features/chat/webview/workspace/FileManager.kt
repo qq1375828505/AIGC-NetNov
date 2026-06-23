@@ -373,7 +373,7 @@ fun FileBrowser(
             isLoading = true
             try {
                 val mimeType = workspaceMimeTypeForPath(filePath)
-                val lastModified = if (isSafEnv) System.currentTimeMillis() else File(filePath).lastModified().toString()
+                val lastModified = if (isSafEnv) System.currentTimeMillis() else File(filePath).lastModified()
 
                 if (workspaceShouldOpenAsDirectPreview(filePath)) {
                     onFileOpen?.invoke(
