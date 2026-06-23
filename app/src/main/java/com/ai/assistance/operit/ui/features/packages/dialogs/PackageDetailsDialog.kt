@@ -44,12 +44,12 @@ fun PackageDetailsDialog(
     var showDeleteConfirmDialog by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
-    val resolvedPackage by produceState<PackageManager.ToolPkgContainerDetails?>(initialValue = null, packageName, toolPackage) {
-        value = null
+    val resolvedPackage by produceState<ToolPackage?>(initialValue = toolPackage, packageName, toolPackage) {
+        value = toolPackage
 
         val resolved =
             try {
-                withContext(Dispatchers.IO) { packageManager.resolvePackageForDisplay(packageName) }
+                withContext(Dispatchers.IO) { packageManager.getPackageTools(packageName) }
             } catch (e: Exception) {
                 AppLogger.e("PackageDetailsDialog", "Failed to load package details", e)
                 null
@@ -161,10 +161,10 @@ fun PackageDetailsDialog(
             color = MaterialTheme.colorScheme.surface
         ) {
             val resolvedAuthors =
-                metaPackage
+                toolPackage
                     ?.author
-                    ?.map(String::trim)
-                    ?.filter(String::isNotBlank)
+                    ?.map { it.trim() }
+                    ?.filter { it.isNotBlank() }
                     .orEmpty()
 
             Column(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
@@ -200,16 +200,16 @@ fun PackageDetailsDialog(
                         )
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Surface(
-                                color = if (metaPackage?.isBuiltIn == true) 
+                                color = if (toolPackage?.isBuiltIn == true) 
                                     MaterialTheme.colorScheme.primaryContainer 
                                 else 
                                     MaterialTheme.colorScheme.secondaryContainer,
                                 shape = RoundedCornerShape(4.dp)
                             ) {
                                 Text(
-                                    text = if (metaPackage?.isBuiltIn == true) stringResource(R.string.builtin) else stringResource(R.string.external),
+                                    text = if (toolPackage?.isBuiltIn == true) stringResource(R.string.builtin) else stringResource(R.string.external),
                                     style = MaterialTheme.typography.labelSmall,
-                                    color = if (metaPackage?.isBuiltIn == true)
+                                    color = if (toolPackage?.isBuiltIn == true)
                                         MaterialTheme.colorScheme.onPrimaryContainer
                                     else
                                         MaterialTheme.colorScheme.onSecondaryContainer,
@@ -575,7 +575,7 @@ fun PackageDetailsDialog(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
                 ) {
-                    if (metaPackage != null && !metaPackage.isBuiltIn) {
+                    if (toolPackage != null && !toolPackage.isBuiltIn) {
                         OutlinedButton(
                             onClick = { showDeleteConfirmDialog = true },
                             colors = ButtonDefaults.outlinedButtonColors(
