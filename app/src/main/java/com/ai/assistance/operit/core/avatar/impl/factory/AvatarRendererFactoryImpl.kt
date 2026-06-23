@@ -1,6 +1,7 @@
 package com.ai.assistance.operit.core.avatar.impl.factory
 
-import com.ai.assistance.operit.core.avatar.common.control.AvatarController
+import androidx.compose.runtime.Composable
+import com.ai.assistance.operit.core.avatar.common.model.AvatarModel
 import com.ai.assistance.operit.core.avatar.common.render.AvatarRenderer
 
 /**
@@ -9,7 +10,8 @@ import com.ai.assistance.operit.core.avatar.common.render.AvatarRenderer
  * TODO: Replace with actual implementation
  */
 object AvatarRendererFactoryImpl {
-    fun createRenderer(controller: AvatarController): AvatarRenderer? {
+    @Composable
+    fun createRenderer(model: AvatarModel): (@Composable () -> Unit)? {
         // Stub implementation - returns null
         return null
     }

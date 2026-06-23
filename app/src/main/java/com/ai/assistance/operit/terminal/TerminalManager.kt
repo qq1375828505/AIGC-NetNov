@@ -27,6 +27,7 @@ class TerminalManager private constructor(private val context: Context) {
     val commandExecutionEvents: MutableSharedFlow<CommandExecutionEvent> = MutableSharedFlow()
     val directoryChangeEvents: MutableSharedFlow<SessionDirectoryEvent> = MutableSharedFlow()
     val terminalState: MutableStateFlow<TerminalState> = MutableStateFlow(TerminalState())
+    val isFullscreen: StateFlow<Boolean> = MutableStateFlow(false)
     val sessions: List<String> = emptyList()
     val currentSessionId: String = ""
     val currentDirectory: String = ""

@@ -259,7 +259,7 @@ class StandardSoftwareSettingsModifyTools(private val context: Context) {
             )
         }
 
-        val availablePackages = packageManager.getAvailablePackages(forceRefresh = true)
+        val availablePackages = packageManager.getAvailablePackages()
         if (!availablePackages.containsKey(packageName)) {
             return ToolResult(
                 toolName = tool.name,

@@ -158,7 +158,7 @@ class PackageManager private constructor(
     )
     
     fun interface ToolPkgRuntimeChangeListener {
-        fun onContainersChanged(activeContainers: List<ToolPkgContainerRuntime>)
+        fun onToolPkgRuntimeChanged(activeContainers: List<ToolPkgContainerRuntime>)
     }
     
     data class ToolPkgContainerRuntime(

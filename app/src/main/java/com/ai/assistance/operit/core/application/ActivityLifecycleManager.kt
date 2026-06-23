@@ -18,8 +18,14 @@ object ActivityLifecycleManager : Application.ActivityLifecycleCallbacks {
     
     fun getCurrentActivity(): Activity? = currentActivity
     
-    fun checkAndApplyKeepScreenOn(enable: Boolean) {
-        // Stub implementation - does nothing
+    fun forceKeepScreenOn(enabled: Boolean) {
+        currentActivity?.window?.let { window ->
+            if (enabled) {
+                window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            } else {
+                window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            }
+        }
     }
     
     fun register(application: Application) {
