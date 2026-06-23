@@ -17,8 +17,8 @@
 package com.ai.assistance.operit.ui.features.chat.components.lazy
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.internal.checkPrecondition
-import androidx.compose.foundation.internal.requirePrecondition
+import com.ai.assistance.operit.ui.features.chat.components.lazy.internal.checkPrecondition
+import com.ai.assistance.operit.ui.features.chat.components.lazy.internal.requirePrecondition
 import com.ai.assistance.operit.ui.features.chat.components.lazy.LazyLayoutNearestRangeState
 import com.ai.assistance.operit.ui.features.chat.components.lazy.findIndexByKey
 import androidx.compose.runtime.getValue

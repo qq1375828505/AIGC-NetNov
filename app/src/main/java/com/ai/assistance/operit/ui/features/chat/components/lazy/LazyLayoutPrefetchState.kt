@@ -21,9 +21,9 @@ import androidx.annotation.VisibleForTesting
 import androidx.collection.mutableScatterMapOf
 import androidx.compose.foundation.ComposeFoundationFlags
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.internal.checkPrecondition
-import androidx.compose.foundation.internal.requirePrecondition
-import androidx.compose.foundation.internal.requirePreconditionNotNull
+import com.ai.assistance.operit.ui.features.chat.components.lazy.internal.checkPrecondition
+import com.ai.assistance.operit.ui.features.chat.components.lazy.internal.requirePrecondition
+import com.ai.assistance.operit.ui.features.chat.components.lazy.internal.requirePreconditionNotNull
 import com.ai.assistance.operit.ui.features.chat.components.lazy.LazyLayoutPrefetchState.PrefetchHandle
 import com.ai.assistance.operit.ui.features.chat.components.lazy.LazyLayoutPrefetchState.PrefetchResultScope
 import androidx.compose.runtime.Stable

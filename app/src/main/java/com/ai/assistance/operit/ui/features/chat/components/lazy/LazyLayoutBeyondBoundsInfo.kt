@@ -16,7 +16,7 @@
 
 package com.ai.assistance.operit.ui.features.chat.components.lazy
 
-import androidx.compose.foundation.internal.requirePrecondition
+import com.ai.assistance.operit.ui.features.chat.components.lazy.internal.requirePrecondition
 import androidx.compose.runtime.collection.mutableVectorOf
 
 /**

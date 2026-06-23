@@ -18,7 +18,7 @@ package com.ai.assistance.operit.ui.features.chat.components.lazy
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.internal.requirePrecondition
+import com.ai.assistance.operit.ui.features.chat.components.lazy.internal.requirePrecondition
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.node.ModifierNodeElement

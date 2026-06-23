@@ -25,7 +25,7 @@ import androidx.compose.foundation.gestures.ScrollScope
 import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.internal.checkPrecondition
+import com.ai.assistance.operit.ui.features.chat.components.lazy.internal.checkPrecondition
 import com.ai.assistance.operit.ui.features.chat.components.lazy.LazyListState.Companion.Saver
 import com.ai.assistance.operit.ui.features.chat.components.lazy.AwaitFirstLayoutModifier
 import com.ai.assistance.operit.ui.features.chat.components.lazy.CacheWindowLogic

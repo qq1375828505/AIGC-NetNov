@@ -21,7 +21,7 @@ import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.animateTo
 import androidx.compose.animation.core.copy
 import androidx.compose.foundation.gestures.ScrollScope
-import androidx.compose.foundation.internal.requirePrecondition
+import com.ai.assistance.operit.ui.features.chat.components.lazy.internal.requirePrecondition
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import kotlin.coroutines.cancellation.CancellationException

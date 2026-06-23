@@ -429,6 +429,14 @@ dependencies {
     // Exclude bcprov-jdk15to18 from all configurations to avoid duplicate classes
     configurations.all {
         exclude(group = "org.bouncycastle", module = "bcprov-jdk15to18")
+        resolutionStrategy {
+            // Enforce Kotlin 2.1.21 for all stdlib artifacts to avoid
+            // "incompatible metadata version" errors from transitive deps.
+            force("org.jetbrains.kotlin:kotlin-stdlib:${libs.versions.kotlin.get()}")
+            force("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${libs.versions.kotlin.get()}")
+            force("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${libs.versions.kotlin.get()}")
+            force("org.jetbrains.kotlin:kotlin-reflect:${libs.versions.kotlin.get()}")
+        }
     }
 
     // Security

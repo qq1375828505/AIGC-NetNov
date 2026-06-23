@@ -16,8 +16,8 @@
 
 package com.ai.assistance.operit.ui.features.chat.components.lazy
 
-import androidx.compose.foundation.internal.requirePrecondition
-import androidx.compose.foundation.internal.requirePreconditionNotNull
+import com.ai.assistance.operit.ui.features.chat.components.lazy.internal.requirePrecondition
+import com.ai.assistance.operit.ui.features.chat.components.lazy.internal.requirePreconditionNotNull
 import com.ai.assistance.operit.ui.features.chat.components.lazy.LazyLayoutItemAnimation.Companion.NotInitialized
 import com.ai.assistance.operit.ui.features.chat.components.lazy.LazyLayoutItemAnimator
 import com.ai.assistance.operit.ui.features.chat.components.lazy.LazyLayoutMeasuredItem

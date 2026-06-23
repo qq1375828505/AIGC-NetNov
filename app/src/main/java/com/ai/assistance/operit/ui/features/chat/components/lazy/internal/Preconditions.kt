@@ -1,4 +1,4 @@
-package androidx.compose.foundation.internal
+package com.ai.assistance.operit.ui.features.chat.components.lazy.internal
 
 internal inline fun checkPrecondition(value: Boolean, lazyMessage: () -> String) {
     if (!value) {

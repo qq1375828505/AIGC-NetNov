@@ -19,7 +19,7 @@ package com.ai.assistance.operit.ui.features.chat.components.lazy
 import androidx.collection.MutableObjectIntMap
 import androidx.collection.ObjectIntMap
 import androidx.collection.emptyObjectIntMap
-import androidx.compose.foundation.internal.checkPrecondition
+import com.ai.assistance.operit.ui.features.chat.components.lazy.internal.checkPrecondition
 
 /**
  * A key-index mapping that can be used by the [LazyLayoutItemProvider] to keep track of indices and

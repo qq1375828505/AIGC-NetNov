@@ -16,7 +16,7 @@
 
 package com.ai.assistance.operit.ui.features.chat.components.lazy
 
-import androidx.compose.foundation.internal.checkPrecondition
+import com.ai.assistance.operit.ui.features.chat.components.lazy.internal.checkPrecondition
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect

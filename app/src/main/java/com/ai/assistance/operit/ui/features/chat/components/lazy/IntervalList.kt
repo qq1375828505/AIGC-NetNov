@@ -16,8 +16,8 @@
 
 package com.ai.assistance.operit.ui.features.chat.components.lazy
 
-import androidx.compose.foundation.internal.requirePrecondition
-import androidx.compose.foundation.internal.throwIndexOutOfBoundsException
+import com.ai.assistance.operit.ui.features.chat.components.lazy.internal.requirePrecondition
+import com.ai.assistance.operit.ui.features.chat.components.lazy.internal.throwIndexOutOfBoundsException
 import androidx.compose.runtime.collection.MutableVector
 import androidx.compose.runtime.collection.mutableVectorOf
 
