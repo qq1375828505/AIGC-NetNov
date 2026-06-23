@@ -14,6 +14,8 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 
+private fun String.resolve(@Suppress("UNUSED_PARAMETER") context: Context): String = this
+
 // In this build the facade always operates on the full container details.
 // Helper signatures take PackageManager.ToolPkgContainerDetails directly
 // so they can read the rich fields (resources, uiModules, workflowTemplates,

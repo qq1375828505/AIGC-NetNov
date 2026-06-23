@@ -2,6 +2,7 @@ package com.ai.assistance.operit.core.avatar.common.repository
 
 import com.ai.assistance.operit.core.avatar.common.model.AvatarType
 import com.ai.assistance.operit.core.avatar.common.state.AvatarConfig
+import com.ai.assistance.operit.core.avatar.common.state.AvatarCustomMoodDefinition
 import com.ai.assistance.operit.core.avatar.common.state.AvatarEmotion
 
 /**
@@ -40,10 +41,3 @@ class AvatarRepository {
         }
     }
 }
-
-data class AvatarCustomMoodDefinition(
-    val id: String = "",
-    val name: String = "",
-    val animationKey: String = "",
-    val customSettings: Map<String, Any?> = emptyMap()
-)

@@ -227,7 +227,7 @@ fun AvatarConfigSection(
                     valueRange = -500f..500f
                 )
 
-                if (currentAvatarConfig.type == AvatarType.MMD) {
+                if (currentAvatarConfig.avatarType == AvatarType.MMD) {
                     val cameraPitch =
                         currentSettings.customSettings[AvatarSettingKeys.MMD_INITIAL_ROTATION_X] ?: 0f
                     val initialRotationY =
@@ -318,7 +318,7 @@ fun AvatarConfigSection(
                     )
                 }
 
-                if (currentAvatarConfig.type == AvatarType.GLTF) {
+                if (currentAvatarConfig.avatarType == AvatarType.GLTF) {
                     val cameraPitch =
                         currentSettings.customSettings[AvatarSettingKeys.GLTF_CAMERA_PITCH] ?: 8f
                     val cameraYaw =
@@ -409,7 +409,7 @@ fun AvatarConfigSection(
                     )
                 }
 
-                if (currentAvatarConfig.type == AvatarType.FBX) {
+                if (currentAvatarConfig.avatarType == AvatarType.FBX) {
                     val cameraPitch =
                         currentSettings.customSettings[AvatarSettingKeys.FBX_CAMERA_PITCH] ?: 8f
                     val cameraYaw =

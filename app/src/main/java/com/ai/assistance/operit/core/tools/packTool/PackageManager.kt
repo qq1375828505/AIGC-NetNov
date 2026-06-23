@@ -424,16 +424,24 @@ class PackageManager private constructor(
     
     data class PublishablePackageSource(
         val id: String = "",
+        val packageName: String = "",
         val name: String = "",
         val description: String = "",
         val sourceType: String = "",
         val sourceUrl: String = "",
+        val sourcePath: String = "",
         val isEnabled: Boolean = false
     ) {
         override fun toString(): String {
-            return "PublishablePackageSource(name=$name, type=$sourceType, enabled=$isEnabled)"
+            return "PublishablePackageSource(packageName=$packageName, name=$name, type=$sourceType, enabled=$isEnabled)"
         }
     }
     
     fun getEnabledToolPkgContainerRuntimes(): List<ToolPkgContainerRuntime> = emptyList()
+
+    fun getPublishablePackageSources(): List<PublishablePackageSource> = emptyList()
+
+    fun getTopLevelAvailablePackages(): Map<String, com.ai.assistance.operit.core.tools.ToolPackage> = emptyMap()
+
+    fun deletePackage(packageName: String): Boolean = false
 }
