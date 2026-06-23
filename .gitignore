@@ -86,3 +86,7 @@ Thumbs.db
 .workbuddy/
 *.swp
 *.swo
+
+# Temporary files
+FIX_PROGRESS.md
+build_log.txt

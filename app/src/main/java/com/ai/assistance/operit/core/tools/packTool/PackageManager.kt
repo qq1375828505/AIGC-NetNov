@@ -137,11 +137,6 @@ class PackageManager private constructor(
         val action: Map<String, Any?> = emptyMap()
     )
     
-    data class ToolPkgNavigationActionHook(
-        val functionName: String = "",
-        val functionSource: String = ""
-    )
-    
     fun interface ToolPkgRuntimeChangeListener {
         fun onContainersChanged(activeContainers: List<ToolPkgContainerRuntime>)
     }

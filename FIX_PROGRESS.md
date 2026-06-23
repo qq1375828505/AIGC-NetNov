@@ -1,7 +1,7 @@
-# Build #57 修复进度报告
+# Build #65 修复进度报告
 
 ## 📅 最后更新时间
-2026-06-23 05:43
+2026-06-23 20:13
 
 ## ✅ 修复完成状态：95%
 
@@ -88,3 +88,60 @@
 - error-analyzer：批量修复简单错误
 - stub-creator：修复复杂数据类定义
 - build-verifier：验证修复结果
+
+---
+
+## Build #65 前端修复任务
+
+### 任务时间：2026-06-23 19:25 - 20:13
+
+### 修复内容（3个P1问题 + 1个架构优化）
+
+#### 1. AgentManager会话泄漏修复 ✅
+- **文件**：`examples/novelide/src/lib/agent_manager.ts`
+- **问题**：sessions Map只增不减，无自动清理机制
+- **修复**：
+  - 将会话过期时间从1小时改为30分钟
+  - 添加自动清理机制：每5分钟检查一次过期会话
+  - 添加`startAutoCleanup()`和`stopAutoCleanup()`方法
+  - 添加`destroy()`方法清理所有资源
+  - 在`getAgentManager()`函数中自动启动清理机制
+
+#### 2. 导入功能文件选择器修复 ✅
+- **文件**：`examples/novelide/src/ui/novel_io_page.ts`
+- **问题**：用户需要手动输入文件URI路径
+- **修复**：
+  - 添加`openFilePicker()`函数调用`window.NativeBridge.openFilePicker()`
+  - 在导入对话框中添加"选择文件..."按钮
+  - 自动填充文件路径和文件名
+
+#### 3. saveTimer闭包风险修复 ✅
+- **文件**：`examples/novelide/src/ui/novel_editor_page.ts`
+- **问题**：切换章节时旧定时器可能执行错误保存
+- **修复**：
+  - 在`selectChapter()`函数中清除旧的自动保存定时器
+  - 防止切换章节时保存错误内容
+
+#### 4. 三重桥接层冗余问题修复 ✅
+- **文件**：
+  - `examples/novelide/src/lib/native_bridge_init.ts`（合并后）
+  - `examples/novelide/src/lib/db_bridge.ts`（已删除）
+  - `examples/novelide/src/lib/ui_bridge.js`（已删除）
+- **问题**：三个桥接层文件职责重叠
+- **修复**：
+  - 分析三个文件的职责和重叠部分
+  - 将`db_bridge.ts`和`ui_bridge.js`的功能合并到`native_bridge_init.ts`
+  - 删除冗余的`db_bridge.ts`和`ui_bridge.js`文件
+  - 合并后`native_bridge_init.ts`包含所有桥接功能
+
+### 验证结果
+- **Linter检查**：0个错误
+- **构建验证**：成功
+  - Build #65 输出：`examples/novelide/dist/main.js` (171.4kb)
+  - 构建时间：11ms
+- **代码质量**：无语法错误，功能完整
+
+### 修复统计
+- **修改文件**：3个
+- **删除文件**：2个
+- **新增功能**：会话自动清理、文件选择器、定时器清理、统一桥接层
