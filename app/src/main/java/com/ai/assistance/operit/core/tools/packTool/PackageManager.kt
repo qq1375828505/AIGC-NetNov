@@ -76,22 +76,22 @@ class PackageManager private constructor(
     data class ToolPkgWorkflowTemplate(
         val id: String = "",
         val name: String = "",
-        val description: String = "",
+        val description: LocalizedText = LocalizedText(),
         val containerPackageName: String = "",
         val toolPkgId: String = "",
         val templateId: String = "",
-        val displayName: String = "",
+        val displayName: LocalizedText = LocalizedText(),
         val resourceKey: String = ""
     )
-    
+
     data class ToolPkgWorkspaceTemplate(
         val id: String = "",
         val name: String = "",
-        val description: String = "",
+        val description: LocalizedText = LocalizedText(),
         val containerPackageName: String = "",
         val toolPkgId: String = "",
         val templateId: String = "",
-        val displayName: String = "",
+        val displayName: LocalizedText = LocalizedText(),
         val resourceKey: String = "",
         val projectType: String = ""
     )
@@ -99,33 +99,33 @@ class PackageManager private constructor(
     data class ToolPkgToolboxUiModule(
         val id: String = "",
         val name: String = "",
-        val description: String = "",
+        val description: LocalizedText = LocalizedText(),
         val containerPackageName: String = "",
         val toolPkgId: String = "",
         val routeId: String = "",
         val uiModuleId: String = "",
         val runtime: String = "",
         val screen: String = "",
-        val title: String = "",
+        val title: LocalizedText = LocalizedText(),
         val keepAlive: Boolean = false,
         val moduleSpec: Map<String, Any> = emptyMap()
     )
-    
+
     data class ToolPkgDesktopWidget(
         val id: String = "",
         val name: String = "",
-        val description: String = "",
+        val description: LocalizedText = LocalizedText(),
         val containerPackageName: String = "",
         val toolPkgId: String = "",
         val widgetId: String = "",
         val routeId: String = "",
         val renderRouteId: String = "",
-        val title: String = "",
-        val subtitle: String = "",
+        val title: LocalizedText = LocalizedText(),
+        val subtitle: LocalizedText = LocalizedText(),
         val icon: String? = null,
         val order: Int = 0
     )
-    
+
     data class ToolPkgUiRoute(
         val containerPackageName: String = "",
         val toolPkgId: String = "",
@@ -133,23 +133,28 @@ class PackageManager private constructor(
         val uiModuleId: String = "",
         val runtime: String = "",
         val screen: String = "",
-        val title: String = "",
-        val description: String = "",
+        val title: LocalizedText = LocalizedText(),
+        val description: LocalizedText = LocalizedText(),
         val keepAlive: Boolean = false,
         val moduleSpec: Map<String, Any?> = emptyMap()
     )
-    
+
     data class ToolPkgNavigationEntry(
         val containerPackageName: String = "",
         val toolPkgId: String = "",
         val entryId: String = "",
         val routeId: String = "",
         val surface: String = "",
-        val title: String = "",
-        val description: String = "",
+        val title: LocalizedText = LocalizedText(),
+        val description: LocalizedText = LocalizedText(),
         val icon: String? = null,
         val order: Int = 0,
-        val action: Map<String, Any?> = emptyMap()
+        val action: ToolPkgNavigationActionHook? = null
+    )
+
+    data class ToolPkgNavigationActionHook(
+        val functionName: String = "",
+        val functionSource: String? = null
     )
     
     fun interface ToolPkgRuntimeChangeListener {
@@ -231,10 +236,20 @@ class PackageManager private constructor(
     fun installDebugToolPkg(filePath: String): Result<Any?> = Result.success(null)
     
     fun readToolPkgResourceBytes(packageName: String, resourceKey: String): ByteArray? = null
-    
+
+    fun readToolPkgResourceBytes(container: ToolPkgContainerDetails, resourcePath: String): ByteArray? = null
+
     fun resolveToolPkgResourceFile(packageName: String, resourceKey: String): String? = null
-    
+
+    fun resolveToolPkgResourceFile(container: ToolPkgContainerDetails, resourcePath: String): String? = null
+
     fun exportToolPkgResource(packageName: String, resourceKey: String, outputPath: String): Boolean = false
+
+    fun exportToolPkgResource(
+        container: ToolPkgContainerDetails,
+        resource: ToolPkgContainerResource,
+        outputFile: java.io.File
+    ): Boolean = false
     
     fun unregisterPackageTools(packageName: String) {}
     
@@ -250,7 +265,7 @@ class PackageManager private constructor(
         val packageName: String = "",
         val subpackageId: String = "",
         val displayName: LocalizedText = LocalizedText(),
-        val description: String = "",
+        val description: LocalizedText = LocalizedText(),
         val enabledByDefault: Boolean = false,
         val toolCount: Int = 0,
         val enabled: Boolean = false
@@ -385,15 +400,6 @@ class PackageManager private constructor(
         containerPackageName: String,
         templateId: String
     ): Result<Any?> = Result.success(null)
-    
-    data class ToolPkgNavigationActionHook(
-        val functionName: String = "",
-        val functionSource: String = ""
-    ) {
-        override fun toString(): String {
-            return "ToolPkgNavigationActionHook(function=$functionName)"
-        }
-    }
     
     data class ToolPkgWorkspaceTemplateImportResult(
         val success: Boolean = false,

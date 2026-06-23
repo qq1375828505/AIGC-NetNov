@@ -15,10 +15,9 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 
 // In this build the facade always operates on the full container details.
-// Aliasing it to ToolPkgContainerRuntime keeps the existing helper signatures
-// (`container: ToolPkgContainerRuntime`) working while still letting them
-// read the rich fields (resources, uiModules, workflowTemplates, ...).
-internal typealias ToolPkgContainerRuntime = PackageManager.ToolPkgContainerDetails
+// Helper signatures take PackageManager.ToolPkgContainerDetails directly
+// so they can read the rich fields (resources, uiModules, workflowTemplates,
+// subpackages, workspaceTemplates, desktopWidgets).
 
 internal class PackageManagerToolPkgFacade(
     private val packageManager: PackageManager
@@ -30,7 +29,7 @@ internal class PackageManagerToolPkgFacade(
         }
 
     private fun buildToolPkgToolboxUiModules(
-        container: ToolPkgContainerRuntime,
+        container: PackageManager.ToolPkgContainerDetails,
         localizationContext: Context,
         runtime: String
     ): List<PackageManager.ToolPkgToolboxUiModule> {
@@ -82,7 +81,7 @@ internal class PackageManagerToolPkgFacade(
     }
 
     private fun buildToolPkgUiRoutes(
-        container: ToolPkgContainerRuntime,
+        container: PackageManager.ToolPkgContainerDetails,
         localizationContext: Context,
         runtime: String = TOOLPKG_RUNTIME_COMPOSE_DSL
     ): List<PackageManager.ToolPkgUiRoute> {
@@ -126,7 +125,7 @@ internal class PackageManagerToolPkgFacade(
     }
 
     private fun buildToolPkgNavigationEntries(
-        container: ToolPkgContainerRuntime,
+        container: PackageManager.ToolPkgContainerDetails,
         localizationContext: Context
     ): List<PackageManager.ToolPkgNavigationEntry> {
         val containerDescription = container.description.resolve(localizationContext)
@@ -135,15 +134,15 @@ internal class PackageManagerToolPkgFacade(
                 PackageManager.ToolPkgNavigationEntry(
                     containerPackageName = container.packageName,
                     toolPkgId = container.packageName,
-                    entryId = entry.id,
+                    entryId = entry.entryId,
                     routeId = entry.routeId,
                     surface = entry.surface,
-                    title = entry.title.resolve(localizationContext).trim().ifBlank { entry.id },
+                    title = entry.title.resolve(localizationContext).trim().ifBlank { entry.entryId },
                     description = containerDescription,
                     action =
                         entry.action?.let { action ->
                             PackageManager.ToolPkgNavigationActionHook(
-                                functionName = action.function,
+                                functionName = action.functionName,
                                 functionSource = action.functionSource
                             )
                         },
@@ -161,7 +160,7 @@ internal class PackageManagerToolPkgFacade(
     }
 
     private fun buildToolPkgDesktopWidgets(
-        container: ToolPkgContainerRuntime,
+        container: PackageManager.ToolPkgContainerDetails,
         localizationContext: Context
     ): List<PackageManager.ToolPkgDesktopWidget> {
         return container.desktopWidgets
@@ -189,7 +188,7 @@ internal class PackageManagerToolPkgFacade(
     }
 
     private fun buildToolPkgWorkflowTemplates(
-        container: ToolPkgContainerRuntime,
+        container: PackageManager.ToolPkgContainerDetails,
         localizationContext: Context
     ): List<PackageManager.ToolPkgWorkflowTemplate> {
         return container.workflowTemplates
@@ -215,7 +214,7 @@ internal class PackageManagerToolPkgFacade(
     }
 
     private fun buildToolPkgWorkspaceTemplates(
-        container: ToolPkgContainerRuntime,
+        container: PackageManager.ToolPkgContainerDetails,
         localizationContext: Context
     ): List<PackageManager.ToolPkgWorkspaceTemplate> {
         return container.workspaceTemplates
@@ -566,7 +565,7 @@ internal class PackageManagerToolPkgFacade(
             packageManager.unregisterPackageTools(normalizedPackageName)
         }
 
-        packageManager.saveEnabledPackageNames(enabledPackageNames.toList())
+        packageManager.saveEnabledPackageNames(enabledPackageNames)
         packageManager.saveToolPkgSubpackageStates(subpackageStates)
 
         val stateSaved = packageManager.getToolPkgSubpackageStatesInternal()[normalizedPackageName] == enabled
