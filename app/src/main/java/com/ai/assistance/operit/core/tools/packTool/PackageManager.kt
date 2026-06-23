@@ -161,18 +161,6 @@ class PackageManager private constructor(
         fun onToolPkgRuntimeChanged(activeContainers: List<ToolPkgContainerRuntime>)
     }
     
-    data class ToolPkgContainerRuntime(
-        val packageName: String = "",
-        val containerPackageName: String = "",
-        val subpackageId: String = "",
-        val entryPath: String = "",
-        val isActive: Boolean = false,
-        val displayName: String = "",
-        val description: String = "",
-        val uiRoutes: List<ToolPkgUiRoute> = emptyList(),
-        val navigationEntries: List<ToolPkgNavigationEntry> = emptyList()
-    )
-    
     // Internal storage for package containers
     val toolPkgContainersInternal: MutableMap<String, ToolPkgContainerDetails> = mutableMapOf()
 
