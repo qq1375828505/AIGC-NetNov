@@ -11,10 +11,10 @@ import java.io.File
 import java.nio.charset.StandardCharsets
 import java.util.UUID
 import kotlinx.serialization.json.Json
-
-typealias ToolPkgContainerRuntime = com.ai.assistance.operit.core.tools.packTool.PackageManager.ToolPkgContainerRuntime
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+
+typealias ToolPkgContainerRuntime = com.ai.assistance.operit.core.tools.packTool.PackageManager.ToolPkgContainerRuntime
 
 internal class PackageManagerToolPkgFacade(
     private val packageManager: PackageManager
