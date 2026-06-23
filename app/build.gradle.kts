@@ -429,9 +429,9 @@ dependencies {
     configurations.all {
         exclude(group = "org.bouncycastle", module = "bcprov-jdk15to18")
         resolutionStrategy {
-            // Enforce Kotlin 2.1.21 for all stdlib artifacts to avoid
+            // Enforce Kotlin 2.3.0 for all stdlib artifacts to avoid
             // "incompatible metadata version" errors from transitive deps.
-            val kotlinVersion = "2.1.21"
+            val kotlinVersion = "2.3.0"
             force("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
             force("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
             force("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
