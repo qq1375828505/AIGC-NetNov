@@ -90,7 +90,7 @@ class AutoGlmViewModel(private val context: Context) : ViewModel() {
                         null
                     }
 
-                    if (!okDisplay || displayId == null) {
+                    if (okDisplay != 0 || displayId == null) {
                         appendWithTimestamp(logBuilder, "[VirtualScreen] Failed to create virtual display for agentId=$agentIdForRun.")
                         _uiState.value = AutoGlmUiState(
                             isLoading = false,

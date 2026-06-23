@@ -5,6 +5,6 @@ data class StepResult(
     val success: Boolean,
     val result: String,
     val thinking: String? = null,
-    val action: Any? = null,
+    val action: AgentAction? = null,
     val message: String? = null
 )
