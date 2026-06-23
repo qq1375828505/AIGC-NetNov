@@ -163,7 +163,7 @@ class PackageManager private constructor(
         val functionSource: String? = null
     )
     
-    fun interface ToolPkgRuntimeChangeListener {
+    internal fun interface ToolPkgRuntimeChangeListener {
         fun onToolPkgRuntimeChanged(activeContainers: List<ToolPkgContainerRuntime>)
     }
     
@@ -443,7 +443,7 @@ class PackageManager private constructor(
         }
     }
     
-    fun getEnabledToolPkgContainerRuntimes(): List<ToolPkgContainerRuntime> = emptyList()
+    internal fun getEnabledToolPkgContainerRuntimes(): List<ToolPkgContainerRuntime> = emptyList()
 
     fun getPublishablePackageSources(): List<PublishablePackageSource> = emptyList()
 

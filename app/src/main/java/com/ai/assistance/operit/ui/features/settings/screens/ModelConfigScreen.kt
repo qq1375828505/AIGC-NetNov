@@ -1266,7 +1266,7 @@ private fun ContextSummarySettingsSection(
                     exit = shrinkVertically() + fadeOut()
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        SettingsInfoBanner(text = stringResource(id = R.string.settings_context_card_content))
+                        SettingsInfoBanner(message = stringResource(id = R.string.settings_context_card_content))
 
                         SettingsTextField(
                             title = stringResource(id = R.string.settings_context_length),
@@ -1355,7 +1355,7 @@ private fun ContextSummarySettingsSection(
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         SettingsSwitchRow(
                             title = stringResource(id = R.string.settings_enable_summary),
-                            subtitle = stringResource(id = R.string.settings_enable_summary_desc),
+                            summary = stringResource(id = R.string.settings_enable_summary_desc),
                             checked = enableSummary,
                             onCheckedChange = { enableSummary = it }
                         )
@@ -1377,7 +1377,7 @@ private fun ContextSummarySettingsSection(
 
                         SettingsSwitchRow(
                             title = stringResource(id = R.string.settings_enable_summary_by_message_count),
-                            subtitle = stringResource(id = R.string.settings_enable_summary_by_message_count_desc),
+                            summary = stringResource(id = R.string.settings_enable_summary_by_message_count_desc),
                             checked = enableSummaryByMessageCount,
                             onCheckedChange = { enableSummaryByMessageCount = it },
                             enabled = enableSummary
