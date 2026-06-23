@@ -8,6 +8,8 @@ import com.ai.assistance.operit.core.avatar.common.model.AvatarType
  * TODO: Replace with actual implementation
  */
 data class AvatarConfig(
+    val id: String = "",
+    val name: String = "",
     val avatarType: AvatarType = AvatarType.NONE,
     val scale: Float = 1.0f,
     val translateX: Float = 0.0f,
@@ -16,6 +18,6 @@ data class AvatarConfig(
     val customSettings: Map<String, Any> = emptyMap()
 ) {
     override fun toString(): String {
-        return "AvatarConfig(type=$type, scale=$scale, translateX=$translateX, translateY=$translateY)"
+        return "AvatarConfig(id=$id, name=$name, type=$type, scale=$scale, translateX=$translateX, translateY=$translateY)"
     }
 }

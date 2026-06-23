@@ -14,6 +14,7 @@ data class AvatarInstanceSettings(
     val scale: Float = 1.0f,
     val translateX: Float = 0f,
     val translateY: Float = 0f,
+    val isVoiceCallAvatarEnabled: Boolean = false,
     val customSettings: Map<String, Any?> = emptyMap()
 ) : Parcelable {
     // Stub implementation - all properties have default values

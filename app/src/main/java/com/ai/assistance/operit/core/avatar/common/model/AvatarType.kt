@@ -5,6 +5,9 @@ package com.ai.assistance.operit.core.avatar.common.model
  * This serves as a discriminator for factories to decide which renderer to use.
  */
 enum class AvatarType {
+    /** No avatar / placeholder type. */
+    NONE,
+
     /** 2D skeletal animation (e.g., DragonBones, Spine). */
     DRAGONBONES,
 
@@ -22,4 +25,4 @@ enum class AvatarType {
 
     /** 3D model animation (e.g., MikuMikuDance, VRM). */
     MMD
-} 
+}
