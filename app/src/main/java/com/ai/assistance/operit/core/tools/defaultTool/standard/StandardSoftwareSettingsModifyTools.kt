@@ -36,7 +36,6 @@ import com.ai.assistance.operit.core.tools.StringResultData
 import com.ai.assistance.operit.core.tools.javascript.JsEngine
 import com.ai.assistance.operit.core.tools.javascript.JsExecutionTraceRecorder
 import com.ai.assistance.operit.core.tools.packTool.PackageManager
-import com.ai.assistance.operit.core.tools.packTool.resolve
 import com.ai.assistance.operit.data.model.AITool
 import com.ai.assistance.operit.data.model.ApiProviderType
 import com.ai.assistance.operit.data.model.FunctionType

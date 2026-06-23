@@ -123,7 +123,7 @@ internal data class ToolPkgSubpackageRuntime(
     val toolCount: Int
 )
 
-data class ToolPkgContainerRuntime(
+internal data class ToolPkgContainerRuntime(
     val packageName: String,
     val displayName: LocalizedText,
     val description: LocalizedText,

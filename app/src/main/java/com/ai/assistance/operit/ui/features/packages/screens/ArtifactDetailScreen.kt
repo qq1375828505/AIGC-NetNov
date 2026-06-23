@@ -54,6 +54,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.core.tools.AIToolHandler
 import com.ai.assistance.operit.core.tools.packTool.PackageManager
+import com.ai.assistance.operit.core.tools.packTool.runQuickPluginCreatorSetup
 import com.ai.assistance.operit.data.api.ArtifactProjectNodeResponse
 import com.ai.assistance.operit.data.api.GitHubIssue
 import com.ai.assistance.operit.data.model.ToolResult

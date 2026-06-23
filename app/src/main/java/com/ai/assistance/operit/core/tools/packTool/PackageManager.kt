@@ -344,9 +344,9 @@ class PackageManager private constructor(
     
     fun getRenderRouteId(packageName: String): String = ""
     
-    fun addToolPkgRuntimeChangeListener(listener: ToolPkgRuntimeChangeListener) {}
+    internal fun addToolPkgRuntimeChangeListener(listener: ToolPkgRuntimeChangeListener) {}
     
-    fun removeToolPkgRuntimeChangeListener(listener: ToolPkgRuntimeChangeListener) {}
+    internal fun removeToolPkgRuntimeChangeListener(listener: ToolPkgRuntimeChangeListener) {}
     
     fun getToolPkgUiRoutes(
         runtime: String = "compose_dsl",
@@ -473,3 +473,9 @@ class PackageManager private constructor(
 
     fun runQuickPluginCreatorSetup(context: android.content.Context): Result<Any?> = Result.success(null)
 }
+
+fun runQuickPluginCreatorSetup(
+    context: android.content.Context,
+    packageManager: PackageManager,
+    toolHandler: com.ai.assistance.operit.core.tools.AIToolHandler
+): Result<Any?> = Result.success(null)
