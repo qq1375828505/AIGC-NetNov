@@ -15,8 +15,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.hjson.JsonValue
 
-typealias ToolPkgContainerRuntime = com.ai.assistance.operit.core.tools.packTool.PackageManager.ToolPkgContainerRuntime
-
 private val TOOLPKG_DIRECTORY_RESOURCE_MIME_TYPES =
     setOf(
         DocumentsContract.Document.MIME_TYPE_DIR.lowercase(),

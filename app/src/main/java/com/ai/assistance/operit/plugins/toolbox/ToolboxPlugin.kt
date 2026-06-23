@@ -19,8 +19,6 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-typealias ToolPkgContainerRuntime = com.ai.assistance.operit.core.tools.packTool.PackageManager.ToolPkgContainerRuntime
-
 private object ToolPkgAppLifecycleHookPlugin : AppLifecycleHookPlugin {
     private const val TAG = "ToolboxPlugin"
     @Volatile

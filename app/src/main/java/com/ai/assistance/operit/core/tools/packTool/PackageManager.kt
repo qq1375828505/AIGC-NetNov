@@ -1,23 +1,9 @@
 package com.ai.assistance.operit.core.tools.packTool
 
 import com.ai.assistance.operit.core.tools.PackageTool
+import com.ai.assistance.operit.core.tools.ToolPackage
+import com.ai.assistance.operit.core.tools.LocalizedText
 import com.ai.assistance.operit.core.tools.javascript.JsEngine
-
-data class LocalizedText(val values: Map<String, String> = emptyMap()) {
-    fun resolve(preferredLanguage: String): String {
-        return values[preferredLanguage] ?: values.values.firstOrNull() ?: ""
-    }
-    
-    override fun toString(): String {
-        return values.values.firstOrNull() ?: ""
-    }
-}
-
-data class ToolPackage(
-    val name: String = "",
-    val description: LocalizedText = LocalizedText(),
-    val tools: List<PackageTool> = emptyList()
-)
 
 /**
  * Stub implementation of PackageManager.

@@ -6,8 +6,6 @@ import com.ai.assistance.operit.core.tools.javascript.JsEngine
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 
-typealias ToolPkgContainerRuntime = com.ai.assistance.operit.core.tools.packTool.PackageManager.ToolPkgContainerRuntime
-
 internal class ToolPkgManager(
     private val context: Context
 ) {
