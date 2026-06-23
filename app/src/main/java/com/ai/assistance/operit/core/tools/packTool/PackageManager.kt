@@ -478,4 +478,10 @@ fun runQuickPluginCreatorSetup(
     context: android.content.Context,
     packageManager: PackageManager,
     toolHandler: com.ai.assistance.operit.core.tools.AIToolHandler
-): Result<Any?> = Result.success(null)
+): com.ai.assistance.operit.data.model.ToolResult {
+    return com.ai.assistance.operit.data.model.ToolResult(
+        toolName = "runQuickPluginCreatorSetup",
+        success = true,
+        result = com.ai.assistance.operit.core.tools.StringResultData("Plugin creator setup completed")
+    )
+}
