@@ -2,7 +2,6 @@ package com.ai.assistance.operit.core.tools.packTool
 
 import com.ai.assistance.operit.core.tools.PackageTool
 import com.ai.assistance.operit.core.tools.ToolPackage
-import com.ai.assistance.operit.core.tools.LocalizedText
 import com.ai.assistance.operit.core.tools.javascript.JsEngine
 
 /**
@@ -28,14 +27,14 @@ class PackageManager private constructor(
         }
     }
     
-    // Nested data classes for package management
+    // Nested data classes for package management (DTOs use resolved String values)
     data class ToolPkgContainerDetails(
         val name: String = "",
-        val description: LocalizedText = LocalizedText(),
+        val description: String = "",
         val packageName: String = "",
         val version: String = "",
         val author: String = "",
-        val displayName: LocalizedText = LocalizedText(),
+        val displayName: String = "",
         val isBuiltIn: Boolean = false,
         val enabledByDefault: Boolean = false,
         val tools: List<PackageTool> = emptyList(),
@@ -76,37 +75,37 @@ class PackageManager private constructor(
     data class ToolPkgWorkflowTemplate(
         val id: String = "",
         val name: String = "",
-        val description: LocalizedText = LocalizedText(),
+        val description: String = "",
         val containerPackageName: String = "",
         val toolPkgId: String = "",
         val templateId: String = "",
-        val displayName: LocalizedText = LocalizedText(),
+        val displayName: String = "",
         val resourceKey: String = ""
     )
 
     data class ToolPkgWorkspaceTemplate(
         val id: String = "",
         val name: String = "",
-        val description: LocalizedText = LocalizedText(),
+        val description: String = "",
         val containerPackageName: String = "",
         val toolPkgId: String = "",
         val templateId: String = "",
-        val displayName: LocalizedText = LocalizedText(),
+        val displayName: String = "",
         val resourceKey: String = "",
         val projectType: String = ""
     )
-    
+
     data class ToolPkgToolboxUiModule(
         val id: String = "",
         val name: String = "",
-        val description: LocalizedText = LocalizedText(),
+        val description: String = "",
         val containerPackageName: String = "",
         val toolPkgId: String = "",
         val routeId: String = "",
         val uiModuleId: String = "",
         val runtime: String = "",
         val screen: String = "",
-        val title: LocalizedText = LocalizedText(),
+        val title: String = "",
         val keepAlive: Boolean = false,
         val moduleSpec: Map<String, Any> = emptyMap()
     )
@@ -114,27 +113,28 @@ class PackageManager private constructor(
     data class ToolPkgDesktopWidget(
         val id: String = "",
         val name: String = "",
-        val description: LocalizedText = LocalizedText(),
+        val description: String = "",
         val containerPackageName: String = "",
         val toolPkgId: String = "",
         val widgetId: String = "",
         val routeId: String = "",
         val renderRouteId: String = "",
-        val title: LocalizedText = LocalizedText(),
-        val subtitle: LocalizedText = LocalizedText(),
+        val title: String = "",
+        val subtitle: String = "",
         val icon: String? = null,
         val order: Int = 0
     )
 
     data class ToolPkgUiRoute(
+        val id: String = "",
         val containerPackageName: String = "",
         val toolPkgId: String = "",
         val routeId: String = "",
         val uiModuleId: String = "",
         val runtime: String = "",
         val screen: String = "",
-        val title: LocalizedText = LocalizedText(),
-        val description: LocalizedText = LocalizedText(),
+        val title: String = "",
+        val description: String = "",
         val keepAlive: Boolean = false,
         val moduleSpec: Map<String, Any?> = emptyMap()
     )
@@ -145,8 +145,8 @@ class PackageManager private constructor(
         val entryId: String = "",
         val routeId: String = "",
         val surface: String = "",
-        val title: LocalizedText = LocalizedText(),
-        val description: LocalizedText = LocalizedText(),
+        val title: String = "",
+        val description: String = "",
         val icon: String? = null,
         val order: Int = 0,
         val action: ToolPkgNavigationActionHook? = null
@@ -164,8 +164,8 @@ class PackageManager private constructor(
     data class ToolPkgContainerRuntime(
         val packageName: String = "",
         val isActive: Boolean = false,
-        val displayName: LocalizedText = LocalizedText(),
-        val description: LocalizedText = LocalizedText(),
+        val displayName: String = "",
+        val description: String = "",
         val uiRoutes: List<ToolPkgUiRoute> = emptyList(),
         val navigationEntries: List<ToolPkgNavigationEntry> = emptyList()
     )
@@ -241,7 +241,7 @@ class PackageManager private constructor(
 
     fun resolveToolPkgResourceFile(packageName: String, resourceKey: String): String? = null
 
-    fun resolveToolPkgResourceFile(container: ToolPkgContainerDetails, resourcePath: String): String? = null
+    fun resolveToolPkgResourceFile(container: ToolPkgContainerDetails, resourcePath: String): java.io.File? = null
 
     fun exportToolPkgResource(packageName: String, resourceKey: String, outputPath: String): Boolean = false
 
@@ -264,22 +264,23 @@ class PackageManager private constructor(
     data class ToolPkgSubpackageInfo(
         val packageName: String = "",
         val subpackageId: String = "",
-        val displayName: LocalizedText = LocalizedText(),
-        val description: LocalizedText = LocalizedText(),
+        val containerPackageName: String = "",
+        val displayName: String = "",
+        val description: String = "",
         val enabledByDefault: Boolean = false,
         val toolCount: Int = 0,
         val enabled: Boolean = false
     )
     
     /**
-     * 获取已禁用的包列表
+     * 获取已禁用的包列�?
      * @return List<String> 已禁用的包名列表
      */
     fun getDisabledPackages(): List<String> = emptyList()
     
     /**
-     * 获取外部包路径
-     * @return String 外部包路径
+     * 获取外部包路�?
+     * @return String 外部包路�?
      */
     fun getExternalPackagesPath(): String = ""
     
