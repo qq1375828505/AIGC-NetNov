@@ -8,11 +8,13 @@ import java.util.UUID
 data class PlotHook(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),
     val workId: String,
+    val title: String = "",
     val content: String,
     val status: String = "planted",      // planted / recycled / abandoned
     val plantedChapterId: String? = null,
     val resolvedChapterId: String? = null,
     val idleChapters: Int = 0,
+    val notes: String = "",
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis()
 )

@@ -135,11 +135,13 @@ export default function OutlinePage(ctx: ComposeDslContext): ComposeNode {
           setEditTitle("");
           setEditContent("");
           setShowAddDialog(true);
-        }
+        },
+        contentDescription: "添加根节点"
       }),
       UI.IconButton({
         icon: "refresh",
-        onClick: loadNodes
+        onClick: loadNodes,
+        contentDescription: "刷新大纲"
       })
     ]
   });
@@ -186,11 +188,13 @@ export default function OutlinePage(ctx: ComposeDslContext): ComposeNode {
             icon: isExpanded ? "expand_more" : "chevron_right",
             onClick: () => toggleExpand(node.id),
             compact: true,
-            tint: colors.onSurfaceVariant
+            tint: colors.onSurfaceVariant,
+            contentDescription: isExpanded ? "折叠节点" : "展开节点"
           }) : UI.Box({ width: 24 }),
           UI.Icon({
             icon: hasChildren ? (isExpanded ? "folder_open" : "folder") : "description",
-            tint: isSelected ? colors.primary : colors.onSurfaceVariant
+            tint: isSelected ? colors.primary : colors.onSurfaceVariant,
+            contentDescription: hasChildren ? "文件夹节点" : "文档节点"
           }),
           UI.Column({
             weight: 1
@@ -223,7 +227,8 @@ export default function OutlinePage(ctx: ComposeDslContext): ComposeNode {
               setEditContent("");
               setShowAddDialog(true);
             },
-            compact: true
+            compact: true,
+            contentDescription: `添加子节点到「${node.title}」`
           })
         ])),
         // 递归渲染子节点（仅在展开时）
@@ -329,11 +334,13 @@ export default function OutlinePage(ctx: ComposeDslContext): ComposeNode {
             onClick: () => {
               setEditChapterId(selectedNode.chapterId || "");
               setIsEditing(true);
-            }
+            },
+            contentDescription: `编辑节点「${selectedNode.title}」`
           }),
           UI.IconButton({
             icon: "delete",
-            onClick: () => deleteNode(selectedNode.id)
+            onClick: () => deleteNode(selectedNode.id),
+            contentDescription: `删除节点「${selectedNode.title}」`
           })
         ])
       ]),
@@ -358,7 +365,8 @@ export default function OutlinePage(ctx: ComposeDslContext): ComposeNode {
             }
           },
           tooltip: "打开章节",
-          compact: true
+          compact: true,
+          contentDescription: `打开关联章节「${linkedChapter.title}」`
         })
       ]) : null,
       UI.Text({

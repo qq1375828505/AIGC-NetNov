@@ -50,6 +50,12 @@ export default function EditorPage(ctx: ComposeDslContext): ComposeNode {
 
   // 选择章节
   function selectChapter(chapter: any) {
+    // 清除旧的自动保存定时器，防止切换章节时保存错误内容
+    if (saveTimer) {
+      clearTimeout(saveTimer);
+      setSaveTimer(null);
+    }
+    
     setCurrentChapter(chapter);
     loadChapterContent(chapter.id);
     setShowChapterList(false);
@@ -111,7 +117,7 @@ export default function EditorPage(ctx: ComposeDslContext): ComposeNode {
     UI.TopAppBar({
       title: "章节列表",
       actions: [
-        UI.IconButton({ icon: "add", onClick: createChapter })
+        UI.IconButton({ icon: "add", onClick: createChapter, contentDescription: "创建新章节" })
       ]
     }),
     UI.LazyColumn({
@@ -144,7 +150,8 @@ export default function EditorPage(ctx: ComposeDslContext): ComposeNode {
       UI.Row({ spacing: 8 }, [
         UI.IconButton({
           icon: "menu",
-          onClick: () => setShowChapterList(!showChapterList)
+          onClick: () => setShowChapterList(!showChapterList),
+          contentDescription: showChapterList ? "隐藏章节列表" : "显示章节列表"
         }),
         UI.Text({
           text: currentChapter?.title || "选择章节",
@@ -155,7 +162,7 @@ export default function EditorPage(ctx: ComposeDslContext): ComposeNode {
         saving
           ? UI.Text({ text: "保存中...", style: "bodySmall", color: colors.onSurfaceVariant })
           : UI.Text({ text: `${wordCount} 字`, style: "bodySmall", color: colors.onSurfaceVariant }),
-        UI.IconButton({ icon: "save", onClick: () => autoSave(content) })
+        UI.IconButton({ icon: "save", onClick: () => autoSave(content), contentDescription: "保存章节内容" })
       ])
     ]),
 
@@ -173,7 +180,7 @@ export default function EditorPage(ctx: ComposeDslContext): ComposeNode {
           fillMaxSize: true,
           contentAlignment: "center"
         }, [
-          UI.Icon({ name: "edit", size: 64, tint: colors.onSurfaceVariant }),
+          UI.Icon({ name: "edit", size: 64, tint: colors.onSurfaceVariant, contentDescription: "编辑器图标" }),
           UI.Text({ text: "选择一个章节开始写作", style: "bodyLarge", color: colors.onSurfaceVariant })
         ])
   ]);

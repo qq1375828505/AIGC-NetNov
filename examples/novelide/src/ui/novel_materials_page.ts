@@ -294,6 +294,7 @@ export default function MaterialsPage(ctx: ComposeDslContext): ComposeNode {
                 name: cat.icon,
                 size: 20,
                 tint: activeTab === index ? colors.primary : colors.onSurfaceVariant,
+                contentDescription: `${cat.label}分类图标`
               }),
               UI.Text({
                 text: cat.label,
@@ -311,7 +312,7 @@ export default function MaterialsPage(ctx: ComposeDslContext): ComposeNode {
   const listView = UI.Column({ fillMaxSize: true }, [
     UI.TopAppBar({
       title: category.label,
-      actions: [UI.IconButton({ icon: "add", onClick: startCreate })],
+      actions: [UI.IconButton({ icon: "add", onClick: startCreate, contentDescription: `新增${category.label}` })],
     }),
     // 搜索框
     UI.TextField({
@@ -324,10 +325,13 @@ export default function MaterialsPage(ctx: ComposeDslContext): ComposeNode {
       modifier: UI.Modifier.padding({ horizontal: 8, vertical: 4 })
     }),
     loading
-      ? UI.Box({ fillMaxSize: true, contentAlignment: "center" }, UI.CircularProgressIndicator())
+      ? UI.Box({ fillMaxSize: true, contentAlignment: "center" }, [
+          UI.CircularProgressIndicator(),
+          UI.Text({ text: "加载中...", style: "bodySmall", color: colors.onSurfaceVariant })
+        ])
       : filteredItems.length === 0
         ? UI.Box({ fillMaxSize: true, contentAlignment: "center" }, [
-            UI.Icon({ name: category.icon, size: 64, tint: colors.onSurfaceVariant }),
+            UI.Icon({ name: category.icon, size: 64, tint: colors.onSurfaceVariant, contentDescription: `${category.label}空状态图标` }),
             UI.Text({
               text: searchQuery ? "未找到匹配项" : `暂无${category.label}数据`,
               style: "bodyLarge",
@@ -359,11 +363,13 @@ export default function MaterialsPage(ctx: ComposeDslContext): ComposeNode {
                   UI.IconButton({
                     icon: "edit",
                     onClick: () => startEdit(item),
+                    contentDescription: `编辑${item.name || item.title || "未命名"}`
                   }),
                   UI.IconButton({
                     icon: "delete",
                     onClick: () => confirmDeleteItem(item.id, item.name || item.title),
                     tint: colors.error,
+                    contentDescription: `删除${item.name || item.title || "未命名"}`
                   }),
                 ]),
               })
@@ -382,7 +388,7 @@ export default function MaterialsPage(ctx: ComposeDslContext): ComposeNode {
         [
           UI.TopAppBar({
             title: editingItem ? `编辑${category.label}` : `新增${category.label}`,
-            actions: [UI.IconButton({ icon: "close", onClick: () => setShowForm(false) })],
+            actions: [UI.IconButton({ icon: "close", onClick: () => setShowForm(false), contentDescription: "关闭表单" })],
           }),
           UI.LazyColumn({ fillMaxSize: true, contentPadding: 12, spacing: 12 }, [
             ...category.fields.map((field) =>

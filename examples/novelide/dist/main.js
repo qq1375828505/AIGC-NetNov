@@ -45,14 +45,14 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/main.ts
+// examples/novelide/src/main.ts
 var main_exports = {};
 __export(main_exports, {
   registerToolPkg: () => registerToolPkg
 });
 module.exports = __toCommonJS(main_exports);
 
-// src/ui/novel_works.ui.ts
+// examples/novelide/src/ui/novel_works.ui.ts
 function Screen(ctx) {
   const { UI } = ctx;
   return UI.Box(
@@ -72,7 +72,7 @@ function Screen(ctx) {
   );
 }
 
-// src/ui/novel_editor.ui.ts
+// examples/novelide/src/ui/novel_editor.ui.ts
 function Screen2(ctx) {
   var _a, _b;
   const { UI } = ctx;
@@ -95,7 +95,7 @@ function Screen2(ctx) {
   );
 }
 
-// src/ui/novel_materials.ui.ts
+// examples/novelide/src/ui/novel_materials.ui.ts
 function Screen3(ctx) {
   var _a, _b;
   const { UI } = ctx;
@@ -118,7 +118,7 @@ function Screen3(ctx) {
   );
 }
 
-// src/ui/novel_outline_page.ts
+// examples/novelide/src/ui/novel_outline_page.ts
 function OutlinePage(ctx) {
   var _a, _b;
   const { UI } = ctx;
@@ -212,11 +212,13 @@ function OutlinePage(ctx) {
           setEditTitle("");
           setEditContent("");
           setShowAddDialog(true);
-        }
+        },
+        contentDescription: "\u6DFB\u52A0\u6839\u8282\u70B9"
       }),
       UI.IconButton({
         icon: "refresh",
-        onClick: loadNodes
+        onClick: loadNodes,
+        contentDescription: "\u5237\u65B0\u5927\u7EB2"
       })
     ]
   });
@@ -252,11 +254,13 @@ function OutlinePage(ctx) {
             icon: isExpanded ? "expand_more" : "chevron_right",
             onClick: () => toggleExpand(node.id),
             compact: true,
-            tint: colors.onSurfaceVariant
+            tint: colors.onSurfaceVariant,
+            contentDescription: isExpanded ? "\u6298\u53E0\u8282\u70B9" : "\u5C55\u5F00\u8282\u70B9"
           }) : UI.Box({ width: 24 }),
           UI.Icon({
             icon: hasChildren ? isExpanded ? "folder_open" : "folder" : "description",
-            tint: isSelected ? colors.primary : colors.onSurfaceVariant
+            tint: isSelected ? colors.primary : colors.onSurfaceVariant,
+            contentDescription: hasChildren ? "\u6587\u4EF6\u5939\u8282\u70B9" : "\u6587\u6863\u8282\u70B9"
           }),
           UI.Column({
             weight: 1
@@ -289,7 +293,8 @@ function OutlinePage(ctx) {
               setEditContent("");
               setShowAddDialog(true);
             },
-            compact: true
+            compact: true,
+            contentDescription: `\u6DFB\u52A0\u5B50\u8282\u70B9\u5230\u300C${node.title}\u300D`
           })
         ])),
         // 递归渲染子节点（仅在展开时）
@@ -386,11 +391,13 @@ function OutlinePage(ctx) {
             onClick: () => {
               setEditChapterId(selectedNode.chapterId || "");
               setIsEditing(true);
-            }
+            },
+            contentDescription: `\u7F16\u8F91\u8282\u70B9\u300C${selectedNode.title}\u300D`
           }),
           UI.IconButton({
             icon: "delete",
-            onClick: () => deleteNode(selectedNode.id)
+            onClick: () => deleteNode(selectedNode.id),
+            contentDescription: `\u5220\u9664\u8282\u70B9\u300C${selectedNode.title}\u300D`
           })
         ])
       ]),
@@ -414,7 +421,8 @@ function OutlinePage(ctx) {
             }
           },
           tooltip: "\u6253\u5F00\u7AE0\u8282",
-          compact: true
+          compact: true,
+          contentDescription: `\u6253\u5F00\u5173\u8054\u7AE0\u8282\u300C${linkedChapter.title}\u300D`
         })
       ]) : null,
       UI.Text({
@@ -508,7 +516,7 @@ function OutlinePage(ctx) {
   ]);
 }
 
-// src/ui/novel_outline.ui.ts
+// examples/novelide/src/ui/novel_outline.ui.ts
 function Screen4(ctx) {
   var _a;
   const { UI } = ctx;
@@ -516,7 +524,7 @@ function Screen4(ctx) {
   return OutlinePage(ctx);
 }
 
-// src/ui/novel_stats_page.ts
+// examples/novelide/src/ui/novel_stats_page.ts
 function StatsPage(ctx) {
   var _a, _b;
   const { UI } = ctx;
@@ -594,7 +602,7 @@ function StatsPage(ctx) {
       spacing: 8,
       contentAlignment: "center"
     }, [
-      UI.Icon({ name: icon, size: 28, tint }),
+      UI.Icon({ name: icon, size: 28, tint, contentDescription: `${label}\u56FE\u6807` }),
       UI.Text({ text: value, style: "headlineMedium", color: tint }),
       UI.Text({ text: label, style: "bodySmall", color: colors.onSurfaceVariant }),
       subtitle ? UI.Text({ text: subtitle, style: "labelSmall", color: colors.outline }) : null
@@ -817,7 +825,10 @@ function StatsPage(ctx) {
       ])
     ]));
   }
-  const content = loading ? UI.Box({ fillMaxSize: true, contentAlignment: "center" }, UI.CircularProgressIndicator()) : UI.LazyColumn({
+  const content = loading ? UI.Box({ fillMaxSize: true, contentAlignment: "center" }, [
+    UI.CircularProgressIndicator(),
+    UI.Text({ text: "\u52A0\u8F7D\u7EDF\u8BA1\u6570\u636E...", style: "bodySmall", color: colors.onSurfaceVariant })
+  ]) : UI.LazyColumn({
     fillMaxSize: true,
     contentPadding: 12,
     verticalArrangement: 8
@@ -872,7 +883,8 @@ function StatsPage(ctx) {
       actions: [
         UI.IconButton({
           icon: "refresh",
-          onClick: loadStats
+          onClick: loadStats,
+          contentDescription: "\u5237\u65B0\u7EDF\u8BA1\u6570\u636E"
         })
       ]
     }),
@@ -880,7 +892,7 @@ function StatsPage(ctx) {
   ]);
 }
 
-// src/ui/novel_stats.ui.ts
+// examples/novelide/src/ui/novel_stats.ui.ts
 function Screen5(ctx) {
   var _a;
   const { UI } = ctx;
@@ -888,7 +900,7 @@ function Screen5(ctx) {
   return StatsPage(ctx);
 }
 
-// src/ui/novel_tools.ui.ts
+// examples/novelide/src/ui/novel_tools.ui.ts
 function Screen6(ctx) {
   const { UI } = ctx;
   return UI.Box(
@@ -908,7 +920,7 @@ function Screen6(ctx) {
   );
 }
 
-// src/ui/novel_workspace.ui.ts
+// examples/novelide/src/ui/novel_workspace.ui.ts
 function Screen7(ctx) {
   const { UI } = ctx;
   return UI.Box(
@@ -928,7 +940,7 @@ function Screen7(ctx) {
   );
 }
 
-// src/ui/novel_io_page.ts
+// examples/novelide/src/ui/novel_io_page.ts
 function IOPage(ctx, workId) {
   const { UI } = ctx;
   const colors = ctx.MaterialTheme.colorScheme;
@@ -947,6 +959,23 @@ function IOPage(ctx, workId) {
   }
   async function importFile() {
     setShowImportDialog(true);
+  }
+  async function openFilePicker() {
+    var _a;
+    try {
+      const result = await ((_a = window.NativeBridge) == null ? void 0 : _a.openFilePicker());
+      if (result) {
+        if (result.uri) {
+          setImportUri(result.uri);
+        }
+        if (result.fileName) {
+          setImportFileName(result.fileName);
+        }
+      }
+    } catch (error) {
+      console.error("[NovelIDE] [ERROR] \u6253\u5F00\u6587\u4EF6\u9009\u62E9\u5668\u5931\u8D25:", error);
+      showMessage("\u6253\u5F00\u6587\u4EF6\u9009\u62E9\u5668\u5931\u8D25");
+    }
   }
   async function confirmImportFile() {
     if (!importUri.trim() || !importFileName.trim()) {
@@ -1177,6 +1206,14 @@ function IOPage(ctx, workId) {
           },
           {}
         ),
+        UI.Button(
+          {
+            onClick: openFilePicker,
+            modifier: UI.Modifier.fillMaxWidth().padding({ vertical: 4 }),
+            background: colors.secondaryContainer
+          },
+          "\u9009\u62E9\u6587\u4EF6..."
+        ),
         UI.TextField(
           {
             value: importFileName,
@@ -1206,7 +1243,7 @@ function IOPage(ctx, workId) {
   ]);
 }
 
-// src/ui/novel_io.ui.ts
+// examples/novelide/src/ui/novel_io.ui.ts
 function Screen8(ctx) {
   var _a, _b;
   const { UI } = ctx;
@@ -1215,7 +1252,7 @@ function Screen8(ctx) {
   return IOPage(ctx, workId);
 }
 
-// src/ui/novel_relationship_page.ts
+// examples/novelide/src/ui/novel_relationship_page.ts
 function RelationshipPage(ctx) {
   var _a, _b;
   const { UI } = ctx;
@@ -1421,7 +1458,7 @@ function RelationshipPage(ctx) {
   ]);
 }
 
-// src/ui/novel_relationship.ui.ts
+// examples/novelide/src/ui/novel_relationship.ui.ts
 function Screen9(ctx) {
   var _a, _b;
   const { UI } = ctx;
@@ -1430,16 +1467,20 @@ function Screen9(ctx) {
   return RelationshipPage(ctx);
 }
 
-// src/ui/novel_tomato_page.ts
+// examples/novelide/src/ui/novel_tomato_page.ts
 function TomatoPage(ctx) {
   const { UI } = ctx;
   const colors = ctx.MaterialTheme.colorScheme;
-  const WORK_MINUTES = 25;
-  const REST_MINUTES = 5;
+  const [workMinutes, setWorkMinutes] = ctx.useState("workMinutes", 25);
+  const [restMinutes, setRestMinutes] = ctx.useState("restMinutes", 5);
+  const [audioContext, setAudioContext] = ctx.useState("audioContext", null);
+  const [showSettings, setShowSettings] = ctx.useState("showSettings", false);
+  const [tempWorkMinutes, setTempWorkMinutes] = ctx.useState("tempWorkMinutes", 25);
+  const [tempRestMinutes, setTempRestMinutes] = ctx.useState("tempRestMinutes", 5);
   const [presets, setPresets] = ctx.useState("presets", []);
   const [selectedPreset, setSelectedPreset] = ctx.useState("selectedPreset", 0);
-  const [totalSeconds, setTotalSeconds] = ctx.useState("totalSeconds", WORK_MINUTES * 60);
-  const [remainingSeconds, setRemainingSeconds] = ctx.useState("remainingSeconds", WORK_MINUTES * 60);
+  const [totalSeconds, setTotalSeconds] = ctx.useState("totalSeconds", 25 * 60);
+  const [remainingSeconds, setRemainingSeconds] = ctx.useState("remainingSeconds", 25 * 60);
   const [isRunning, setIsRunning] = ctx.useState("isRunning", false);
   const [isWorkPhase, setIsWorkPhase] = ctx.useState("isWorkPhase", true);
   const [tomatoCount, setTomatoCount] = ctx.useState("tomatoCount", 0);
@@ -1462,11 +1503,18 @@ function TomatoPage(ctx) {
   function playNotificationSound(type) {
     if (!soundEnabled) return;
     try {
-      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
+      let audioCtx = audioContext;
+      if (!audioCtx || audioCtx.state === "closed") {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        setAudioContext(audioCtx);
+      }
+      if (audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
+      const oscillator = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
       oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
+      gainNode.connect(audioCtx.destination);
       switch (type) {
         case "work":
           oscillator.frequency.value = 800;
@@ -1485,7 +1533,6 @@ function TomatoPage(ctx) {
       oscillator.start();
       setTimeout(() => {
         oscillator.stop();
-        audioContext.close();
       }, type === "warning" ? 200 : 500);
     } catch (e) {
       console.log("\u97F3\u9891\u64AD\u653E\u5931\u8D25:", e);
@@ -1505,7 +1552,7 @@ function TomatoPage(ctx) {
     setSelectedPreset(index);
     const preset = presets[index];
     if (preset) {
-      const minutes = preset.minutes || WORK_MINUTES;
+      const minutes = preset.minutes || workMinutes;
       setTotalSeconds(minutes * 60);
       setRemainingSeconds(minutes * 60);
       setIsWorkPhase(true);
@@ -1545,8 +1592,8 @@ function TomatoPage(ctx) {
   function onTimerComplete() {
     if (isWorkPhase) {
       const preset = presets[selectedPreset];
-      const presetName = (preset == null ? void 0 : preset.name) || `${WORK_MINUTES}\u5206\u949F`;
-      const duration = (preset == null ? void 0 : preset.minutes) || WORK_MINUTES;
+      const presetName = (preset == null ? void 0 : preset.name) || `${workMinutes}\u5206\u949F`;
+      const duration = (preset == null ? void 0 : preset.minutes) || workMinutes;
       const newCount = tomatoCount + 1;
       setTomatoCount(newCount);
       setTodayCount(todayCount + 1);
@@ -1560,13 +1607,13 @@ function TomatoPage(ctx) {
       }
       setShowCompleteDialog(true);
       setIsWorkPhase(false);
-      setTotalSeconds(REST_MINUTES * 60);
-      setRemainingSeconds(REST_MINUTES * 60);
+      setTotalSeconds(restMinutes * 60);
+      setRemainingSeconds(restMinutes * 60);
     } else {
       playNotificationSound("rest");
       setIsWorkPhase(true);
       const preset = presets[selectedPreset];
-      const minutes = (preset == null ? void 0 : preset.minutes) || WORK_MINUTES;
+      const minutes = (preset == null ? void 0 : preset.minutes) || workMinutes;
       setTotalSeconds(minutes * 60);
       setRemainingSeconds(minutes * 60);
     }
@@ -1580,7 +1627,7 @@ function TomatoPage(ctx) {
     setIsWorkPhase(true);
     setPulseAnimation(false);
     const preset = presets[selectedPreset];
-    const minutes = (preset == null ? void 0 : preset.minutes) || WORK_MINUTES;
+    const minutes = (preset == null ? void 0 : preset.minutes) || workMinutes;
     setTotalSeconds(minutes * 60);
     setRemainingSeconds(minutes * 60);
   }
@@ -1593,12 +1640,12 @@ function TomatoPage(ctx) {
     setPulseAnimation(false);
     if (isWorkPhase) {
       setIsWorkPhase(false);
-      setTotalSeconds(REST_MINUTES * 60);
-      setRemainingSeconds(REST_MINUTES * 60);
+      setTotalSeconds(restMinutes * 60);
+      setRemainingSeconds(restMinutes * 60);
     } else {
       setIsWorkPhase(true);
       const preset = presets[selectedPreset];
-      const minutes = (preset == null ? void 0 : preset.minutes) || WORK_MINUTES;
+      const minutes = (preset == null ? void 0 : preset.minutes) || workMinutes;
       setTotalSeconds(minutes * 60);
       setRemainingSeconds(minutes * 60);
     }
@@ -1607,23 +1654,53 @@ function TomatoPage(ctx) {
     loadPresets();
     return () => {
       if (timerRef) clearInterval(timerRef);
+      if (audioContext && audioContext.state !== "closed") {
+        audioContext.close();
+      }
     };
   }, []);
   const progressColor = isWorkPhase ? colors.primary : colors.tertiary;
   const phaseLabel = isWorkPhase ? "\u4E13\u6CE8\u5199\u4F5C" : "\u4F11\u606F\u4E00\u4E0B";
   const phaseIcon = isWorkPhase ? "edit_note" : "self_improvement";
+  function openSettings() {
+    setTempWorkMinutes(workMinutes);
+    setTempRestMinutes(restMinutes);
+    setShowSettings(true);
+  }
+  function saveSettings() {
+    setWorkMinutes(tempWorkMinutes);
+    setRestMinutes(tempRestMinutes);
+    if (!isRunning) {
+      if (isWorkPhase) {
+        setTotalSeconds(tempWorkMinutes * 60);
+        setRemainingSeconds(tempWorkMinutes * 60);
+      } else {
+        setTotalSeconds(tempRestMinutes * 60);
+        setRemainingSeconds(tempRestMinutes * 60);
+      }
+    }
+    setShowSettings(false);
+  }
   const topBar = UI.TopAppBar({
     title: "\u756A\u8304\u949F",
     actions: [
       UI.IconButton({
         icon: soundEnabled ? "volume_up" : "volume_off",
         onClick: () => setSoundEnabled(!soundEnabled),
-        tooltip: soundEnabled ? "\u5173\u95ED\u58F0\u97F3" : "\u5F00\u542F\u58F0\u97F3"
+        tooltip: soundEnabled ? "\u5173\u95ED\u58F0\u97F3" : "\u5F00\u542F\u58F0\u97F3",
+        contentDescription: soundEnabled ? "\u5173\u95ED\u58F0\u97F3\u63D0\u9192" : "\u5F00\u542F\u58F0\u97F3\u63D0\u9192"
+      }),
+      UI.IconButton({
+        icon: "settings",
+        onClick: openSettings,
+        tooltip: "\u8BBE\u7F6E",
+        contentDescription: "\u756A\u8304\u949F\u8BBE\u7F6E"
       }),
       UI.IconButton({
         icon: "refresh",
         onClick: resetTimer,
-        tooltip: "\u91CD\u7F6E"
+        tooltip: "\u91CD\u7F6E",
+        contentDescription: "\u91CD\u7F6E\u756A\u8304\u949F"
       })
     ]
   });
@@ -1641,7 +1718,7 @@ function TomatoPage(ctx) {
         spacing: 16,
         contentAlignment: "center"
       }, [
-        UI.Icon({ name: "celebration", size: 48, tint: colors.tertiary }),
+        UI.Icon({ name: "celebration", size: 48, tint: colors.tertiary, contentDescription: "\u5E86\u795D\u56FE\u6807" }),
         UI.Text({ text: "\u756A\u8304\u5B8C\u6210!", style: "headlineSmall", color: colors.tertiary }),
         UI.Text({ text: `\u5B8C\u6210\u4E86\u4E00\u4E2A ${lastCompletedPreset} \u7684\u4E13\u6CE8`, style: "bodyMedium", color: colors.onSurfaceVariant }),
         UI.Text({ text: `\u4ECA\u65E5\u5DF2\u5B8C\u6210 ${todayCount} \u4E2A\u756A\u8304`, style: "bodySmall", color: colors.outline }),
@@ -1649,6 +1726,77 @@ function TomatoPage(ctx) {
           onClick: () => setShowCompleteDialog(false),
           modifier: UI.Modifier.fillMaxWidth()
         }, "\u7EE7\u7EED\u52AA\u529B")
+      ]))
+    ]);
+  }
+  function renderSettingsDialog() {
+    if (!showSettings) return null;
+    return UI.Box({
+      fillMaxSize: true,
+      background: "rgba(0,0,0,0.6)",
+      contentAlignment: "center"
+    }, [
+      UI.Card({
+        modifier: UI.Modifier.padding(32).fillMaxWidth().clickable(() => {
+        })
+      }, UI.Column({
+        padding: 24,
+        spacing: 16
+      }, [
+        UI.Icon({ name: "timer", size: 40, tint: colors.primary, contentDescription: "\u8BBE\u7F6E\u56FE\u6807" }),
+        UI.Text({ text: "\u756A\u8304\u949F\u8BBE\u7F6E", style: "headlineSmall", color: colors.onSurface }),
+        UI.Text({ text: "\u81EA\u5B9A\u4E49\u5DE5\u4F5C\u548C\u4F11\u606F\u65F6\u957F", style: "bodyMedium", color: colors.onSurfaceVariant }),
+        UI.Column({ spacing: 12, fillMaxWidth: true }, [
+          UI.Text({ text: `\u5DE5\u4F5C\u65F6\u957F\uFF08\u5F53\u524D\uFF1A${workMinutes} \u5206\u949F\uFF09`, style: "labelLarge", color: colors.onSurface }),
+          UI.Row({ spacing: 8, verticalAlignment: "center", fillMaxWidth: true }, [
+            UI.Button({
+              onClick: () => setTempWorkMinutes(Math.max(1, tempWorkMinutes - 1)),
+              variant: "outlined",
+              modifier: UI.Modifier.weight(1)
+            }, "-1"),
+            UI.Text({
+              text: `${tempWorkMinutes} \u5206\u949F`,
+              style: "titleMedium",
+              color: colors.primary,
+              modifier: UI.Modifier.weight(2)
+            }),
+            UI.Button({
+              onClick: () => setTempWorkMinutes(tempWorkMinutes + 1),
+              variant: "outlined",
+              modifier: UI.Modifier.weight(1)
+            }, "+1")
+          ]),
+          UI.Text({ text: `\u4F11\u606F\u65F6\u957F\uFF08\u5F53\u524D\uFF1A${restMinutes} \u5206\u949F\uFF09`, style: "labelLarge", color: colors.onSurface }),
+          UI.Row({ spacing: 8, verticalAlignment: "center", fillMaxWidth: true }, [
+            UI.Button({
+              onClick: () => setTempRestMinutes(Math.max(1, tempRestMinutes - 1)),
+              variant: "outlined",
+              modifier: UI.Modifier.weight(1)
+            }, "-1"),
+            UI.Text({
+              text: `${tempRestMinutes} \u5206\u949F`,
+              style: "titleMedium",
+              color: colors.primary,
+              modifier: UI.Modifier.weight(2)
+            }),
+            UI.Button({
+              onClick: () => setTempRestMinutes(tempRestMinutes + 1),
+              variant: "outlined",
+              modifier: UI.Modifier.weight(1)
+            }, "+1")
+          ])
+        ]),
+        UI.Row({ spacing: 8, fillMaxWidth: true }, [
+          UI.Button({
+            onClick: () => setShowSettings(false),
+            variant: "outlined",
+            modifier: UI.Modifier.weight(1)
+          }, "\u53D6\u6D88"),
+          UI.Button({
+            onClick: saveSettings,
+            modifier: UI.Modifier.weight(1)
+          }, "\u4FDD\u5B58")
+        ])
       ]))
     ]);
   }
@@ -1666,7 +1814,7 @@ function TomatoPage(ctx) {
         spacing: 8,
         verticalAlignment: "center"
       }, [
-        UI.Icon({ name: phaseIcon, size: 20, tint: progressColor }),
+        UI.Icon({ name: phaseIcon, size: 20, tint: progressColor, contentDescription: phaseLabel }),
         UI.Text({
           text: phaseLabel,
           style: "titleMedium",
@@ -1724,7 +1872,7 @@ function TomatoPage(ctx) {
         verticalAlignment: "center",
         modifier: UI.Modifier.animatePulse()
       }, [
-        UI.Icon({ name: "warning", size: 16, tint: colors.error }),
+        UI.Icon({ name: "warning", size: 16, tint: colors.error, contentDescription: "\u5012\u8BA1\u65F6\u8B66\u544A" }),
         UI.Text({
           text: `${remainingSeconds} \u79D2\u540E\u5B8C\u6210`,
           style: "labelLarge",
@@ -1848,11 +1996,12 @@ function TomatoPage(ctx) {
       statsArea,
       presetsArea
     ]),
-    renderCompleteDialog()
+    renderCompleteDialog(),
+    renderSettingsDialog()
   ]);
 }
 
-// src/ui/novel_tomato.ui.ts
+// examples/novelide/src/ui/novel_tomato.ui.ts
 function Screen10(ctx) {
   var _a, _b;
   const { UI } = ctx;
@@ -1861,7 +2010,7 @@ function Screen10(ctx) {
   return TomatoPage(ctx);
 }
 
-// src/ui/novel_agents_page.ts
+// examples/novelide/src/ui/novel_agents_page.ts
 function AgentsPage(ctx) {
   var _a;
   const { UI } = ctx;
@@ -1921,7 +2070,8 @@ function AgentsPage(ctx) {
     actions: [
       UI.IconButton({
         icon: "refresh",
-        onClick: loadSessions
+        onClick: loadSessions,
+        contentDescription: "\u5237\u65B0\u4F1A\u8BDD\u5217\u8868"
       })
     ]
   });
@@ -1967,7 +2117,8 @@ function AgentsPage(ctx) {
         ]),
         selectedAgent === agent.id ? UI.Icon({
           icon: "check_circle",
-          tint: colors.primary
+          tint: colors.primary,
+          contentDescription: `${agent.name}\u5DF2\u9009\u4E2D`
         }) : null
       ].filter(Boolean)))
     )
@@ -2083,7 +2234,7 @@ function AgentsPage(ctx) {
   ]);
 }
 
-// src/ui/novel_agents.ui.ts
+// examples/novelide/src/ui/novel_agents.ui.ts
 function Screen11(ctx) {
   var _a;
   const { UI } = ctx;
@@ -2091,7 +2242,7 @@ function Screen11(ctx) {
   return AgentsPage(ctx);
 }
 
-// src/ui/novel_skills_page.ts
+// examples/novelide/src/ui/novel_skills_page.ts
 function SkillsPage(ctx) {
   var _a, _b;
   const { UI } = ctx;
@@ -2158,11 +2309,13 @@ function SkillsPage(ctx) {
     actions: [
       UI.IconButton({
         icon: "sync",
-        onClick: syncFromBackend
+        onClick: syncFromBackend,
+        contentDescription: "\u4ECE\u540E\u7AEF\u540C\u6B65Skill"
       }),
       UI.IconButton({
         icon: "refresh",
-        onClick: loadSkills
+        onClick: loadSkills,
+        contentDescription: "\u5237\u65B0Skill\u5217\u8868"
       })
     ]
   });
@@ -2377,7 +2530,7 @@ function SkillsPage(ctx) {
   ]);
 }
 
-// src/ui/novel_skills.ui.ts
+// examples/novelide/src/ui/novel_skills.ui.ts
 function Screen12(ctx) {
   var _a;
   const { UI } = ctx;
@@ -2385,7 +2538,7 @@ function Screen12(ctx) {
   return SkillsPage(ctx);
 }
 
-// src/packages/novel_utils.ts
+// examples/novelide/src/packages/novel_utils.ts
 var LOG_PREFIX = "[NovelIDE]";
 var Logger = {
   info(message, ...args) {
@@ -2530,7 +2683,7 @@ function clearJsonCache() {
   Logger.info("JSON \u7F13\u5B58\u5DF2\u6E05\u9664");
 }
 
-// src/packages/novel_works.ts
+// examples/novelide/src/packages/novel_works.ts
 function registerTools() {
   Tools.register("novelide:create_work", {
     description: "\u521B\u5EFA\u65B0\u7684\u5C0F\u8BF4\u4F5C\u54C1",
@@ -2646,7 +2799,7 @@ function registerTools() {
   });
 }
 
-// src/packages/novel_chapters.ts
+// examples/novelide/src/packages/novel_chapters.ts
 function registerTools2() {
   Tools.register("novelide:create_chapter", {
     description: "\u4E3A\u6307\u5B9A\u4F5C\u54C1\u521B\u5EFA\u65B0\u7AE0\u8282",
@@ -2786,7 +2939,7 @@ function registerTools2() {
   });
 }
 
-// src/packages/novel_materials.ts
+// examples/novelide/src/packages/novel_materials.ts
 function registerTools3() {
   Tools.register("novelide:create_character", {
     description: "\u521B\u5EFA\u89D2\u8272",
@@ -3696,7 +3849,7 @@ ${content}` : content;
   });
 }
 
-// src/packages/novel_ai_tools.ts
+// examples/novelide/src/packages/novel_ai_tools.ts
 function registerTools4() {
   Tools.register("novelide:continue_writing", {
     description: "AI \u7EED\u5199\uFF0C\u6839\u636E\u524D\u6587\u5185\u5BB9\u81EA\u52A8\u7EED\u5199\u540E\u7EED\u60C5\u8282",
@@ -3919,7 +4072,7 @@ ${content}` }],
   });
 }
 
-// src/packages/novel_io.ts
+// examples/novelide/src/packages/novel_io.ts
 function registerTools5() {
   Tools.register("novelide:import_file", {
     description: "\u5BFC\u5165\u6587\u4EF6\uFF08\u652F\u6301 TXT/Markdown/JSON \u683C\u5F0F\uFF09",
@@ -4011,7 +4164,7 @@ function registerTools5() {
   });
 }
 
-// src/packages/novel_stats.ts
+// examples/novelide/src/packages/novel_stats.ts
 function registerTools6() {
   Tools.register("novelide:get_writing_stats", {
     description: "\u83B7\u53D6\u5199\u4F5C\u7EDF\u8BA1\uFF08\u603B\u5B57\u6570\u3001\u4ECA\u65E5\u5B57\u6570\u3001\u8FDE\u7EED\u5929\u6570\u3001\u76EE\u6807\u5B8C\u6210\u5EA6\uFF09",
@@ -4077,7 +4230,7 @@ function registerTools6() {
   });
 }
 
-// src/packages/novel_agents.ts
+// examples/novelide/src/packages/novel_agents.ts
 var AGENT_CONFIGS = {
   outline: {
     id: "outline",
@@ -4305,7 +4458,7 @@ function registerTools7() {
   });
 }
 
-// src/main.ts
+// examples/novelide/src/main.ts
 var NOVEL_BASE_ROUTE = "toolpkg:com.operit.novelide:ui";
 function registerToolPkg() {
   ToolPkg.registerNavigationEntry({

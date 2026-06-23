@@ -26,6 +26,26 @@ export default function IOPage(ctx: ComposeDslContext, workId: string): ComposeN
     setShowImportDialog(true);
   }
 
+  // 打开文件选择器
+  async function openFilePicker() {
+    try {
+      // 调用 NativeBridge 打开文件选择对话框
+      const result = await (window as any).NativeBridge?.openFilePicker();
+      if (result) {
+        // result 应该包含 uri 和 fileName
+        if (result.uri) {
+          setImportUri(result.uri);
+        }
+        if (result.fileName) {
+          setImportFileName(result.fileName);
+        }
+      }
+    } catch (error) {
+      console.error("[NovelIDE] [ERROR] 打开文件选择器失败:", error);
+      showMessage("打开文件选择器失败");
+    }
+  }
+
   async function confirmImportFile() {
     if (!importUri.trim() || !importFileName.trim()) {
       showMessage("请输入文件路径和文件名");
@@ -284,6 +304,14 @@ export default function IOPage(ctx: ComposeDslContext, workId: string): ComposeN
                 modifier: UI.Modifier.fillMaxWidth()
               },
               {}
+            ),
+            UI.Button(
+              {
+                onClick: openFilePicker,
+                modifier: UI.Modifier.fillMaxWidth().padding({vertical: 4}),
+                background: colors.secondaryContainer
+              },
+              "选择文件..."
             ),
             UI.TextField(
               {

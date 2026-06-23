@@ -6,13 +6,16 @@ export default function TomatoPage(ctx: ComposeDslContext): ComposeNode {
   const { UI } = ctx;
   const colors = ctx.MaterialTheme.colorScheme;
 
-  const WORK_MINUTES = 25;
-  const REST_MINUTES = 5;
-
+  const [workMinutes, setWorkMinutes] = ctx.useState("workMinutes", 25);
+  const [restMinutes, setRestMinutes] = ctx.useState("restMinutes", 5);
+  const [audioContextRef, setAudioContextRef] = ctx.useState("audioContextRef", null);
+  const [showSettingsDialog, setShowSettingsDialog] = ctx.useState("showSettingsDialog", false);
+  const [settingsWorkMinutes, setSettingsWorkMinutes] = ctx.useState("settingsWorkMinutes", 25);
+  const [settingsRestMinutes, setSettingsRestMinutes] = ctx.useState("settingsRestMinutes", 5);
   const [presets, setPresets] = ctx.useState("presets", []);
   const [selectedPreset, setSelectedPreset] = ctx.useState("selectedPreset", 0);
-  const [totalSeconds, setTotalSeconds] = ctx.useState("totalSeconds", WORK_MINUTES * 60);
-  const [remainingSeconds, setRemainingSeconds] = ctx.useState("remainingSeconds", WORK_MINUTES * 60);
+  const [totalSeconds, setTotalSeconds] = ctx.useState("totalSeconds", 25 * 60);
+  const [remainingSeconds, setRemainingSeconds] = ctx.useState("remainingSeconds", 25 * 60);
   const [isRunning, setIsRunning] = ctx.useState("isRunning", false);
   const [isWorkPhase, setIsWorkPhase] = ctx.useState("isWorkPhase", true);
   const [tomatoCount, setTomatoCount] = ctx.useState("tomatoCount", 0);
@@ -23,6 +26,16 @@ export default function TomatoPage(ctx: ComposeDslContext): ComposeNode {
   const [lastCompletedPreset, setLastCompletedPreset] = ctx.useState("lastCompletedPreset", "");
   const [soundEnabled, setSoundEnabled] = ctx.useState("soundEnabled", true);
   const [totalFocusMinutes, setTotalFocusMinutes] = ctx.useState("totalFocusMinutes", 0);
+
+  // 获取或创建AudioContext（复用同一个实例）
+  function getAudioContext() {
+    if (audioContextRef) {
+      return audioContextRef;
+    }
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    setAudioContextRef(ctx);
+    return ctx;
+  }
 
   // 加载预设列表
   async function loadPresets() {
@@ -39,8 +52,8 @@ export default function TomatoPage(ctx: ComposeDslContext): ComposeNode {
   function playNotificationSound(type: "work" | "rest" | "warning") {
     if (!soundEnabled) return;
     try {
-      // 使用 Web Audio API 生成提示音
-      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      // 使用 Web Audio API 生成提示音（复用同一个AudioContext）
+      const audioContext = getAudioContext();
       const oscillator = audioContext.createOscillator();
       const gainNode = audioContext.createGain();
       
@@ -66,10 +79,9 @@ export default function TomatoPage(ctx: ComposeDslContext): ComposeNode {
       gainNode.gain.value = 0.3;
       oscillator.start();
       
-      // 播放时长
+      // 播放时长（不再关闭AudioContext，复用实例）
       setTimeout(() => {
         oscillator.stop();
-        audioContext.close();
       }, type === "warning" ? 200 : 500);
     } catch (e) {
       console.log("音频播放失败:", e);
@@ -95,7 +107,7 @@ export default function TomatoPage(ctx: ComposeDslContext): ComposeNode {
     setSelectedPreset(index);
     const preset = presets[index];
     if (preset) {
-      const minutes = preset.minutes || WORK_MINUTES;
+      const minutes = preset.minutes || workMinutes;
       setTotalSeconds(minutes * 60);
       setRemainingSeconds(minutes * 60);
       setIsWorkPhase(true);
@@ -143,8 +155,8 @@ export default function TomatoPage(ctx: ComposeDslContext): ComposeNode {
     if (isWorkPhase) {
       // 工作阶段结束
       const preset = presets[selectedPreset];
-      const presetName = preset?.name || `${WORK_MINUTES}分钟`;
-      const duration = preset?.minutes || WORK_MINUTES;
+      const presetName = preset?.name || `${workMinutes}分钟`;
+      const duration = preset?.minutes || workMinutes;
       
       const newCount = tomatoCount + 1;
       setTomatoCount(newCount);
@@ -167,14 +179,14 @@ export default function TomatoPage(ctx: ComposeDslContext): ComposeNode {
       
       // 进入休息阶段
       setIsWorkPhase(false);
-      setTotalSeconds(REST_MINUTES * 60);
-      setRemainingSeconds(REST_MINUTES * 60);
+      setTotalSeconds(restMinutes * 60);
+      setRemainingSeconds(restMinutes * 60);
     } else {
       // 休息阶段结束
       playNotificationSound("rest");
       setIsWorkPhase(true);
       const preset = presets[selectedPreset];
-      const minutes = preset?.minutes || WORK_MINUTES;
+      const minutes = preset?.minutes || workMinutes;
       setTotalSeconds(minutes * 60);
       setRemainingSeconds(minutes * 60);
     }
@@ -207,13 +219,13 @@ export default function TomatoPage(ctx: ComposeDslContext): ComposeNode {
     if (isWorkPhase) {
       // 跳过工作，进入休息
       setIsWorkPhase(false);
-      setTotalSeconds(REST_MINUTES * 60);
-      setRemainingSeconds(REST_MINUTES * 60);
+      setTotalSeconds(restMinutes * 60);
+      setRemainingSeconds(restMinutes * 60);
     } else {
       // 跳过休息，进入工作
       setIsWorkPhase(true);
       const preset = presets[selectedPreset];
-      const minutes = preset?.minutes || WORK_MINUTES;
+      const minutes = preset?.minutes || workMinutes;
       setTotalSeconds(minutes * 60);
       setRemainingSeconds(minutes * 60);
     }
@@ -224,6 +236,10 @@ export default function TomatoPage(ctx: ComposeDslContext): ComposeNode {
     loadPresets();
     return () => {
       if (timerRef) clearInterval(timerRef);
+      // 组件卸载时关闭AudioContext，释放资源
+      if (audioContextRef && audioContextRef.state !== "closed") {
+        audioContextRef.close();
+      }
     };
   }, []);
 
@@ -231,6 +247,30 @@ export default function TomatoPage(ctx: ComposeDslContext): ComposeNode {
   const progressColor = isWorkPhase ? colors.primary : colors.tertiary;
   const phaseLabel = isWorkPhase ? "专注写作" : "休息一下";
   const phaseIcon = isWorkPhase ? "edit_note" : "self_improvement";
+
+  // 打开设置对话框
+  function openSettings() {
+    setSettingsWorkMinutes(workMinutes);
+    setSettingsRestMinutes(restMinutes);
+    setShowSettingsDialog(true);
+  }
+
+  // 保存设置
+  function saveSettings() {
+    setWorkMinutes(settingsWorkMinutes);
+    setRestMinutes(settingsRestMinutes);
+    setShowSettingsDialog(false);
+    // 如果当前不是运行状态，更新总时间和剩余时间
+    if (!isRunning) {
+      if (isWorkPhase) {
+        setTotalSeconds(settingsWorkMinutes * 60);
+        setRemainingSeconds(settingsWorkMinutes * 60);
+      } else {
+        setTotalSeconds(settingsRestMinutes * 60);
+        setRemainingSeconds(settingsRestMinutes * 60);
+      }
+    }
+  }
 
   // 顶部栏
   const topBar = UI.TopAppBar({
@@ -242,12 +282,90 @@ export default function TomatoPage(ctx: ComposeDslContext): ComposeNode {
         tooltip: soundEnabled ? "关闭声音" : "开启声音"
       }),
       UI.IconButton({
+        icon: "settings",
+        onClick: openSettings,
+        tooltip: "设置"
+      }),
+      UI.IconButton({
         icon: "refresh",
         onClick: resetTimer,
         tooltip: "重置"
       })
     ]
   });
+
+  // 设置对话框
+  function renderSettingsDialog() {
+    if (!showSettingsDialog) return null;
+
+    return UI.Box({
+      fillMaxSize: true,
+      background: "rgba(0,0,0,0.6)",
+      contentAlignment: "center"
+    }, [
+      UI.Card({
+        modifier: UI.Modifier.padding(32).fillMaxWidth().clickable(() => {})
+      }, UI.Column({
+        padding: 24,
+        spacing: 16
+      }, [
+        UI.Icon({ name: "timer", size: 40, tint: colors.primary }),
+        UI.Text({ text: "番茄钟设置", style: "headlineSmall", color: colors.onSurface }),
+        UI.Text({ text: "自定义工作和休息时长", style: "bodyMedium", color: colors.onSurfaceVariant }),
+        UI.Column({ spacing: 12, fillMaxWidth: true }, [
+          UI.Text({ text: `工作时长（当前：${workMinutes} 分钟）`, style: "labelLarge", color: colors.onSurface }),
+          UI.Row({ spacing: 8, verticalAlignment: "center", fillMaxWidth: true }, [
+            UI.Button({
+              onClick: () => setSettingsWorkMinutes(Math.max(1, settingsWorkMinutes - 1)),
+              variant: "outlined",
+              modifier: UI.Modifier.weight(1)
+            }, "-1"),
+            UI.Text({
+              text: `${settingsWorkMinutes} 分钟`,
+              style: "titleMedium",
+              color: colors.primary,
+              modifier: UI.Modifier.weight(2)
+            }),
+            UI.Button({
+              onClick: () => setSettingsWorkMinutes(settingsWorkMinutes + 1),
+              variant: "outlined",
+              modifier: UI.Modifier.weight(1)
+            }, "+1")
+          ]),
+          UI.Text({ text: `休息时长（当前：${restMinutes} 分钟）`, style: "labelLarge", color: colors.onSurface }),
+          UI.Row({ spacing: 8, verticalAlignment: "center", fillMaxWidth: true }, [
+            UI.Button({
+              onClick: () => setSettingsRestMinutes(Math.max(1, settingsRestMinutes - 1)),
+              variant: "outlined",
+              modifier: UI.Modifier.weight(1)
+            }, "-1"),
+            UI.Text({
+              text: `${settingsRestMinutes} 分钟`,
+              style: "titleMedium",
+              color: colors.primary,
+              modifier: UI.Modifier.weight(2)
+            }),
+            UI.Button({
+              onClick: () => setSettingsRestMinutes(settingsRestMinutes + 1),
+              variant: "outlined",
+              modifier: UI.Modifier.weight(1)
+            }, "+1")
+          ])
+        ]),
+        UI.Row({ spacing: 8, fillMaxWidth: true }, [
+          UI.Button({
+            onClick: () => setShowSettingsDialog(false),
+            variant: "outlined",
+            modifier: UI.Modifier.weight(1)
+          }, "取消"),
+          UI.Button({
+            onClick: saveSettings,
+            modifier: UI.Modifier.weight(1)
+          }, "保存")
+        ])
+      ]))
+    ]);
+  }
 
   // 完成对话框
   function renderCompleteDialog() {
@@ -494,6 +612,7 @@ export default function TomatoPage(ctx: ComposeDslContext): ComposeNode {
       statsArea,
       presetsArea
     ]),
-    renderCompleteDialog()
+    renderCompleteDialog(),
+    renderSettingsDialog()
   ]);
 }

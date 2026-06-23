@@ -14,6 +14,11 @@
   --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
   --toolbar-height: 44px;
   --statusbar-height: 40px;
+  /* 统一响应式断点变量 */
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -272,8 +277,35 @@ html, body {
 }
 
 /* ===== 响应式 ===== */
-@media (max-width: 600px) {
+/* 小屏幕设备 (<480px) */
+@media (max-width: 480px) {
   .toolbar-center { display: none; }
   #editor { padding: 16px 14px 60px; font-size: 15px; }
   .status-btn { padding: 4px 8px; font-size: 11px; }
+  #chapter-title { max-width: 100px; }
+  #word-count { min-width: 40px; }
+}
+
+/* 中等屏幕设备 (480px-768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .toolbar-center { display: flex; }
+  #editor { padding: 20px 16px 70px; font-size: 15px; }
+  .status-btn { padding: 4px 10px; font-size: 12px; }
+  #chapter-title { max-width: 120px; }
+}
+
+/* 大屏幕设备 (769px-1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .toolbar-center { display: flex; }
+  #editor { padding: 24px 20px 80px; font-size: 16px; }
+  .status-btn { padding: 4px 10px; font-size: 12px; }
+  #chapter-title { max-width: 140px; }
+}
+
+/* 超大屏幕设备 (>1024px) */
+@media (min-width: 1025px) {
+  .toolbar-center { display: flex; }
+  #editor { padding: 24px 20px 80px; font-size: 16px; }
+  .status-btn { padding: 4px 10px; font-size: 12px; }
+  #chapter-title { max-width: 180px; }
 }

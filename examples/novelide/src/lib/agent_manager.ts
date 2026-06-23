@@ -133,6 +133,12 @@ const AVAILABLE_AGENTS: AgentConfig[] = [
 export class AgentManager {
   private sessions: Map<string, AgentSession> = new Map();
   private terminalInitialized: boolean = false;
+  private cleanupIntervalId: ReturnType<typeof setInterval> | null = null;
+  
+  // 会话过期时间（30分钟）
+  private readonly SESSION_EXPIRY_MS = 30 * 60 * 1000;
+  // 自动清理间隔（5分钟检查一次）
+  private readonly CLEANUP_INTERVAL_MS = 5 * 60 * 1000;
 
   /**
    * 获取所有可用 Agent 列表
@@ -394,15 +400,59 @@ export class AgentManager {
   }
 
   /**
-   * 清理过期会话（超过1小时未活跃）
+   * 清理过期会话（超过30分钟未活跃）
    */
   async cleanupSessions(): Promise<void> {
-    const oneHourAgo = Date.now() - 60 * 60 * 1000;
+    const expiryTime = Date.now() - this.SESSION_EXPIRY_MS;
     for (const [id, session] of this.sessions) {
-      if (session.lastActiveAt < oneHourAgo) {
+      if (session.lastActiveAt < expiryTime) {
         await this.closeSession(id);
       }
     }
+  }
+
+  /**
+   * 启动自动清理会话
+   */
+  startAutoCleanup(): void {
+    if (this.cleanupIntervalId) {
+      return; // 已经启动
+    }
+    
+    this.cleanupIntervalId = setInterval(async () => {
+      try {
+        await this.cleanupSessions();
+      } catch (error) {
+        console.error("自动清理会话失败:", error);
+      }
+    }, this.CLEANUP_INTERVAL_MS);
+    
+    console.log(`自动清理会话已启动，每 ${this.CLEANUP_INTERVAL_MS / 1000 / 60} 分钟检查一次`);
+  }
+
+  /**
+   * 停止自动清理会话
+   */
+  stopAutoCleanup(): void {
+    if (this.cleanupIntervalId) {
+      clearInterval(this.cleanupIntervalId);
+      this.cleanupIntervalId = null;
+      console.log("自动清理会话已停止");
+    }
+  }
+
+  /**
+   * 销毁管理器，清理所有资源
+   */
+  async destroy(): Promise<void> {
+    this.stopAutoCleanup();
+    
+    // 关闭所有会话
+    for (const [id, session] of this.sessions) {
+      await this.closeSession(id);
+    }
+    
+    this.sessions.clear();
   }
 }
 
@@ -415,6 +465,8 @@ let globalAgentManager: AgentManager | null = null;
 export function getAgentManager(): AgentManager {
   if (!globalAgentManager) {
     globalAgentManager = new AgentManager();
+    // 启动自动清理会话
+    globalAgentManager.startAutoCleanup();
   }
   return globalAgentManager;
 }

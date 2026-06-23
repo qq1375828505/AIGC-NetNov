@@ -9,10 +9,12 @@ data class NovelItem(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),
     val workId: String,
     val name: String,
+    val type: String = "",
     val grade: String = "",
     val holder: String = "",
     val isKey: Boolean = false,
     val description: String = "",
+    val notes: String = "",
     val tags: String = "",
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis()

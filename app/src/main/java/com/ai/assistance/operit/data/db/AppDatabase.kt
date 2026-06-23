@@ -46,7 +46,7 @@ import com.ai.assistance.novelide.data.migration.TomatoPresetSeeder
         NovelEventParticipant::class,
         OutlineNode::class
     ],
-    version = 22,
+    version = 23,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -277,6 +277,32 @@ abstract class AppDatabase : RoomDatabase() {
                 }
             }
 
+        private val MIGRATION_22_23 =
+            object : Migration(22, 23) {
+                override fun migrate(db: SupportSQLiteDatabase) {
+                    // NovelCharacter: 添加 gender, age, notes
+                    try { db.execSQL("ALTER TABLE `novel_characters` ADD COLUMN `gender` TEXT NOT NULL DEFAULT ''") } catch (_: Exception) {}
+                    try { db.execSQL("ALTER TABLE `novel_characters` ADD COLUMN `age` TEXT NOT NULL DEFAULT ''") } catch (_: Exception) {}
+                    try { db.execSQL("ALTER TABLE `novel_characters` ADD COLUMN `notes` TEXT NOT NULL DEFAULT ''") } catch (_: Exception) {}
+                    // NovelFaction: 添加 type, notes
+                    try { db.execSQL("ALTER TABLE `novel_factions` ADD COLUMN `type` TEXT NOT NULL DEFAULT ''") } catch (_: Exception) {}
+                    try { db.execSQL("ALTER TABLE `novel_factions` ADD COLUMN `notes` TEXT NOT NULL DEFAULT ''") } catch (_: Exception) {}
+                    // NovelItem: 添加 type, notes
+                    try { db.execSQL("ALTER TABLE `novel_items` ADD COLUMN `type` TEXT NOT NULL DEFAULT ''") } catch (_: Exception) {}
+                    try { db.execSQL("ALTER TABLE `novel_items` ADD COLUMN `notes` TEXT NOT NULL DEFAULT ''") } catch (_: Exception) {}
+                    // NovelSetting: 添加 category, notes
+                    try { db.execSQL("ALTER TABLE `novel_settings` ADD COLUMN `category` TEXT NOT NULL DEFAULT ''") } catch (_: Exception) {}
+                    try { db.execSQL("ALTER TABLE `novel_settings` ADD COLUMN `notes` TEXT NOT NULL DEFAULT ''") } catch (_: Exception) {}
+                    // PlotHook: 添加 title, notes
+                    try { db.execSQL("ALTER TABLE `novel_plot_hooks` ADD COLUMN `title` TEXT NOT NULL DEFAULT ''") } catch (_: Exception) {}
+                    try { db.execSQL("ALTER TABLE `novel_plot_hooks` ADD COLUMN `notes` TEXT NOT NULL DEFAULT ''") } catch (_: Exception) {}
+                    // ReferenceMaterial: 添加 type, url, notes
+                    try { db.execSQL("ALTER TABLE `novel_references` ADD COLUMN `type` TEXT NOT NULL DEFAULT ''") } catch (_: Exception) {}
+                    try { db.execSQL("ALTER TABLE `novel_references` ADD COLUMN `url` TEXT NOT NULL DEFAULT ''") } catch (_: Exception) {}
+                    try { db.execSQL("ALTER TABLE `novel_references` ADD COLUMN `notes` TEXT NOT NULL DEFAULT ''") } catch (_: Exception) {}
+                }
+            }
+
         // 定义从版本2到3的迁移
         private val MIGRATION_2_3 =
             object : Migration(2, 3) {
@@ -395,7 +421,8 @@ abstract class AppDatabase : RoomDatabase() {
                                 MIGRATION_18_19,
                                 MIGRATION_19_20,
                                 MIGRATION_20_21,
-                                MIGRATION_21_22
+                                MIGRATION_21_22,
+                                MIGRATION_22_23
                             )
                             .addCallback(object : RoomDatabase.Callback() {
                                 override fun onCreate(db: SupportSQLiteDatabase) {

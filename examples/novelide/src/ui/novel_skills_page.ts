@@ -88,11 +88,13 @@ export default function SkillsPage(ctx: ComposeDslContext): ComposeNode {
     actions: [
       UI.IconButton({
         icon: "sync",
-        onClick: syncFromBackend
+        onClick: syncFromBackend,
+        contentDescription: "从后端同步Skill"
       }),
       UI.IconButton({
         icon: "refresh",
-        onClick: loadSkills
+        onClick: loadSkills,
+        contentDescription: "刷新Skill列表"
       })
     ]
   });

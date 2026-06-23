@@ -76,7 +76,8 @@ export default function AgentsPage(ctx: ComposeDslContext): ComposeNode {
     actions: [
       UI.IconButton({
         icon: "refresh",
-        onClick: loadSessions
+        onClick: loadSessions,
+        contentDescription: "刷新会话列表"
       })
     ]
   });
@@ -127,7 +128,8 @@ export default function AgentsPage(ctx: ComposeDslContext): ComposeNode {
         ]),
         selectedAgent === agent.id ? UI.Icon({
           icon: "check_circle",
-          tint: colors.primary
+          tint: colors.primary,
+          contentDescription: `${agent.name}已选中`
         }) : null
       ].filter(Boolean)))
     )

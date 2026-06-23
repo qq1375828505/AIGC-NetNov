@@ -20,7 +20,14 @@ export default function WorksPage(ctx: ComposeDslContext): ComposeNode {
     setLoading(true);
     try {
       const result = await Tools.callNative("getNovelWorks", []);
-      setWorks(JSON.parse(result));
+      let parsedWorks: any[] = [];
+      try {
+        parsedWorks = JSON.parse(result);
+      } catch (parseError) {
+        console.error("[NovelIDE] [ERROR] 解析作品数据失败:", parseError);
+        parsedWorks = [];
+      }
+      setWorks(Array.isArray(parsedWorks) ? parsedWorks : []);
     } catch (error) {
       console.error("[NovelIDE] [ERROR] 加载作品失败:", error);
     } finally {

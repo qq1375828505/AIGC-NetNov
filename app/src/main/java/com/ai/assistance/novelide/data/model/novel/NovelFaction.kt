@@ -9,9 +9,11 @@ data class NovelFaction(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),
     val workId: String,
     val name: String,
+    val type: String = "",
     val leader: String = "",
     val powerLevel: String = "",
     val description: String = "",
+    val notes: String = "",
     val tags: String = "",
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis()

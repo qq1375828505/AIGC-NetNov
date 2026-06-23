@@ -145,6 +145,22 @@ declare global {
       navigateToChapter(chapterId: string): void;
       getPendingNavigation(): string;
 
+      // 大纲节点
+      getOutlineNodes(workId: string): string;
+      createOutlineNode(workId: string, title: string, content: string, parentId: string): string;
+      updateOutlineNode(nodeId: string, title: string, content: string): string;
+      deleteOutlineNode(nodeId: string): string;
+
+      // Agent
+      getAvailableAgents(): string;
+      createAgentSession(agentId: string): string;
+      sendAgentTask(agentId: string, task: string): string;
+      getAgentResult(agentId: string): string;
+
+      // 技能
+      getAvailableSkills(): string;
+      applySkill(skillId: string): string;
+
       // 异步操作
       getAsyncResult(callId: string): string;
     };
@@ -710,4 +726,211 @@ export const NovelBridge = {
     const result = window.NativeBridge.getWork(workId);
     return JSON.parse(result);
   },
+
+  // 大纲节点
+  async getOutlineNodes(workId: string): Promise<any[]> {
+    const result = window.NativeBridge.getOutlineNodes(workId);
+    return JSON.parse(result);
+  },
+
+  async createOutlineNode(workId: string, title: string, content: string, parentId: string): Promise<string> {
+    return window.NativeBridge.createOutlineNode(workId, title, content, parentId);
+  },
+
+  async updateOutlineNode(nodeId: string, title: string, content: string): Promise<boolean> {
+    const result = window.NativeBridge.updateOutlineNode(nodeId, title, content);
+    return parseSuccess(result);
+  },
+
+  async deleteOutlineNode(nodeId: string): Promise<boolean> {
+    const result = window.NativeBridge.deleteOutlineNode(nodeId);
+    return parseSuccess(result);
+  },
+
+  // Agent
+  async getAvailableAgents(): Promise<any[]> {
+    const result = window.NativeBridge.getAvailableAgents();
+    return JSON.parse(result);
+  },
+
+  async createAgentSession(agentId: string): Promise<string> {
+    const result = window.NativeBridge.createAgentSession(agentId);
+    return JSON.parse(result);
+  },
+
+  async sendAgentTask(agentId: string, task: string): Promise<any> {
+    const result = window.NativeBridge.sendAgentTask(agentId, task);
+    return JSON.parse(result);
+  },
+
+  async getAgentResult(agentId: string): Promise<any> {
+    const result = window.NativeBridge.getAgentResult(agentId);
+    return JSON.parse(result);
+  },
+
+  // 技能
+  async getAvailableSkills(): Promise<any[]> {
+    const result = window.NativeBridge.getAvailableSkills();
+    return JSON.parse(result);
+  },
+
+  async applySkill(skillId: string): Promise<any> {
+    const result = window.NativeBridge.applySkill(skillId);
+    return JSON.parse(result);
+  },
 };
+
+/**
+ * UI 桥接层 - HTML 端 JavaScript 调用封装
+ * 在 HTML 中通过 window.NovelUI 调用
+ */
+(window as any).NovelUI = {
+  // ==================== 作品 ====================
+  async getWorks() {
+    const result = window.NativeBridge.getNovelWorks();
+    return JSON.parse(result);
+  },
+
+  async createWork(title: string, genre: string = '', description: string = '') {
+    return window.NativeBridge.createWork(title, genre, description);
+  },
+
+  async deleteWork(workId: string) {
+    return window.NativeBridge.deleteWork(workId);
+  },
+
+  // ==================== 章节 ====================
+  async getChapters(workId: string) {
+    const result = window.NativeBridge.getChapters(workId);
+    return JSON.parse(result);
+  },
+
+  async createChapter(workId: string, title: string) {
+    return window.NativeBridge.createChapter(workId, title, 0);
+  },
+
+  async getChapterContent(chapterId: string) {
+    return window.NativeBridge.getChapterContent(chapterId);
+  },
+
+  async saveChapter(chapterId: string, content: string) {
+    return window.NativeBridge.saveChapterContent(chapterId, content, content.length);
+  },
+
+  async deleteChapter(chapterId: string) {
+    return window.NativeBridge.deleteChapter(chapterId);
+  },
+
+  // ==================== 资料 ====================
+  async getCharacters(workId: string) {
+    const result = window.NativeBridge.getCharacters(workId);
+    return JSON.parse(result);
+  },
+
+  async createCharacter(workId: string, name: string, role: string) {
+    return window.NativeBridge.createCharacter(workId, name, role);
+  },
+
+  async deleteCharacter(characterId: string) {
+    return window.NativeBridge.deleteCharacter(characterId);
+  },
+
+  async getSettings(workId: string) {
+    const result = window.NativeBridge.getSettings(workId);
+    return JSON.parse(result);
+  },
+
+  async getLocations(workId: string) {
+    const result = window.NativeBridge.getLocations(workId);
+    return JSON.parse(result);
+  },
+
+  async getFactions(workId: string) {
+    const result = window.NativeBridge.getFactions(workId);
+    return JSON.parse(result);
+  },
+
+  async getItems(workId: string) {
+    const result = window.NativeBridge.getItems(workId);
+    return JSON.parse(result);
+  },
+
+  async getPlotHooks(workId: string) {
+    const result = window.NativeBridge.getPlotHooks(workId);
+    return JSON.parse(result);
+  },
+
+  async getReferences(workId: string) {
+    const result = window.NativeBridge.getReferences(workId);
+    return JSON.parse(result);
+  },
+
+  async getTodos(workId: string) {
+    const result = window.NativeBridge.getTodos(workId);
+    return JSON.parse(result);
+  },
+
+  // ==================== 关系图 ====================
+  async getRelationships(workId: string) {
+    const result = window.NativeBridge.getCharacterRelationships(workId);
+    return JSON.parse(result);
+  },
+
+  async getEvents(workId: string) {
+    const result = window.NativeBridge.getNovelEvents(workId);
+    return JSON.parse(result);
+  },
+
+  // ==================== 番茄 ====================
+  async getTomatoPresets() {
+    const result = window.NativeBridge.getTomatoPresets();
+    return JSON.parse(result);
+  },
+
+  // ==================== 统计 ====================
+  async getStats(workId: string) {
+    const result = window.NativeBridge.getWritingStats(workId);
+    return JSON.parse(result);
+  },
+
+  // ==================== 工具 ====================
+  async showToast(message: string, duration: string = 'short') {
+    // 调用原生 Toast
+    if ((window.NativeBridge as any).showToast) {
+      (window.NativeBridge as any).showToast(message, duration);
+    }
+  },
+
+  async navigate(route: string) {
+    // 调用原生导航
+    if ((window.NativeBridge as any).navigate) {
+      (window.NativeBridge as any).navigate(route);
+    }
+  }
+};
+
+/**
+ * 自动保存工具
+ */
+(window as any).AutoSave = {
+  timer: null as ReturnType<typeof setTimeout> | null,
+  
+  start(chapterId: string, content: string, delay: number = 3000) {
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
+    this.timer = setTimeout(async () => {
+      await window.NativeBridge.saveChapterContent(chapterId, content, content.length);
+      this.timer = null;
+    }, delay);
+  },
+  
+  cancel() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+  }
+};
+
+console.log('NovelUI bridge initialized');

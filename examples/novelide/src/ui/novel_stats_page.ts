@@ -94,7 +94,7 @@ export default function StatsPage(ctx: ComposeDslContext): ComposeNode {
       spacing: 8,
       contentAlignment: "center"
     }, [
-      UI.Icon({ name: icon, size: 28, tint }),
+      UI.Icon({ name: icon, size: 28, tint, contentDescription: `${label}图标` }),
       UI.Text({ text: value, style: "headlineMedium", color: tint }),
       UI.Text({ text: label, style: "bodySmall", color: colors.onSurfaceVariant }),
       subtitle ? UI.Text({ text: subtitle, style: "labelSmall", color: colors.outline }) : null
@@ -344,7 +344,10 @@ export default function StatsPage(ctx: ComposeDslContext): ComposeNode {
 
   // 主内容
   const content = loading
-    ? UI.Box({ fillMaxSize: true, contentAlignment: "center" }, UI.CircularProgressIndicator())
+    ? UI.Box({ fillMaxSize: true, contentAlignment: "center" }, [
+        UI.CircularProgressIndicator(),
+        UI.Text({ text: "加载统计数据...", style: "bodySmall", color: colors.onSurfaceVariant })
+      ])
     : UI.LazyColumn({
         fillMaxSize: true,
         contentPadding: 12,
@@ -409,7 +412,8 @@ export default function StatsPage(ctx: ComposeDslContext): ComposeNode {
       actions: [
         UI.IconButton({
           icon: "refresh",
-          onClick: loadStats
+          onClick: loadStats,
+          contentDescription: "刷新统计数据"
         })
       ]
     }),
