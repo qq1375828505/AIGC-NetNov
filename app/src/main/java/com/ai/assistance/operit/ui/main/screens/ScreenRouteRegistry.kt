@@ -358,7 +358,7 @@ object ScreenRouteRegistry {
             ),
             hostEntryDefinition(
                 entryId = "hidden.user_preferences_guide",
-                screen = Screen.UserPreferencesGuide(),
+                screen = Screen.UserPreferencesGuide,
                 launchNavItem = NavItem.UserPreferencesGuide
             ),
             hostEntryDefinition(

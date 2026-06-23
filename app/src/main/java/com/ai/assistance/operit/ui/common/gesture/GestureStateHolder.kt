@@ -21,10 +21,13 @@ class GestureStateHolder {
     
     var gestureTranslationY: Float = 0.0f
     
+    var isChatScreenGestureConsumed: Boolean = false
+    
     fun resetGestureState() {
         gestureScale = 1.0f
         gestureTranslationX = 0.0f
         gestureTranslationY = 0.0f
+        isChatScreenGestureConsumed = false
     }
     
     companion object {

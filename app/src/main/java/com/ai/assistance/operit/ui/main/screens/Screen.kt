@@ -23,7 +23,7 @@ sealed class Screen {
     
     open val uiModuleId: String = ""
     
-    fun stableScreenKey(): String? = stableScreenKey.ifBlank { null }
+    fun resolvedStableScreenKey(): String? = stableScreenKey.ifBlank { null }
     
     @Composable
     open fun Content(
@@ -32,8 +32,8 @@ sealed class Screen {
         onGoBack: () -> Unit = {},
         hasBackgroundImage: Boolean = false,
         onLoading: (Boolean) -> Unit = {},
-        onTitleChange: (String) -> Unit = {},
-        onSubtitleChange: (String) -> Unit = {}
+        onError: (String) -> Unit = {},
+        onGestureConsumed: (Boolean) -> Unit = {}
     ) {}
     
     object AiChat : Screen()
@@ -73,13 +73,15 @@ sealed class Screen {
     class ToolPkgComposeDsl(
         override val containerPackageName: String = "",
         override val uiModuleId: String = "",
-        override val title: String = ""
+        override val title: String = "",
+        override val keepAlive: Boolean = false
     ) : Screen()
     
     class ToolPkgPluginConfig(
         override val containerPackageName: String = "",
         override val uiModuleId: String = "",
-        override val title: String = ""
+        override val title: String = "",
+        override val keepAlive: Boolean = false
     ) : Screen()
     
     open fun getTitle(): String = title

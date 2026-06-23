@@ -226,7 +226,7 @@ fun AppContent(
     val currentScreenKey =
         remember(currentRouteEntry.instanceId, currentScreen) {
             if (currentScreen.keepAlive) {
-                currentScreen.stableScreenKey() ?: currentRouteEntry.instanceId
+                currentScreen.resolvedStableScreenKey() ?: currentRouteEntry.instanceId
             } else {
                 currentRouteEntry.instanceId
             }
