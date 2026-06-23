@@ -1,15 +1,11 @@
 package com.ai.assistance.operit.ui.main.screens
 
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import com.ai.assistance.operit.ui.common.NavItem
 
-/**
- * Stub implementation of Screen sealed class.
- * This is a placeholder to fix compilation errors.
- * TODO: Replace with actual implementation
- */
 sealed class Screen {
-    // Common properties for all screens
     @StringRes
     open val titleRes: Int? = null
     
@@ -19,7 +15,27 @@ sealed class Screen {
     
     open val stableScreenKey: String = ""
     
-    // Screen subclasses
+    open val keepAlive: Boolean = false
+    
+    open val title: String = ""
+    
+    open val containerPackageName: String = ""
+    
+    open val uiModuleId: String = ""
+    
+    fun stableScreenKey(): String? = stableScreenKey.ifBlank { null }
+    
+    @Composable
+    open fun Content(
+        navController: NavHostController,
+        navigateTo: (Screen) -> Unit = {},
+        onGoBack: () -> Unit = {},
+        hasBackgroundImage: Boolean = false,
+        onLoading: (Boolean) -> Unit = {},
+        onTitleChange: (String) -> Unit = {},
+        onSubtitleChange: (String) -> Unit = {}
+    ) {}
+    
     object AiChat : Screen()
     object AssistantConfig : Screen()
     object MemoryBase : Screen()
@@ -54,6 +70,17 @@ sealed class Screen {
     object ChatHistorySettings : Screen()
     object TerminalSetup : Screen()
     
-    // Helper method to get title
-    open fun getTitle(): String = ""
+    class ToolPkgComposeDsl(
+        override val containerPackageName: String = "",
+        override val uiModuleId: String = "",
+        override val title: String = ""
+    ) : Screen()
+    
+    class ToolPkgPluginConfig(
+        override val containerPackageName: String = "",
+        override val uiModuleId: String = "",
+        override val title: String = ""
+    ) : Screen()
+    
+    open fun getTitle(): String = title
 }
