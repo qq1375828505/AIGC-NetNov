@@ -13,7 +13,7 @@ fun ModelApiSettingsSection(
     configManager: Any? = null,
     saveCoordinator: Any? = null,
     showNotification: (String) -> Unit = {},
-    navigateToMnnModelDownload: () -> Unit = {}
+    navigateToMnnModelDownload: (() -> Unit)? = null
 ) {
     // Stub implementation - empty composable
 }

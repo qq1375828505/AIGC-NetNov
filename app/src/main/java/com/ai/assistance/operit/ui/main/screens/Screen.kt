@@ -2,7 +2,7 @@ package com.ai.assistance.operit.ui.main.screens
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
 import com.ai.assistance.operit.ui.common.NavItem
 
 sealed class Screen {
@@ -27,7 +27,7 @@ sealed class Screen {
     
     @Composable
     open fun Content(
-        navController: NavHostController,
+        navController: NavController,
         navigateTo: (Screen) -> Unit = {},
         onGoBack: () -> Unit = {},
         hasBackgroundImage: Boolean = false,
