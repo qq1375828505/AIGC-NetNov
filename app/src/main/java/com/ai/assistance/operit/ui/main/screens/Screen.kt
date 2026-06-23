@@ -80,9 +80,6 @@ sealed class Screen {
     class ToolPkgPluginConfig(
         override val containerPackageName: String = "",
         override val uiModuleId: String = "",
-        override val title: String = "",
-        override val keepAlive: Boolean = false
+        override val title: String = ""
     ) : Screen()
-    
-    open fun getTitle(): String = title
 }
