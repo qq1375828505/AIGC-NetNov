@@ -49,7 +49,22 @@ class PackageManager private constructor(
         val toolboxUiModules: List<ToolPkgToolboxUiModule> = emptyList(),
         val subpackages: List<ToolPkgSubpackageInfo> = emptyList(),
         val workflowTemplates: List<ToolPkgWorkflowTemplate> = emptyList(),
-        val workspaceTemplates: List<ToolPkgWorkspaceTemplate> = emptyList()
+        val workspaceTemplates: List<ToolPkgWorkspaceTemplate> = emptyList(),
+        val resources: List<ToolPkgContainerResource> = emptyList(),
+        val uiModules: List<ToolPkgUiModuleInfo> = emptyList(),
+        val desktopWidgets: List<ToolPkgDesktopWidget> = emptyList()
+    )
+
+    data class ToolPkgContainerResource(
+        val key: String = "",
+        val path: String = "",
+        val mime: String = ""
+    )
+
+    data class ToolPkgUiModuleInfo(
+        val id: String = "",
+        val runtime: String = "",
+        val screen: String = ""
     )
     
     data class PackageLoadErrorInfo(
@@ -152,6 +167,12 @@ class PackageManager private constructor(
     
     // Internal storage for package containers
     val toolPkgContainersInternal: MutableMap<String, ToolPkgContainerDetails> = mutableMapOf()
+
+    // Internal map of subpackage packageName -> info
+    val toolPkgSubpackageByPackageNameInternal: MutableMap<String, ToolPkgSubpackageInfo> = mutableMapOf()
+
+    // Internal context accessor for facade helpers (matches the legacy field name)
+    val contextInternal: android.content.Context get() = appContext
     
     // Package management methods
     fun getEnabledPackageNames(): List<String> = emptyList()

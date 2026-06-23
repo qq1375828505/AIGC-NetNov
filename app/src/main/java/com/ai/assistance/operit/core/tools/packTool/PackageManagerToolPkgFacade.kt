@@ -14,6 +14,12 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 
+// In this build the facade always operates on the full container details.
+// Aliasing it to ToolPkgContainerRuntime keeps the existing helper signatures
+// (`container: ToolPkgContainerRuntime`) working while still letting them
+// read the rich fields (resources, uiModules, workflowTemplates, ...).
+internal typealias ToolPkgContainerRuntime = PackageManager.ToolPkgContainerDetails
+
 internal class PackageManagerToolPkgFacade(
     private val packageManager: PackageManager
 ) {
