@@ -1,7 +1,5 @@
 package com.ai.assistance.operit.core.tools.packTool
 
-typealias ToolPkgContainerRuntime = com.ai.assistance.operit.core.tools.packTool.PackageManager.ToolPkgContainerRuntime
-
 import android.content.Context
 import android.provider.DocumentsContract
 import com.ai.assistance.operit.core.tools.LocalizedText
@@ -16,6 +14,8 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.hjson.JsonValue
+
+typealias ToolPkgContainerRuntime = com.ai.assistance.operit.core.tools.packTool.PackageManager.ToolPkgContainerRuntime
 
 private val TOOLPKG_DIRECTORY_RESOURCE_MIME_TYPES =
     setOf(
