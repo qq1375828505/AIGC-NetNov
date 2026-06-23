@@ -432,10 +432,11 @@ dependencies {
         resolutionStrategy {
             // Enforce Kotlin 2.1.21 for all stdlib artifacts to avoid
             // "incompatible metadata version" errors from transitive deps.
-            force("org.jetbrains.kotlin:kotlin-stdlib:${libs.versions.kotlin.get()}")
-            force("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${libs.versions.kotlin.get()}")
-            force("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${libs.versions.kotlin.get()}")
-            force("org.jetbrains.kotlin:kotlin-reflect:${libs.versions.kotlin.get()}")
+            val kotlinVersion = "2.1.21"
+            force("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
+            force("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
+            force("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
+            force("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
         }
     }
 
