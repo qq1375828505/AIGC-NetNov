@@ -432,7 +432,7 @@ fun AppContent(
                                         )
                                     else ->
                                         screenSnapshot.Content(
-                                            navController = navController,
+                                            navController = navController as androidx.navigation.NavHostController,
                                             navigateTo = onScreenChange,
                                             onGoBack = onGoBack,
                                             hasBackgroundImage = hasBackgroundImage,

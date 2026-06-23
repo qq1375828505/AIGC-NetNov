@@ -44,8 +44,8 @@ fun PackageDetailsDialog(
     var showDeleteConfirmDialog by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
-    val resolvedPackage by produceState<ToolPackage?>(initialValue = toolPackage, packageName, toolPackage) {
-        value = toolPackage
+    val resolvedPackage by produceState<PackageManager.ToolPkgContainerDetails?>(initialValue = null, packageName, toolPackage) {
+        value = null
 
         val resolved =
             try {
@@ -95,20 +95,19 @@ fun PackageDetailsDialog(
             }
     }
 
-    val metaPackage = toolPackage ?: resolvedPackage
     val isToolPkgContainer = toolPkgDetails != null
     val packageDisplayName =
         toolPkgDetails?.displayName?.takeIf { it.isNotBlank() }
-            ?: metaPackage
+            ?: toolPackage
                 ?.displayName
                 ?.resolve(java.util.Locale.getDefault().getLanguage())
                 ?.trim()
                 ?.takeIf { it.isNotBlank() }
             ?: packageName
 
-    val states = (toolPackage ?: resolvedPackage)?.states.orEmpty()
+    val states = toolPackage?.states.orEmpty()
     val hasStates = states.isNotEmpty()
-    val baseTools = (toolPackage ?: resolvedPackage)?.tools.orEmpty()
+    val baseTools = (toolPackage?.tools ?: resolvedPackage?.tools).orEmpty()
     val contentScrollState = rememberScrollState()
 
     var selectedTabIndex by remember(packageName, activeStateId, hasStates) {

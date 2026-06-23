@@ -11,7 +11,7 @@ object TomatoPresetSeeder {
                 """INSERT OR IGNORE INTO `tomato_presets` 
                    (`id`, `name`, `category`, `description`, `workMinutes`, `breakMinutes`, `icon`, `systemPrompt`, `tags`, `isBuiltin`, `createdAt`, `updatedAt`) 
                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-                arrayOf(
+                arrayOf<Any?>(
                     preset.id, preset.name, preset.category, preset.description,
                     preset.workMinutes, preset.breakMinutes, preset.icon,
                     preset.systemPrompt, preset.tags, if (preset.isBuiltin) 1 else 0,

@@ -633,7 +633,7 @@ fun ModelConfigScreen(
                         configManager = configManager,
                         saveCoordinator = saveCoordinator,
                         showNotification = { message -> showNotification(message) },
-                        navigateToMnnModelDownload = navigateToMnnModelDownload
+                        navigateToMnnModelDownload = navigateToMnnModelDownload ?: {}
                     )
                 }
 

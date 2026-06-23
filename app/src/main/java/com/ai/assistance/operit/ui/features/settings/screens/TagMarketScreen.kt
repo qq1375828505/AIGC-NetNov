@@ -148,7 +148,7 @@ fun TagMarketScreen(onBackPressed: () -> Unit) {
                 ) {
                     Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp))
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = context.getString(com.ai.assistance.operit.R.string.save_successful), style = MaterialTheme.typography.bodyMedium)
+                    Text(text = context.getString(R.string.save_successful), style = MaterialTheme.typography.bodyMedium)
                 }
             }
         }

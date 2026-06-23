@@ -673,7 +673,7 @@ fun ShizukuDemoScreen(
                     onToggleWizard = { viewModel.toggleOperitTerminalWizard() },
                     onOpenTerminalScreen = { 
                         // 跳转到TerminalSetup，直接显示配置界面
-                        navigateTo?.invoke(Screen.TerminalSetup)
+                        navigateTo?.navigateTo(Screen.TerminalSetup)
                     }
                 )
             }

@@ -367,7 +367,7 @@ class WorkflowViewModel(application: Application) : AndroidViewModel(application
             }.fold(
                 onSuccess = {
                     loadWorkflows(showLoading = false)
-                    onSuccess(it)
+                    (it as? Workflow)?.let { workflow -> onSuccess(workflow) }
                 },
                 onFailure = {
                     error = it.message ?: app.getString(R.string.workflow_create_failed)
