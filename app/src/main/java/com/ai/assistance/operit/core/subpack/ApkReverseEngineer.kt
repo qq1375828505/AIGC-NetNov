@@ -378,7 +378,7 @@ class ApkReverseEngineer(private val context: Context) {
 
             val entry = ZipArchiveEntry(entryName)
             entry.method = ZipArchiveEntry.DEFLATED
-            entry.time = file.lastModified().toString()
+            entry.time = file.lastModified()
 
             zipOut.putArchiveEntry(entry)
             FileInputStream(file).use { input -> IOUtils.copy(input, zipOut) }

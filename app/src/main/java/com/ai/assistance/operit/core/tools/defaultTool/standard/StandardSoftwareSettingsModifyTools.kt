@@ -2,8 +2,6 @@ package com.ai.assistance.operit.core.tools.defaultTool.standard
 
 import android.content.Context
 import com.ai.assistance.operit.api.chat.EnhancedAIService
-
-private fun String.resolve(@Suppress("UNUSED_PARAMETER") language: String): String = this
 import com.ai.assistance.operit.api.chat.llmprovider.ModelConfigConnectionTester
 import com.ai.assistance.operit.api.speech.SpeechServiceFactory
 import com.ai.assistance.operit.api.voice.HttpTtsResponsePipelineStep
@@ -38,6 +36,7 @@ import com.ai.assistance.operit.core.tools.StringResultData
 import com.ai.assistance.operit.core.tools.javascript.JsEngine
 import com.ai.assistance.operit.core.tools.javascript.JsExecutionTraceRecorder
 import com.ai.assistance.operit.core.tools.packTool.PackageManager
+import com.ai.assistance.operit.core.tools.packTool.resolve
 import com.ai.assistance.operit.data.model.AITool
 import com.ai.assistance.operit.data.model.ApiProviderType
 import com.ai.assistance.operit.data.model.FunctionType
@@ -72,6 +71,8 @@ import java.net.ConnectException
 import java.net.ProtocolException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+
+private fun String.resolve(@Suppress("UNUSED_PARAMETER") language: String): String = this
 
 /** 软件设置修改工具（包含 MCP 重启与日志收集） */
 class StandardSoftwareSettingsModifyTools(private val context: Context) {
@@ -279,14 +280,18 @@ class StandardSoftwareSettingsModifyTools(private val context: Context) {
         }
 
         val previousEnabled = packageManager.isPackageEnabled(packageName)
-        val operationMessage =
-            if (enabled) {
-                packageManager.enablePackage(packageName)
-            } else {
-                packageManager.disablePackage(packageName)
-            }
+        if (enabled) {
+            packageManager.enablePackage(packageName)
+        } else {
+            packageManager.disablePackage(packageName)
+        }
         val currentEnabled = packageManager.isPackageEnabled(packageName)
         val success = currentEnabled == enabled
+        val operationMessage = if (success) {
+            "Package $packageName ${if (enabled) "enabled" else "disabled"} successfully"
+        } else {
+            "Failed to ${if (enabled) "enable" else "disable"} package $packageName"
+        }
 
         return ToolResult(
             toolName = tool.name,

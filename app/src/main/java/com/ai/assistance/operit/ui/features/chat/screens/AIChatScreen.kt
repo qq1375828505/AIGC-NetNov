@@ -79,7 +79,7 @@ import com.ai.assistance.operit.ui.features.chat.viewmodel.ChatViewModel
 import com.ai.assistance.operit.ui.main.LocalTopBarActions
 import com.ai.assistance.operit.ui.main.PendingChatDraftHandler
 import com.ai.assistance.operit.ui.main.components.LocalAppBarContentColor
-import com.ai.assistance.operit.ui.main.screens.GestureStateHolder
+import com.ai.assistance.operit.ui.common.gesture.GestureStateHolder
 import com.ai.assistance.operit.ui.main.SharedFileHandler
 import java.io.File
 import kotlinx.coroutines.flow.distinctUntilChanged

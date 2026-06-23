@@ -229,13 +229,13 @@ fun AvatarConfigSection(
 
                 if (currentAvatarConfig.avatarType == AvatarType.MMD) {
                     val cameraPitch =
-                        currentSettings.customSettings[AvatarSettingKeys.MMD_INITIAL_ROTATION_X] ?: 0f
+                        (currentSettings.customSettings[AvatarSettingKeys.MMD_INITIAL_ROTATION_X] as? Float) ?: 0f
                     val initialRotationY =
-                        currentSettings.customSettings[AvatarSettingKeys.MMD_INITIAL_ROTATION_Y] ?: 0f
+                        (currentSettings.customSettings[AvatarSettingKeys.MMD_INITIAL_ROTATION_Y] as? Float) ?: 0f
                     val cameraDistanceScale =
-                        currentSettings.customSettings[AvatarSettingKeys.MMD_CAMERA_DISTANCE_SCALE] ?: 1f
+                        (currentSettings.customSettings[AvatarSettingKeys.MMD_CAMERA_DISTANCE_SCALE] as? Float) ?: 1f
                     val cameraTargetHeight =
-                        currentSettings.customSettings[AvatarSettingKeys.MMD_CAMERA_TARGET_HEIGHT] ?: 0f
+                        (currentSettings.customSettings[AvatarSettingKeys.MMD_CAMERA_TARGET_HEIGHT] as? Float) ?: 0f
 
                     Text(
                         text =
@@ -320,13 +320,13 @@ fun AvatarConfigSection(
 
                 if (currentAvatarConfig.avatarType == AvatarType.GLTF) {
                     val cameraPitch =
-                        currentSettings.customSettings[AvatarSettingKeys.GLTF_CAMERA_PITCH] ?: 8f
+                        (currentSettings.customSettings[AvatarSettingKeys.GLTF_CAMERA_PITCH] as? Float) ?: 8f
                     val cameraYaw =
-                        currentSettings.customSettings[AvatarSettingKeys.GLTF_CAMERA_YAW] ?: 0f
+                        (currentSettings.customSettings[AvatarSettingKeys.GLTF_CAMERA_YAW] as? Float) ?: 0f
                     val cameraDistanceScale =
-                        currentSettings.customSettings[AvatarSettingKeys.GLTF_CAMERA_DISTANCE_SCALE] ?: 0.5f
+                        (currentSettings.customSettings[AvatarSettingKeys.GLTF_CAMERA_DISTANCE_SCALE] as? Float) ?: 0.5f
                     val cameraTargetHeight =
-                        currentSettings.customSettings[AvatarSettingKeys.GLTF_CAMERA_TARGET_HEIGHT] ?: 0f
+                        (currentSettings.customSettings[AvatarSettingKeys.GLTF_CAMERA_TARGET_HEIGHT] as? Float) ?: 0f
 
                     Text(
                         text =
@@ -411,13 +411,13 @@ fun AvatarConfigSection(
 
                 if (currentAvatarConfig.avatarType == AvatarType.FBX) {
                     val cameraPitch =
-                        currentSettings.customSettings[AvatarSettingKeys.FBX_CAMERA_PITCH] ?: 8f
+                        (currentSettings.customSettings[AvatarSettingKeys.FBX_CAMERA_PITCH] as? Float) ?: 8f
                     val cameraYaw =
-                        currentSettings.customSettings[AvatarSettingKeys.FBX_CAMERA_YAW] ?: 0f
+                        (currentSettings.customSettings[AvatarSettingKeys.FBX_CAMERA_YAW] as? Float) ?: 0f
                     val cameraDistanceScale =
-                        currentSettings.customSettings[AvatarSettingKeys.FBX_CAMERA_DISTANCE_SCALE] ?: 1f
+                        (currentSettings.customSettings[AvatarSettingKeys.FBX_CAMERA_DISTANCE_SCALE] as? Float) ?: 1f
                     val cameraTargetHeight =
-                        currentSettings.customSettings[AvatarSettingKeys.FBX_CAMERA_TARGET_HEIGHT] ?: 0f
+                        (currentSettings.customSettings[AvatarSettingKeys.FBX_CAMERA_TARGET_HEIGHT] as? Float) ?: 0f
 
                     Text(
                         text =

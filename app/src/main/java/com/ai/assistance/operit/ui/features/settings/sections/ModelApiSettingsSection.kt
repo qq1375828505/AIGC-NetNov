@@ -9,7 +9,7 @@ fun ModelApiSettingsSection(
     modifier: Modifier = Modifier,
     modelConfig: ModelConfigData? = null,
     onModelConfigChange: (ModelConfigData) -> Unit = {},
-    config: ModelConfigData = ModelConfigData(),
+    config: ModelConfigData? = null,
     configManager: Any? = null,
     saveCoordinator: Any? = null,
     showNotification: (String) -> Unit = {},

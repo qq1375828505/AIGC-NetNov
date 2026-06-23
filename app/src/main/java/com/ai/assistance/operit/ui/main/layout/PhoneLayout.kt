@@ -45,7 +45,7 @@ import com.ai.assistance.operit.ui.main.navigation.RouteEntry
 import com.ai.assistance.operit.ui.main.components.AppContent
 import com.ai.assistance.operit.ui.main.components.DrawerContent
 import com.ai.assistance.operit.ui.main.components.rememberNavigationDrawerAppearance
-import com.ai.assistance.operit.ui.main.screens.GestureStateHolder
+import com.ai.assistance.operit.ui.common.gesture.GestureStateHolder
 import com.ai.assistance.operit.ui.main.screens.Screen
 import com.ai.assistance.operit.ui.theme.waterGlass
 import kotlinx.coroutines.CoroutineScope

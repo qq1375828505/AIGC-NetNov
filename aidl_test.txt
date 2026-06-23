@@ -1,0 +1,33 @@
+﻿./gradlew : Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8
+所在位置 行:1 字符: 84
++ ... 作区\项目\小说软件\AIGC-NetNov"; ./gradlew :app:compileDebugAidl 2>&1 | Out-F ...
++                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Picked up JAVA_....encoding=UTF-8:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Configuration on demand is an incubating feature.
+
+> Configure project :app
+WARNING: The option setting 'android.overridePathCheck=true' is experimental.
+The current default is 'false'.
+
+> Task :app:objectboxPrepareBuild UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileDebugAidl'.
+> A failure occurred while executing com.android.build.gradle.tasks.AidlCompile$AidlCompileRunnable
+   > java.nio.charset.MalformedInputException: Input length = 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 1s
+2 actionable tasks: 1 executed, 1 up-to-date

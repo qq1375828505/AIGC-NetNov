@@ -81,7 +81,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.ui.res.stringResource
 import com.ai.assistance.novelide.R
 import com.ai.assistance.operit.ui.features.chat.components.MessageEditor
-import com.ai.assistance.operit.ui.main.screens.GestureStateHolder
+import com.ai.assistance.operit.ui.common.gesture.GestureStateHolder
 import kotlin.math.roundToInt
 
 @SuppressLint("UnusedBoxWithConstraintsScope")

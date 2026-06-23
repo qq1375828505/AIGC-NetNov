@@ -628,16 +628,17 @@ internal class PackageManagerToolPkgFacade(
         }
 
         val directSubpackage = packageManager.resolveToolPkgSubpackageRuntimeInternal(subpackageId)
-        val subpackages =
+        val candidateContainerNames: List<String> =
             if (directSubpackage != null) {
-                listOf(directSubpackage)
+                listOf(directSubpackage.containerPackageName)
             } else {
-                packageManager.toolPkgSubpackageByPackageNameInternal.values.filter {
-                    it.subpackageId.equals(subpackageId, ignoreCase = true)
-                }
+                packageManager.toolPkgSubpackageByPackageNameInternal.values
+                    .filter { it.subpackageId.equals(subpackageId, ignoreCase = true) }
+                    .map { it.containerPackageName }
+                    .distinct()
             }
 
-        if (subpackages.isEmpty()) {
+        if (candidateContainerNames.isEmpty()) {
             return false
         }
 
@@ -645,17 +646,14 @@ internal class PackageManagerToolPkgFacade(
             if (preferEnabledContainer) {
                 val enabledSet = packageManager.getEnabledPackageNameSetInternal()
                 val enabledContainers =
-                    subpackages
-                        .map { it.containerPackageName }
-                        .distinct()
-                        .filter { enabledSet.contains(it) }
+                    candidateContainerNames.filter { enabledSet.contains(it) }
                 if (enabledContainers.isNotEmpty()) {
                     enabledContainers
                 } else {
-                    subpackages.map { it.containerPackageName }.distinct()
+                    candidateContainerNames
                 }
             } else {
-                subpackages.map { it.containerPackageName }.distinct()
+                candidateContainerNames
             }
 
         candidateContainers.forEach { containerName ->
@@ -773,28 +771,28 @@ internal class PackageManagerToolPkgFacade(
         }
 
         val directSubpackage = packageManager.resolveToolPkgSubpackageRuntimeInternal(subpackageId)
-        val subpackages =
+        val candidateContainerNames: List<String> =
             if (directSubpackage != null) {
-                listOf(directSubpackage)
+                listOf(directSubpackage.containerPackageName)
             } else {
-                packageManager.toolPkgSubpackageByPackageNameInternal.values.filter {
-                    it.subpackageId.equals(subpackageId, ignoreCase = true)
-                }
+                packageManager.toolPkgSubpackageByPackageNameInternal.values
+                    .filter { it.subpackageId.equals(subpackageId, ignoreCase = true) }
+                    .map { it.containerPackageName }
+                    .distinct()
             }
 
-        if (subpackages.isEmpty()) {
+        if (candidateContainerNames.isEmpty()) {
             return null
         }
 
         val candidateContainers =
             if (preferEnabledContainer) {
                 val enabledSet = packageManager.getEnabledPackageNameSetInternal()
-                subpackages
-                    .map { it.containerPackageName }
-                    .distinct()
+                candidateContainerNames
                     .filter { enabledSet.contains(it) }
+                    .ifEmpty { candidateContainerNames }
             } else {
-                subpackages.map { it.containerPackageName }.distinct()
+                candidateContainerNames
             }
 
         candidateContainers.forEach { containerName ->

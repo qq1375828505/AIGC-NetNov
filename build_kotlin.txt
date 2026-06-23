@@ -1,0 +1,462 @@
+﻿Configuration on demand is an incubating feature.
+
+> Configure project :app
+WARNING: The option setting 'android.overridePathCheck=true' is experimental.
+The current default is 'false'.
+
+> Task :quickjs:preBuild UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :quickjs:preDebugBuild UP-TO-DATE
+> Task :quickjs:writeDebugAarMetadata UP-TO-DATE
+> Task :app:objectboxPrepareBuild UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :quickjs:processDebugNavigationResources UP-TO-DATE
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :quickjs:generateDebugResValues UP-TO-DATE
+> Task :quickjs:generateDebugResources UP-TO-DATE
+> Task :quickjs:packageDebugResources UP-TO-DATE
+> Task :quickjs:extractDeepLinksDebug UP-TO-DATE
+> Task :quickjs:processDebugManifest UP-TO-DATE
+> Task :quickjs:compileDebugLibraryResources UP-TO-DATE
+> Task :quickjs:parseDebugLocalResources UP-TO-DATE
+> Task :quickjs:generateDebugRFile UP-TO-DATE
+> Task :quickjs:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :quickjs:compileDebugKotlin UP-TO-DATE
+> Task :quickjs:javaPreCompileDebug UP-TO-DATE
+> Task :quickjs:compileDebugJavaWithJavac NO-SOURCE
+> Task :quickjs:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:compileDebugNavigationResources UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:kaptGenerateStubsDebugKotlin
+
+> Task :app:kaptDebugKotlin
+[ObjectBox] ID model file unchanged: default.json
+[ObjectBox] ObjectBox Generator
+[ObjectBox] Copyright 2017-2025 ObjectBox Ltd, objectbox.io. Licensed under GNU Affero General Public License, Version 3.
+[ObjectBox] This program comes with ABSOLUTELY NO WARRANTY
+[ObjectBox] Processing schema version 1...
+[ObjectBox] Written com.ai.assistance.operit.data.model.DocumentChunkCursor.java
+[ObjectBox] Written com.ai.assistance.operit.data.model.DocumentChunk_.java
+[ObjectBox] Written com.ai.assistance.operit.data.model.MemoryCursor.java
+[ObjectBox] Written com.ai.assistance.operit.data.model.Memory_.java
+[ObjectBox] Written com.ai.assistance.operit.data.model.MemoryAutoSaveCandidateCursor.java
+[ObjectBox] Written com.ai.assistance.operit.data.model.MemoryAutoSaveCandidate_.java
+[ObjectBox] Written com.ai.assistance.operit.data.model.MemoryLinkCursor.java
+[ObjectBox] Written com.ai.assistance.operit.data.model.MemoryLink_.java
+[ObjectBox] Written com.ai.assistance.operit.data.model.MemoryPropertyCursor.java
+[ObjectBox] Written com.ai.assistance.operit.data.model.MemoryProperty_.java
+[ObjectBox] Written com.ai.assistance.operit.data.model.MemoryTagCursor.java
+[ObjectBox] Written com.ai.assistance.operit.data.model.MemoryTag_.java
+[ObjectBox] Written com.ai.assistance.operit.data.model.MyObjectBox.java
+[ObjectBox] Processed 6 entities in 64ms
+D:\宸ヤ綔鍖篭椤圭洰\灏忚杞欢\AIGC-NetNov\app\build\tmp\kapt3\stubs\debug\com\ai\assistance\novelide\data\model\novel\Chapter.java:5: 璀﹀憡: workId column references a foreign key but it is not part of an index. This may trigger full table scans whenever parent table is modified so you are highly advised to create an index that covers this column.
+public final class Chapter {
+             ^
+D:\宸ヤ綔鍖篭椤圭洰\灏忚杞欢\AIGC-NetNov\app\build\tmp\kapt3\stubs\debug\com\ai\assistance\novelide\data\model\novel\Chapter.java:5: 璀﹀憡: volumeId column references a foreign key but it is not part of an index. This may trigger full table scans whenever parent table is modified so you are highly advised to create an index that covers this column.
+public final class Chapter {
+             ^
+
+> Task :app:compileDebugKotlin
+./gradlew : e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/novelide/data/migration/Tomat
+oPresetSeeder.kt:14:17 Type argument for reified type parameter 'T' was inferred to the intersection of ['Comparable<*>
+' & 'Serializable']. Reification of an intersection type results in the common supertype being used. This may lead to s
+ubtle issues and an explicit type argument is encouraged.
+所在位置 行:1 字符: 1
++ ./gradlew :app:compileDebugKotlin --continue -x compileDebugAidl 2>&1 ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (e: file:///D:/宸... is encouraged.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/subpack/ApkReverseEngineer.kt
+:381:26 Assignment type mismatch: actual type is 'String', but 'Long' was expected.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/defaultTool/websession/
+browser/BrowserDownloadSupport.kt:1102:58 Unresolved reference 'R'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/defaultTool/websession/
+browser/BrowserDownloadSupport.kt:1124:58 Unresolved reference 'R'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/javascript/JsNativeInte
+rfaceDelegates.kt:338:21 No parameter with name 'packageNameOrSubpackageId' found.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/javascript/JsNativeInte
+rfaceDelegates.kt:340:21 No value passed for parameter 'packageName'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/javascript/JsToolManage
+r.kt:113:63 Unresolved reference 'entryPath'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageDebugRe
+freshReceiver.kt:51:21 No parameter with name 'reactivateActivePackages' found.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageDebugRe
+freshReceiver.kt:53:30 Argument type mismatch: actual type is 'Unit', but 'String' was expected.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+.kt:167:37 'public' function exposes its 'internal' parameter type argument 'ToolPkgContainerRuntime'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+.kt:442:101 'public' function exposes its 'internal' return type argument 'ToolPkgContainerRuntime'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:17:9 Conflicting overloads:
+fun String.resolve(context: Context): String
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:39:35 Overload resolution ambiguity between candidates:
+fun String.resolve(context: Context): String
+fun String.resolve(context: Context): String
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:39:64 Cannot infer type for type parameter 'C'. Specify it explicitly.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:39:64 Cannot infer type for type parameter 'R'. Specify it explicitly.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:39:64 Unresolved reference. None of the following candidates is applicable because of a receiver type 
+mismatch:
+fun <C : CharSequence, R, R> C.ifBlank(defaultValue: () -> R): R
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:40:58 Overload resolution ambiguity between candidates:
+fun String.resolve(context: Context): String
+fun String.resolve(context: Context): String
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:53:33 Overload resolution ambiguity between candidates:
+fun String.resolve(context: Context): String
+fun String.resolve(context: Context): String
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:91:35 Overload resolution ambiguity between candidates:
+fun String.resolve(context: Context): String
+fun String.resolve(context: Context): String
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:91:64 Cannot infer type for type parameter 'C'. Specify it explicitly.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:91:64 Cannot infer type for type parameter 'R'. Specify it explicitly.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:91:64 Unresolved reference. None of the following candidates is applicable because of a receiver type 
+mismatch:
+fun <C : CharSequence, R, R> C.ifBlank(defaultValue: () -> R): R
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:92:58 Overload resolution ambiguity between candidates:
+fun String.resolve(context: Context): String
+fun String.resolve(context: Context): String
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:97:33 Overload resolution ambiguity between candidates:
+fun String.resolve(context: Context): String
+fun String.resolve(context: Context): String
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:133:58 Overload resolution ambiguity between candidates:
+fun String.resolve(context: Context): String
+fun String.resolve(context: Context): String
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:142:41 Overload resolution ambiguity between candidates:
+fun String.resolve(context: Context): String
+fun String.resolve(context: Context): String
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:176:42 Overload resolution ambiguity between candidates:
+fun String.resolve(context: Context): String
+fun String.resolve(context: Context): String
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:177:48 Overload resolution ambiguity between candidates:
+fun String.resolve(context: Context): String
+fun String.resolve(context: Context): String
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:178:54 Overload resolution ambiguity between candidates:
+fun String.resolve(context: Context): String
+fun String.resolve(context: Context): String
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:203:46 Overload resolution ambiguity between candidates:
+fun String.resolve(context: Context): String
+fun String.resolve(context: Context): String
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:206:56 Overload resolution ambiguity between candidates:
+fun String.resolve(context: Context): String
+fun String.resolve(context: Context): String
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:229:46 Overload resolution ambiguity between candidates:
+fun String.resolve(context: Context): String
+fun String.resolve(context: Context): String
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:232:56 Overload resolution ambiguity between candidates:
+fun String.resolve(context: Context): String
+fun String.resolve(context: Context): String
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:282:58 Overload resolution ambiguity between candidates:
+fun String.resolve(context: Context): String
+fun String.resolve(context: Context): String
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:283:58 Overload resolution ambiguity between candidates:
+fun String.resolve(context: Context): String
+fun String.resolve(context: Context): String
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:294:49 Overload resolution ambiguity between candidates:
+fun String.resolve(context: Context): String
+fun String.resolve(context: Context): String
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager
+ToolPkgFacade.kt:295:49 Overload resolution ambiguity between candidates:
+fun String.resolve(context: Context): String
+fun String.resolve(context: Context): String
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/ToolPkgParser.
+kt:126:21 Redeclaration:
+typealias ToolPkgContainerRuntime = <ERROR TYPE REF: Symbol not found for PackageManager.ToolPkgContainerRuntime>
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/ToolPkgTypeAli
+ases.kt:3:11 Redeclaration:
+data class ToolPkgContainerRuntime : Any
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/ToolPkgTypeAli
+ases.kt:3:52 Unresolved reference 'ToolPkgContainerRuntime'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/data/repository/UIHierarchyManager
+.kt:18:42 Unresolved reference 'IAccessibilityProvider'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/data/repository/UIHierarchyManager
+.kt:54:40 Unresolved reference 'IAccessibilityProvider'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/data/repository/UIHierarchyManager
+.kt:67:37 Unresolved reference 'IAccessibilityProvider'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/data/repository/UIHierarchyManager
+.kt:314:36 Unresolved reference 'uiHierarchy'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/data/repository/UIHierarchyManager
+.kt:369:36 Unresolved reference 'performClick'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/data/repository/UIHierarchyManager
+.kt:382:36 Unresolved reference 'performLongPress'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/data/repository/UIHierarchyManager
+.kt:398:36 Unresolved reference 'performSwipe'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/data/repository/UIHierarchyManager
+.kt:414:36 Unresolved reference 'performGlobalAction'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/data/repository/UIHierarchyManager
+.kt:430:36 Unresolved reference 'findFocusedNodeId'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/data/repository/UIHierarchyManager
+.kt:446:36 Unresolved reference 'setTextOnNode'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/data/repository/UIHierarchyManager
+.kt:465:36 Unresolved reference 'takeScreenshot'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/data/repository/UIHierarchyManager
+.kt:481:36 Unresolved reference 'isAccessibilityServiceEnabled'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/data/repository/UIHierarchyManager
+.kt:497:36 Unresolved reference 'currentActivityName'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/common/markdown/MarkdownCodeTyp
+eface.kt:17:81 Unresolved reference 'R'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/chat/components/ChatSc
+reenContent.kt:84:49 Unresolved reference 'GestureStateHolder'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/chat/components/ChatSc
+reenContent.kt:1200:21 Unresolved reference 'GestureStateHolder'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/chat/screens/AIChatScr
+een.kt:82:49 Unresolved reference 'GestureStateHolder'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/chat/screens/AIChatScr
+een.kt:809:9 Unresolved reference 'GestureStateHolder'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/chat/util/MessageImage
+Generator.kt:229:113 Unresolved reference 'R'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/chat/webview/workspace
+/editor/CanvasCodeEditorView.kt:1708:65 Unresolved reference 'R'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/demo/screens/ShizukuDe
+moScreen.kt:676:37 Unresolved reference 'invoke'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/packages/dialogs/Packa
+geDetailsDialog.kt:59:21 Assignment type mismatch: actual type is 'PackageManager.ToolPkgContainerDetails', but 'ToolPa
+ckage?' was expected.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/packages/screens/Artif
+actDetailScreen.kt:569:45 Unresolved reference 'runQuickPluginCreatorSetup'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/packages/screens/Packa
+geManagerDialogs.kt:72:31 Unresolved reference 'sourcePath'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/packages/screens/Packa
+geManagerDialogs.kt:72:43 Cannot infer type for type parameter 'T'. Specify it explicitly.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/packages/screens/Packa
+geManagerDialogs.kt:72:43 Cannot infer type for type parameter 'R'. Specify it explicitly.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/packages/screens/Packa
+geManagerDialogs.kt:72:49 Cannot infer type for type parameter 'T'. Specify it explicitly.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/packages/screens/Packa
+geManagerDialogs.kt:81:42 Unresolved reference 'message'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/packages/screens/Packa
+geManagerDialogs.kt:85:35 Unresolved reference 'isExternalSource'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/packages/screens/Packa
+geManagerDialogs.kt:85:65 Unresolved reference 'sourcePath'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/packages/screens/Packa
+geManagerDialogs.kt:88:66 Unresolved reference 'sourcePath'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/settings/screens/Model
+ConfigScreen.kt:636:54 Argument type mismatch: actual type is 'Function0<Unit>?', but 'Function0<Unit>' was expected.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/settings/screens/Model
+ConfigScreen.kt:1269:25 None of the following candidates is applicable:
+
+fun SettingsInfoBanner(message: String, modifier: Modifier = ..., type: InfoBannerType = ...): Unit:
+  No parameter with name 'text' found.
+  No value passed for parameter 'message'.
+
+fun SettingsInfoBanner(text: String, backgroundColor: Color, modifier: Modifier = ...): Unit:
+  No value passed for parameter 'backgroundColor'.
+
+fun SettingsInfoBanner(text: String, backgroundColor: Color): Unit:
+  No value passed for parameter 'backgroundColor'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/settings/screens/Model
+ConfigScreen.kt:1356:25 None of the following candidates is applicable:
+
+fun SettingsSwitchRow(title: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit, modifier: Modifier = ..., en
+abled: Boolean = ..., summary: String? = ...): Unit:
+  No parameter with name 'subtitle' found.
+
+fun SettingsSwitchRow(title: String, subtitle: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit, background
+Color: Color, enabled: Boolean = ...): Unit:
+  No value passed for parameter 'backgroundColor'.
+
+fun SettingsSwitchRow(title: String, subtitle: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit, background
+Color: Color, enabled: Boolean = ...): Unit:
+  No value passed for parameter 'backgroundColor'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/settings/screens/Model
+ConfigScreen.kt:1360:65 Unresolved reference 'it'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/settings/screens/Model
+ConfigScreen.kt:1378:25 None of the following candidates is applicable:
+
+fun SettingsSwitchRow(title: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit, modifier: Modifier = ..., en
+abled: Boolean = ..., summary: String? = ...): Unit:
+  No parameter with name 'subtitle' found.
+
+fun SettingsSwitchRow(title: String, subtitle: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit, background
+Color: Color, enabled: Boolean = ...): Unit:
+  No value passed for parameter 'backgroundColor'.
+
+fun SettingsSwitchRow(title: String, subtitle: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit, background
+Color: Color, enabled: Boolean = ...): Unit:
+  No value passed for parameter 'backgroundColor'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/settings/screens/Model
+ConfigScreen.kt:1382:79 Unresolved reference 'it'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/settings/screens/TagMa
+rketScreen.kt:151:76 Unresolved reference 'R'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/settings/sections/Adva
+ncedSettingsSection.kt:260:29 None of the following candidates is applicable:
+
+fun SettingsTextField(label: String, value: String, onValueChange: (String) -> Unit, modifier: Modifier = ..., singleLi
+ne: Boolean = ..., maxLines: Int = ...): Unit:
+  No parameter with name 'title' found.
+  No parameter with name 'subtitle' found.
+  No parameter with name 'placeholder' found.
+  No parameter with name 'keyboardOptions' found.
+  No value passed for parameter 'label'.
+
+fun SettingsTextField(title: String, subtitle: String = ..., value: String, onValueChange: (String) -> Unit, modifier: 
+Modifier = ..., enabled: Boolean = ..., unitText: String = ..., keyboardOptions: KeyboardOptions = ..., singleLine: Boo
+lean = ..., maxLines: Int = ...): Unit:
+  No parameter with name 'placeholder' found.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/settings/sections/Adva
+ncedSettingsSection.kt:265:66 Unresolved reference 'it'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/settings/sections/Adva
+ncedSettingsSection.kt:265:78 Cannot infer type for value parameter 'ch'. Specify it explicitly.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/settings/sections/Adva
+ncedSettingsSection.kt:274:29 None of the following candidates is applicable:
+
+fun SettingsTextField(label: String, value: String, onValueChange: (String) -> Unit, modifier: Modifier = ..., singleLi
+ne: Boolean = ..., maxLines: Int = ...): Unit:
+  No parameter with name 'title' found.
+  No parameter with name 'subtitle' found.
+  No parameter with name 'placeholder' found.
+  No parameter with name 'keyboardOptions' found.
+  No value passed for parameter 'label'.
+
+fun SettingsTextField(title: String, subtitle: String = ..., value: String, onValueChange: (String) -> Unit, modifier: 
+Modifier = ..., enabled: Boolean = ..., unitText: String = ..., keyboardOptions: KeyboardOptions = ..., singleLine: Boo
+lean = ..., maxLines: Int = ...): Unit:
+  No parameter with name 'placeholder' found.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/settings/sections/Adva
+ncedSettingsSection.kt:279:66 Unresolved reference 'it'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/settings/sections/Adva
+ncedSettingsSection.kt:279:78 Cannot infer type for value parameter 'ch'. Specify it explicitly.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/toolbox/screens/autogl
+m/AutoGlmViewModel.kt:93:25 Unresolved reference 'not' for operator '!'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/toolbox/screens/autogl
+m/AutoGlmViewModel.kt:249:20 Unresolved reference 'actionName'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/toolbox/screens/autogl
+m/AutoGlmViewModel.kt:249:32 Cannot infer type for type parameter 'T'. Specify it explicitly.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/toolbox/screens/autogl
+m/AutoGlmViewModel.kt:249:32 Cannot infer type for type parameter 'R'. Specify it explicitly.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/toolbox/screens/autogl
+m/AutoGlmViewModel.kt:249:38 Cannot infer type for type parameter 'T'. Specify it explicitly.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/toolbox/screens/autogl
+m/AutoGlmViewModel.kt:252:53 Unresolved reference 'metadata'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/toolbox/screens/autogl
+m/AutoGlmViewModel.kt:253:20 Unresolved reference 'fields'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/toolbox/screens/autogl
+m/AutoGlmViewModel.kt:253:37 Cannot infer type for implicit value parameter 'it'. Specify it explicitly.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/toolbox/screens/autogl
+m/AutoGlmViewModel.kt:253:37 Operator call 'component1()' is ambiguous for destructuring of type 'ERROR CLASS: Cannot i
+nfer type for parameter <destruct>'. Applicable candidates:
+fun <T> Array<out T>.component1(): T
+fun ByteArray.component1(): Byte
+fun ShortArray.component1(): Short
+fun IntArray.component1(): Int
+fun LongArray.component1(): Long
+fun FloatArray.component1(): Float
+fun DoubleArray.component1(): Double
+
+fun BooleanArray.component1(): Boolean
+fun CharArray.component1(): Char
+fun <T> List<T>.component1(): T
+fun <K, V> Map.Entry<K, V>.component1(): K
+fun UIntArray.component1(): UInt
+fun ULongArray.component1(): ULong
+fun UByteArray.component1(): UByte
+fun UShortArray.component1(): UShort
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/toolbox/screens/autogl
+m/AutoGlmViewModel.kt:253:37 Operator call 'component2()' is ambiguous for destructuring of type 'ERROR CLASS: Cannot i
+nfer type for parameter <destruct>'. Applicable candidates:
+fun <T> Array<out T>.component2(): T
+fun ByteArray.component2(): Byte
+fun ShortArray.component2(): Short
+fun IntArray.component2(): Int
+fun LongArray.component2(): Long
+fun FloatArray.component2(): Float
+fun DoubleArray.component2(): Double
+fun BooleanArray.component2(): Boolean
+fun CharArray.component2(): Char
+fun <T> List<T>.component2(): T
+fun <K, V> Map.Entry<K, V>.component2(): V
+fun UIntArray.component2(): UInt
+fun ULongArray.component2(): ULong
+fun UByteArray.component2(): UByte
+fun UShortArray.component2(): UShort
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/toolbox/screens/autogl
+m/AutoGlmViewModel.kt:269:62 Unresolved reference 'metadata'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/features/workflow/viewmodel/Wor
+kflowViewModel.kt:370:31 Argument type mismatch: actual type is 'Any?', but 'Workflow' was expected.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/main/components/AppContent.kt:2
+28:31 Unresolved reference 'keepAlive'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/main/components/AppContent.kt:2
+29:31 Expression 'stableScreenKey' of type 'String' cannot be invoked as a function. Function 'invoke()' is not found.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/main/components/AppContent.kt:4
+14:85 Unresolved reference 'keepAlive'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/main/components/AppContent.kt:4
+17:47 Unresolved reference 'ToolPkgComposeDsl'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/main/components/AppContent.kt:4
+21:83 Unresolved reference 'containerPackageName'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/main/components/AppContent.kt:4
+22:73 Unresolved reference 'uiModuleId'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/main/components/AppContent.kt:4
+23:76 Unresolved reference 'title'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/main/components/AppContent.kt:4
+25:47 Unresolved reference 'ToolPkgPluginConfig'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/main/components/AppContent.kt:4
+29:83 Unresolved reference 'containerPackageName'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/main/components/AppContent.kt:4
+30:73 Unresolved reference 'uiModuleId'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/main/components/AppContent.kt:4
+31:76 Unresolved reference 'title'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/main/components/AppContent.kt:4
+34:56 Unresolved reference 'Content'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/main/layout/PhoneLayout.kt:48:4
+9 Unresolved reference 'GestureStateHolder'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/main/layout/PhoneLayout.kt:156:
+22 Unresolved reference 'GestureStateHolder'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/main/navigation/AppRouteCatalog
+.kt:83:23 Unresolved reference 'ToolPkgComposeDsl'.
+e: file:///D:/宸ヤ綔鍖?椤圭洰/灏忚杞欢/AIGC-NetNov/app/src/main/java/com/ai/assistance/operit/ui/main/screens/ScreenRouteRegistr
+y.kt:361:33 Unresolved reference 'UserPreferencesGuide'.
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileDebugKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCo
+mpilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 1m 33s
+> Task :app:compileDebugKotlin FAILED
+33 actionable tasks: 3 executed, 30 up-to-date

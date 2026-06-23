@@ -1,0 +1,247 @@
+﻿git : warning: in the working copy of 'app/src/main/java/com/ai/assistance/operit/core/tools/defaultTool/standard/Stand
+ardSoftwareSettingsModifyTools.kt', LF will be replaced by CRLF the next time Git touches it
+所在位置 行:1 字符: 1
++ git diff HEAD 2>&1 | Out-File -FilePath full_diff.txt -Encoding utf8
++ ~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (warning: in the... Git touches it:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+warning: in the working copy of 'app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager.kt', LF 
+will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'app/src/main/java/com/ai/assistance/operit/ui/features/assistant/components/AvatarConf
+igSection.kt', LF will be replaced by CRLF the next time Git touches it
+diff --git a/app/src/main/java/com/ai/assistance/operit/core/tools/defaultTool/standard/StandardSoftwareSettingsModifyTools.kt b/app/src/main/java/com/ai/assistance/operit/core/tools/defaultTool/standard/StandardSoftwareSettingsModifyTools.kt
+index 5e0d5e4..785e3c5 100644
+--- a/app/src/main/java/com/ai/assistance/operit/core/tools/defaultTool/standard/StandardSoftwareSettingsModifyTools.kt
++++ b/app/src/main/java/com/ai/assistance/operit/core/tools/defaultTool/standard/StandardSoftwareSettingsModifyTools.kt
+@@ -2,8 +2,6 @@ package com.ai.assistance.operit.core.tools.defaultTool.standard
+ 
+ import android.content.Context
+ import com.ai.assistance.operit.api.chat.EnhancedAIService
+-
+-private fun String.resolve(@Suppress("UNUSED_PARAMETER") language: String): String = this
+ import com.ai.assistance.operit.api.chat.llmprovider.ModelConfigConnectionTester
+ import com.ai.assistance.operit.api.speech.SpeechServiceFactory
+ import com.ai.assistance.operit.api.voice.HttpTtsResponsePipelineStep
+@@ -73,6 +71,8 @@ import java.net.ProtocolException
+ import java.net.SocketTimeoutException
+ import java.net.UnknownHostException
+ 
++private fun String.resolve(@Suppress("UNUSED_PARAMETER") language: String): String = this
++
+ /** 杞欢璁剧疆淇敼宸ュ叿锛堝寘鍚?MCP 閲嶅惎涓庢棩蹇楁敹闆嗭級 */
+ class StandardSoftwareSettingsModifyTools(private val context: Context) {
+ 
+@@ -279,14 +279,18 @@ class StandardSoftwareSettingsModifyTools(private val context: Context) {
+         }
+ 
+         val previousEnabled = packageManager.isPackageEnabled(packageName)
+-        val operationMessage =
+-            if (enabled) {
+-                packageManager.enablePackage(packageName)
+-            } else {
+-                packageManager.disablePackage(packageName)
+-            }
++        if (enabled) {
++            packageManager.enablePackage(packageName)
++        } else {
++            packageManager.disablePackage(packageName)
++        }
+         val currentEnabled = packageManager.isPackageEnabled(packageName)
+         val success = currentEnabled == enabled
++        val operationMessage = if (success) {
++            "Package $packageName ${if (enabled) "enabled" else "disabled"} successfully"
++        } else {
++            "Failed to ${if (enabled) "enable" else "disable"} package $packageName"
++        }
+ 
+         return ToolResult(
+             toolName = tool.name,
+diff --git a/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager.kt b/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager.kt
+index a400109..54ce370 100644
+--- a/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager.kt
++++ b/app/src/main/java/com/ai/assistance/operit/core/tools/packTool/PackageManager.kt
+@@ -214,18 +214,20 @@ class PackageManager private constructor(
+     
+     fun getToolPkgMainScriptInternal(packageName: String): String? = null
+     
+-    fun getToolPkgResourceOutputFileName(packageName: String, resourceKey: String): String? = null
++    fun getToolPkgResourceOutputFileName(packageName: String, resourceKey: String, preferEnabledContainer: Boolean = false): String? = null
+     
+-    fun copyToolPkgResourceToFile(packageName: String, resourceKey: String, outputPath: String): Boolean = false
++    fun copyToolPkgResourceToFile(packageName: String, resourceKey: String, outputFile: java.io.File): Boolean = false
+     
+-    fun copyToolPkgResourceToFileBySubpackageId(subpackageId: String, resourceKey: String, outputPath: String): Boolean = false
++    fun copyToolPkgResourceToFileBySubpackageId(subpackageId: String, resourceKey: String, destinationFile: java.io.File, preferEnabledContainer: Boolean = false): Boolean = false
+     
+-    fun getPluginConfigDirPath(): String = ""
++    fun getPluginConfigDirPath(packageName: String? = null): String = ""
+     
+     fun refreshExternalPackagesForDebug() {}
+     
+     fun installDebugToolPkg(filePath: String): Result<Any?> = Result.success(null)
+     
++    fun installDebugToolPkg(containerPackageName: String, externalFilePath: String, resetSubpackageStatesToManifest: Boolean): String = ""
++    
+     fun readToolPkgResourceBytes(packageName: String, resourceKey: String): ByteArray? = null
+ 
+     fun readToolPkgResourceBytes(container: ToolPkgContainerDetails, resourcePath: String): ByteArray? = null
+diff --git a/app/src/main/java/com/ai/assistance/operit/ui/features/assistant/components/AvatarConfigSection.kt b/app/src/main/java/com/ai/assistance/operit/ui/features/assistant/components/AvatarConfigSection.kt
+index da5a699..6411a97 100644
+--- a/app/src/main/java/com/ai/assistance/operit/ui/features/assistant/components/AvatarConfigSection.kt
++++ b/app/src/main/java/com/ai/assistance/operit/ui/features/assistant/components/AvatarConfigSection.kt
+@@ -229,13 +229,13 @@ fun AvatarConfigSection(
+ 
+                 if (currentAvatarConfig.avatarType == AvatarType.MMD) {
+                     val cameraPitch =
+-                        currentSettings.customSettings[AvatarSettingKeys.MMD_INITIAL_ROTATION_X] ?: 0f
++                        (currentSettings.customSettings[AvatarSettingKeys.MMD_INITIAL_ROTATION_X] as? Float) ?: 0f
+                     val initialRotationY =
+-                        currentSettings.customSettings[AvatarSettingKeys.MMD_INITIAL_ROTATION_Y] ?: 0f
++                        (currentSettings.customSettings[AvatarSettingKeys.MMD_INITIAL_ROTATION_Y] as? Float) ?: 0f
+                     val cameraDistanceScale =
+-                        currentSettings.customSettings[AvatarSettingKeys.MMD_CAMERA_DISTANCE_SCALE] ?: 1f
++                        (currentSettings.customSettings[AvatarSettingKeys.MMD_CAMERA_DISTANCE_SCALE] as? Float) ?: 1f
+                     val cameraTargetHeight =
+-                        currentSettings.customSettings[AvatarSettingKeys.MMD_CAMERA_TARGET_HEIGHT] ?: 0f
++                        (currentSettings.customSettings[AvatarSettingKeys.MMD_CAMERA_TARGET_HEIGHT] as? Float) ?: 0f
+ 
+                     Text(
+                         text =
+@@ -320,13 +320,13 @@ fun AvatarConfigSection(
+ 
+                 if (currentAvatarConfig.avatarType == AvatarType.GLTF) {
+                     val cameraPitch =
+-                        currentSettings.customSettings[AvatarSettingKeys.GLTF_CAMERA_PITCH] ?: 8f
++                        (currentSettings.customSettings[AvatarSettingKeys.GLTF_CAMERA_PITCH] as? Float) ?: 8f
+                     val cameraYaw =
+-                        currentSettings.customSettings[AvatarSettingKeys.GLTF_CAMERA_YAW] ?: 0f
++                        (currentSettings.customSettings[AvatarSettingKeys.GLTF_CAMERA_YAW] as? Float) ?: 0f
+                     val cameraDistanceScale =
+-                        currentSettings.customSettings[AvatarSettingKeys.GLTF_CAMERA_DISTANCE_SCALE] ?: 0.5f
++                        (currentSettings.customSettings[AvatarSettingKeys.GLTF_CAMERA_DISTANCE_SCALE] as? Float) ?: 0.5f
+                     val cameraTargetHeight =
+-                        currentSettings.customSettings[AvatarSettingKeys.GLTF_CAMERA_TARGET_HEIGHT] ?: 0f
++                        (currentSettings.customSettings[AvatarSettingKeys.GLTF_CAMERA_TARGET_HEIGHT] as? Float) ?: 0f
+ 
+                     Text(
+                         text =
+@@ -411,13 +411,13 @@ fun AvatarConfigSection(
+ 
+                 if (currentAvatarConfig.avatarType == AvatarType.FBX) {
+                     val cameraPitch =
+-                        currentSettings.customSettings[AvatarSettingKeys.FBX_CAMERA_PITCH] ?: 8f
++                        (currentSettings.customSettings[AvatarSettingKeys.FBX_CAMERA_PITCH] as? Float) ?: 8f
+                     val cameraYaw =
+-                        currentSettings.customSettings[AvatarSettingKeys.FBX_CAMERA_YAW] ?: 0f
++                        (currentSettings.customSettings[AvatarSettingKeys.FBX_CAMERA_YAW] as? Float) ?: 0f
+                     val cameraDistanceScale =
+-                        currentSettings.customSettings[AvatarSettingKeys.FBX_CAMERA_DISTANCE_SCALE] ?: 1f
++                        (currentSettings.customSettings[AvatarSettingKeys.FBX_CAMERA_DISTANCE_SCALE] as? Float) ?: 1f
+                     val cameraTargetHeight =
+-                        currentSettings.customSettings[AvatarSettingKeys.FBX_CAMERA_TARGET_HEIGHT] ?: 0f
++                        (currentSettings.customSettings[AvatarSettingKeys.FBX_CAMERA_TARGET_HEIGHT] as? Float) ?: 0f
+ 
+                     Text(
+                         text =
+diff --git a/app/src/main/java/com/ai/assistance/operit/ui/features/settings/sections/ModelApiSettingsSection.kt b/app/src/main/java/com/ai/assistance/operit/ui/features/settings/sections/ModelApiSettingsSection.kt
+index af5d5bc..5dcbe65 100644
+--- a/app/src/main/java/com/ai/assistance/operit/ui/features/settings/sections/ModelApiSettingsSection.kt
++++ b/app/src/main/java/com/ai/assistance/operit/ui/features/settings/sections/ModelApiSettingsSection.kt
+@@ -9,7 +9,7 @@ fun ModelApiSettingsSection(
+     modifier: Modifier = Modifier,
+     modelConfig: ModelConfigData? = null,
+     onModelConfigChange: (ModelConfigData) -> Unit = {},
+-    config: ModelConfigData = ModelConfigData(),
++    config: ModelConfigData? = null,
+     configManager: Any? = null,
+     saveCoordinator: Any? = null,
+     showNotification: (String) -> Unit = {},
+diff --git a/app/src/main/java/com/ai/assistance/operit/ui/features/settings/sections/SettingsComponents.kt b/app/src/main/java/com/ai/assistance/operit/ui/features/settings/sections/SettingsComponents.kt
+deleted file mode 100644
+index eac2553..0000000
+--- a/app/src/main/java/com/ai/assistance/operit/ui/features/settings/sections/SettingsComponents.kt
++++ /dev/null
+@@ -1,82 +0,0 @@
+-package com.ai.assistance.operit.ui.features.settings.sections
+-
+-import androidx.compose.foundation.layout.ColumnScope
+-import androidx.compose.foundation.layout.RowScope
+-import androidx.compose.runtime.Composable
+-import androidx.compose.ui.Modifier
+-import androidx.compose.ui.res.stringResource
+-import com.ai.assistance.novelide.R
+-
+-/**
+- * Stub implementation of SettingsTextField.
+- * This is a placeholder to allow compilation without the actual implementation.
+- * TODO: Replace with actual implementation
+- */
+-
+-@Composable
+-fun SettingsTextField(
+-    label: String,
+-    value: String,
+-    onValueChange: (String) -> Unit,
+-    modifier: Modifier = Modifier,
+-    singleLine: Boolean = true,
+-    maxLines: Int = 1
+-) {
+-    // Stub implementation - empty composable
+-}
+-
+-/**
+- * Stub implementation of SettingsSwitchRow.
+- * This is a placeholder to allow compilation without the actual implementation.
+- * TODO: Replace with actual implementation
+- */
+-
+-@Composable
+-fun SettingsSwitchRow(
+-    title: String,
+-    checked: Boolean,
+-    onCheckedChange: (Boolean) -> Unit,
+-    modifier: Modifier = Modifier,
+-    enabled: Boolean = true,
+-    summary: String? = null
+-) {
+-    // Stub implementation - empty composable
+-}
+-
+-/**
+- * Stub implementation of SettingsSectionHeader.
+- * This is a placeholder to allow compilation without the actual implementation.
+- * TODO: Replace with actual implementation
+- */
+-
+-@Composable
+-fun SettingsSectionHeader(
+-    title: String,
+-    modifier: Modifier = Modifier
+-) {
+-    // Stub implementation - empty composable
+-}
+-
+-/**
+- * Stub implementation of SettingsInfoBanner.
+- * This is a placeholder to allow compilation without the actual implementation.
+- * TODO: Replace with actual implementation
+- */
+-
+-@Composable
+-fun SettingsInfoBanner(
+-    message: String,
+-    modifier: Modifier = Modifier,
+-    type: InfoBannerType = InfoBannerType.INFO
+-) {
+-    // Stub implementation - empty composable
+-}
+-
+-/**
+- * Info banner type enum for SettingsInfoBanner
+- */
+-enum class InfoBannerType {
+-    INFO,
+-    WARNING,
+-    ERROR
+-}

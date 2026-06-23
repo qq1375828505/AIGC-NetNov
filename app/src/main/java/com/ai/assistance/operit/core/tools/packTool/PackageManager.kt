@@ -4,6 +4,12 @@ import com.ai.assistance.operit.core.tools.PackageTool
 import com.ai.assistance.operit.core.tools.ToolPackage
 import com.ai.assistance.operit.core.tools.javascript.JsEngine
 
+/** Stub extension: returns the string itself (mimics LocalizedText.resolve(Context)). */
+internal fun String.resolve(context: android.content.Context): String = this
+
+/** Stub extension: returns the string itself (mimics LocalizedText.resolve(preferredLanguage)). */
+internal fun String.resolve(preferredLanguage: String): String = this
+
 /**
  * Stub implementation of PackageManager.
  * This is a placeholder to allow compilation without the actual implementation.
@@ -206,7 +212,7 @@ class PackageManager private constructor(
     fun getEnabledPackageNameSet(): Set<String> = emptySet()
     
     // Stub methods for internal tool package resolution
-    fun resolveToolPkgSubpackageRuntimeInternal(subpackageId: String): ToolPkgContainerRuntime? = null
+    fun resolveToolPkgSubpackageRuntimeInternal(subpackageId: String): ToolPkgSubpackageInfo? = null
     
     fun getActivePackageStateId(): String? = null
     
@@ -214,17 +220,19 @@ class PackageManager private constructor(
     
     fun getToolPkgMainScriptInternal(packageName: String): String? = null
     
-    fun getToolPkgResourceOutputFileName(packageName: String, resourceKey: String): String? = null
+    fun getToolPkgResourceOutputFileName(packageName: String, resourceKey: String, preferEnabledContainer: Boolean = false): String? = null
     
-    fun copyToolPkgResourceToFile(packageName: String, resourceKey: String, outputPath: String): Boolean = false
+    fun copyToolPkgResourceToFile(packageName: String, resourceKey: String, outputFile: java.io.File): Boolean = false
     
-    fun copyToolPkgResourceToFileBySubpackageId(subpackageId: String, resourceKey: String, outputPath: String): Boolean = false
+    fun copyToolPkgResourceToFileBySubpackageId(subpackageId: String, resourceKey: String, destinationFile: java.io.File, preferEnabledContainer: Boolean = false): Boolean = false
     
-    fun getPluginConfigDirPath(): String = ""
+    fun getPluginConfigDirPath(packageName: String? = null): String = ""
     
-    fun refreshExternalPackagesForDebug() {}
+    fun refreshExternalPackagesForDebug(reactivateActivePackages: Boolean = false): String = ""
     
     fun installDebugToolPkg(filePath: String): Result<Any?> = Result.success(null)
+    
+    fun installDebugToolPkg(containerPackageName: String, externalFilePath: String, resetSubpackageStatesToManifest: Boolean): String = ""
     
     fun readToolPkgResourceBytes(packageName: String, resourceKey: String): ByteArray? = null
 

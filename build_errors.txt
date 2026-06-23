@@ -1,0 +1,66 @@
+﻿Configuration on demand is an incubating feature.
+
+> Configure project :app
+WARNING: The option setting 'android.overridePathCheck=true' is experimental.
+The current default is 'false'.
+
+> Task :quickjs:preBuild UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :quickjs:preDebugBuild UP-TO-DATE
+> Task :app:objectboxPrepareBuild UP-TO-DATE
+> Task :quickjs:writeDebugAarMetadata UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :quickjs:processDebugNavigationResources UP-TO-DATE
+> Task :quickjs:generateDebugResValues UP-TO-DATE
+> Task :quickjs:generateDebugResources UP-TO-DATE
+> Task :quickjs:packageDebugResources UP-TO-DATE
+> Task :quickjs:extractDeepLinksDebug UP-TO-DATE
+> Task :quickjs:processDebugManifest UP-TO-DATE
+> Task :quickjs:compileDebugLibraryResources UP-TO-DATE
+> Task :quickjs:parseDebugLocalResources UP-TO-DATE
+> Task :quickjs:generateDebugRFile UP-TO-DATE
+> Task :quickjs:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :quickjs:compileDebugKotlin UP-TO-DATE
+> Task :quickjs:javaPreCompileDebug UP-TO-DATE
+> Task :quickjs:compileDebugJavaWithJavac NO-SOURCE
+> Task :quickjs:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:compileDebugNavigationResources UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:compileDebugAidl FAILED
+./gradlew : 
+所在位置 行:1 字符: 35
++ ... 项目\小说软件\AIGC-NetNov" ; ./gradlew :app:compileDebugKotlin 2>&1 | Out-F ...
++                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileDebugAidl'.
+> A failure occurred while executing com.android.build.gradle.tasks.AidlCompile$AidlCompileRunnable
+   > java.nio.charset.MalformedInputException: Input length = 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 1s
+31 actionable tasks: 1 executed, 30 up-to-date
