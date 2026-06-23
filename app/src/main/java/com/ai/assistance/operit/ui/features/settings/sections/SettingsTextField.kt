@@ -25,6 +25,7 @@ fun SettingsTextField(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     unitText: String = "",
+    placeholder: String = "",
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     singleLine: Boolean = true,
     maxLines: Int = 1

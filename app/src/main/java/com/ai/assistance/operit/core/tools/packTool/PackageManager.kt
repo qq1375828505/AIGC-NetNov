@@ -4,12 +4,6 @@ import com.ai.assistance.operit.core.tools.PackageTool
 import com.ai.assistance.operit.core.tools.ToolPackage
 import com.ai.assistance.operit.core.tools.javascript.JsEngine
 
-/** Stub extension: returns the string itself (mimics LocalizedText.resolve(Context)). */
-internal fun String.resolve(context: android.content.Context): String = this
-
-/** Stub extension: returns the string itself (mimics LocalizedText.resolve(preferredLanguage)). */
-internal fun String.resolve(preferredLanguage: String): String = this
-
 /**
  * Stub implementation of PackageManager.
  * This is a placeholder to allow compilation without the actual implementation.
@@ -75,7 +69,10 @@ class PackageManager private constructor(
     data class PackageLoadErrorInfo(
         val packageName: String = "",
         val errorMessage: String = "",
-        val filePath: String = ""
+        val filePath: String = "",
+        val sourcePath: String? = null,
+        val message: String = "",
+        val isExternalSource: Boolean = false
     )
     
     data class ToolPkgWorkflowTemplate(
@@ -222,6 +219,8 @@ class PackageManager private constructor(
     
     fun getToolPkgResourceOutputFileName(packageName: String, resourceKey: String, preferEnabledContainer: Boolean = false): String? = null
     
+    fun getToolPkgResourceOutputFileName(packageNameOrSubpackageId: String, resourceKey: String, preferEnabledContainer: Boolean, unused: Boolean = false): String? = null
+    
     fun copyToolPkgResourceToFile(packageName: String, resourceKey: String, outputFile: java.io.File): Boolean = false
     
     fun copyToolPkgResourceToFileBySubpackageId(subpackageId: String, resourceKey: String, destinationFile: java.io.File, preferEnabledContainer: Boolean = false): Boolean = false
@@ -268,7 +267,8 @@ class PackageManager private constructor(
         val description: String = "",
         val enabledByDefault: Boolean = false,
         val toolCount: Int = 0,
-        val enabled: Boolean = false
+        val enabled: Boolean = false,
+        val entryPath: String = ""
     )
     
     /**
