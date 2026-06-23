@@ -1099,7 +1099,7 @@ internal fun StandardBrowserSessionTools.startBrowserManagedDownload(
         mimeType = mimeType,
         headers = headers
     )
-    showToast(context.getString(com.ai.assistance.operit.R.string.download_started, fileName))
+    showToast(context.getString(com.ai.assistance.novelide.R.string.download_started, fileName))
 }
 
 internal fun StandardBrowserSessionTools.startInlineManagedDownload(
@@ -1121,7 +1121,7 @@ internal fun StandardBrowserSessionTools.startInlineManagedDownload(
         bytes = bytes,
         sourceUrl = sourceUrl
     )
-    showToast(context.getString(com.ai.assistance.operit.R.string.download_started, resolvedFileName))
+    showToast(context.getString(com.ai.assistance.novelide.R.string.download_started, resolvedFileName))
 }
 
 internal fun StandardBrowserSessionTools.buildBrowserDownloadSummary(): BrowserDownloadSummary {

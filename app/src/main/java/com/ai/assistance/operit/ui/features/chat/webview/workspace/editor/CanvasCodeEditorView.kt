@@ -1705,7 +1705,8 @@ class CanvasCodeEditorView @JvmOverloads constructor(
 
     private fun loadEditorTypeface(): Typeface {
         return try {
-            resources.getFont(com.ai.assistance.operit.terminal.R.font.jetbrains_mono_nerd_font_regular)
+            val fontId = resources.getIdentifier("jetbrains_mono_nerd_font_regular", "font", context.packageName)
+            if (fontId != 0) resources.getFont(fontId) else throw IllegalArgumentException("Font not found")
         } catch (_: Exception) {
             Typeface.MONOSPACE
         }

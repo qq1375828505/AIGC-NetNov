@@ -21,8 +21,6 @@ class GestureStateHolder {
     
     var gestureTranslationY: Float = 0.0f
     
-    var isChatScreenGestureConsumed: Boolean = false
-    
     fun resetGestureState() {
         gestureScale = 1.0f
         gestureTranslationX = 0.0f
@@ -31,6 +29,8 @@ class GestureStateHolder {
     }
     
     companion object {
+        var isChatScreenGestureConsumed: Boolean = false
+
         @Composable
         fun rememberGestureStateHolder(): MutableState<GestureStateHolder> {
             return remember { mutableStateOf(GestureStateHolder()) }
