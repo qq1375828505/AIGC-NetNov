@@ -114,6 +114,7 @@ object ScreenRouteRegistry {
                 screen = Screen.AiChat,
                 surface = NavigationSurface.MAIN_SIDEBAR_AI,
                 launchNavItem = NavItem.AiChat,
+                titleResId = R.string.nav_ai_chat,
                 icon = NavItem.AiChat.icon,
                 order = 10
             ),
@@ -122,6 +123,7 @@ object ScreenRouteRegistry {
                 screen = Screen.AssistantConfig,
                 surface = NavigationSurface.MAIN_SIDEBAR_AI,
                 launchNavItem = NavItem.AssistantConfig,
+                titleResId = R.string.nav_assistant_config,
                 icon = NavItem.AssistantConfig.icon,
                 order = 20
             ),
@@ -130,6 +132,7 @@ object ScreenRouteRegistry {
                 screen = Screen.MemoryBase,
                 surface = NavigationSurface.MAIN_SIDEBAR_AI,
                 launchNavItem = NavItem.MemoryBase,
+                titleResId = R.string.nav_memory_base,
                 icon = NavItem.MemoryBase.icon,
                 order = 30
             ),
@@ -138,6 +141,7 @@ object ScreenRouteRegistry {
                 screen = Screen.Packages,
                 surface = NavigationSurface.MAIN_SIDEBAR_TOOLS,
                 launchNavItem = NavItem.Packages,
+                titleResId = R.string.nav_packages,
                 icon = NavItem.Packages.icon,
                 order = 10
             ),
@@ -146,6 +150,7 @@ object ScreenRouteRegistry {
                 screen = Screen.ShizukuCommands,
                 surface = NavigationSurface.MAIN_SIDEBAR_TOOLS,
                 launchNavItem = NavItem.ShizukuCommands,
+                titleResId = R.string.shizuku_commands,
                 icon = NavItem.ShizukuCommands.icon,
                 order = 20
             ),
@@ -154,6 +159,7 @@ object ScreenRouteRegistry {
                 screen = Screen.Workflow,
                 surface = NavigationSurface.MAIN_SIDEBAR_TOOLS,
                 launchNavItem = NavItem.Workflow,
+                titleResId = R.string.nav_workflow,
                 icon = NavItem.Workflow.icon,
                 order = 30
             ),
@@ -162,6 +168,7 @@ object ScreenRouteRegistry {
                 screen = Screen.Settings,
                 surface = NavigationSurface.MAIN_SIDEBAR_SYSTEM,
                 launchNavItem = NavItem.Settings,
+                titleResId = R.string.nav_settings,
                 icon = NavItem.Settings.icon,
                 order = 10
             ),
@@ -170,6 +177,7 @@ object ScreenRouteRegistry {
                 screen = Screen.Help,
                 surface = NavigationSurface.MAIN_SIDEBAR_SYSTEM,
                 launchNavItem = NavItem.Help,
+                titleResId = R.string.nav_help,
                 icon = NavItem.Help.icon,
                 order = 20
             ),
@@ -178,6 +186,7 @@ object ScreenRouteRegistry {
                 screen = Screen.About,
                 surface = NavigationSurface.MAIN_SIDEBAR_SYSTEM,
                 launchNavItem = NavItem.About,
+                titleResId = R.string.nav_about,
                 icon = NavItem.About.icon,
                 order = 30
             ),
