@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Fic-IDE UI 对接审计报告</title>
+<style>
+  :root {
+    --bg: #fafaf7; --surface: #ffffff; --border: #e6e4dc; --text: #2c2c2a;
+    --muted: #5f5e5a; --accent: #534ab7; --teal: #0f6e56; --amber: #854f0b;
+    --red: #a32d2d; --green: #3b6d11; --teal-bg: #e1f5ee; --amber-bg: #faeeda;
+    --red-bg: #fcebeb; --purple-bg: #eeedfe;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 32px 20px; background: var(--bg); color: var(--text);
+    font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 15px; line-height: 1.7; }
+  .wrap { max-width: 920px; margin: 0 auto; }
+  h1 { font-size: 26px; font-weight: 600; margin: 0 0 4px; }
+  .subtitle { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+  h2 { font-size: 19px; font-weight: 600; margin: 36px 0 12px; padding-bottom: 8px;
+    border-bottom: 2px solid var(--accent); color: var(--accent); }
+  h3 { font-size: 16px; font-weight: 600; margin: 24px 0 10px; }
+  p { margin: 8px 0; }
+  .lead { background: var(--purple-bg); border-left: 4px solid var(--accent);
+    padding: 16px 20px; border-radius: 8px; margin: 16px 0 24px; }
+  .lead strong { color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    overflow: hidden; }
+  th { background: #f1efe8; text-align: left; padding: 10px 12px; font-weight: 600;
+    font-size: 13px; border-bottom: 1px solid var(--border); }
+  td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 12px;
+    font-weight: 600; white-space: nowrap; }
+  .b-ok { background: var(--teal-bg); color: var(--teal); }
+  .b-fake { background: var(--amber-bg); color: var(--amber); }
+  .b-bug { background: var(--red-bg); color: var(--red); }
+  .b-info { background: #e6f1fb; color: #0c447c; }
+  code { background: #f1efe8; padding: 1px 6px; border-radius: 4px; font-size: 13px;
+    font-family: "SF Mono", Consolas, monospace; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px 22px; margin: 14px 0; }
+  .card-ok { border-left: 4px solid var(--teal); }
+  .card-fake { border-left: 4px solid var(--amber); }
+  .card-bug { border-left: 4px solid var(--red); }
+  ul { margin: 8px 0; padding-left: 22px; }
+  li { margin: 4px 0; }
+  .stat-row { display: flex; gap: 12px; margin: 16px 0; flex-wrap: wrap; }
+  .stat { flex: 1; min-width: 130px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 16px; text-align: center; }
+  .stat .num { font-size: 28px; font-weight: 600; }
+  .stat .lbl { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .num-ok { color: var(--teal); } .num-fake { color: var(--amber); } .num-bug { color: var(--red); }
+  .arch { background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; margin: 14px 0; }
+  .arch pre { background: #2c2c2a; color: #e1f5ee; padding: 14px 18px; border-radius: 8px;
+    overflow-x: auto; font-size: 13px; margin: 10px 0; }
+  .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);
+    color: var(--muted); font-size: 13px; }
+  .tag-list span { display: inline-block; background: #f1efe8; padding: 2px 8px; border-radius: 4px;
+    font-size: 12px; margin: 2px 4px 2px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>AI-Fic-IDE UI 对接审计报告</h1>
+<div class="subtitle">审计对象：软件改造计划/UI/完整版.html × 主要项目AI-Fic-IDE（Android/Kotlin/Compose）｜审计日期：2026-06-18</div>
+
+<div class="lead">
+  <strong>一句话结论：</strong>这份 UI 设计稿<strong>已经被项目采用</strong>了——同一份 HTML（MD5 完全一致 <code>b0e08baa…</code>）被打包进了 <code>app/src/main/assets/web/ui/完整版.html</code>，通过 WebView + NativeBridge 混合架构加载。<strong>能用，但只覆盖了约 35% 的页面</strong>：AI 对话、会话记录、语音通话、工作区、主题 5 大块已真实对接原生后端可正常运行；而 10 个写作核心页面（作品/编辑器/资料/统计/工具/记忆/工作流/终端/智能体/设置详情）是<strong>空壳</strong>——讽刺的是，这些功能的后端能力（NovelRepository + 8 类素材 + 59 个 AI 工具 + 写作 Agent）在 Android 原生侧<strong>全部已实现且可用</strong>，只是没接进这份 HTML。
+</div>
+
+<h2>一、核心发现：一份 HTML，两套对接路径</h2>
+
+<div class="arch">
+<p>通过 MD5 校验确认，<strong>你给的 UI 设计稿 = Android 项目里打包的那份 HTML</strong>，一个字都没改。但它在两种环境下的"后端对接方式"完全不同：</p>
+<pre>PC 浏览器（开发/调试）
+  完整版.html ──fetch──▶ http://127.0.0.1:4590 ──▶ voice-call-server (Node.js)
+                          （WebSocket 信令 + REST + SQLite，仅 PC mock 用）
+
+Android App（生产）
+  WebView 加载 完整版.html
+       │
+       ▼  WebUIContainer.kt 在 onPageFinished 注入 override 脚本
+       │  把 HTML 里调 4590 的函数全部重写为调 window.NativeBridge
+       │
+       ▼  NativeBridge (@JavascriptInterface, 40+ 方法)
+       ▼
+  ChatViewModel / NovelRepository / ModelConfigManager / VoiceCallManager ...
+  （Room + ObjectBox + 30+ AI Provider + 本地 llama.cpp/MNN）</pre>
+<p><code>WebUIContainer.kt:1074</code> 的注释写得明明白白：</p>
+<pre>"NOTE: Local HTTP proxy (127.0.0.1:4590 / /api/sessions) is NOT wired up.
+ Session history, voice calls, and chat now route through NativeBridge."</pre>
+<p>也就是说：<code>voice-call-server</code>（端口 4590）只是 PC 端调试用的 mock 后端，Android 手机上<strong>不跑这个服务</strong>，所有调用都被注入的 JS 脚本劫持重定向到原生。</p>
+</div>
+
+<h2>二、覆盖统计</h2>
+
+<div class="stat-row">
+  <div class="stat"><div class="num num-ok">6</div><div class="lbl">已对接原生（可用）</div></div>
+  <div class="stat"><div class="num num-fake">10</div><div class="lbl">假功能未对接</div></div>
+  <div class="stat"><div class="num num-bug">3</div><div class="lbl">Bug / 不一致</div></div>
+  <div class="stat"><div class="num">~35%</div><div class="lbl">设计稿实际利用率</div></div>
+</div>
+
+<h2>三、逐页对接审计矩阵</h2>
+
+<table>
+<thead><tr><th style="width:18%">页面</th><th style="width:14%">HTML 原始状态</th><th style="width:14%">Android 对接</th><th>后端契约与证据</th></tr></thead>
+<tbody>
+<tr><td><strong>AI 对话 chat</strong></td><td><span class="badge b-fake">AI回复硬编码</span></td><td><span class="badge b-ok">已重写</span></td>
+<td>WebUIContainer 重写 <code>sendChat()</code> → <code>NB.sendChatMessage()</code> → <code>ChatViewModel.sendTextMessage()</code>，真实流式 AI（30+ Provider），通过 <code>_webuiOnAIStreamChunk</code> 回调推流。✅ 正常</td></tr>
+<tr><td><strong>会话记录 history</strong></td><td><span class="badge b-info">调4590 REST</span></td><td><span class="badge b-ok">已重写</span></td>
+<td>重写 <code>createNewSession/refreshSessionHistory/openSession/pinSession/deleteOneSession/renderSessionList/loadHistStats</code> → <code>NB.getSessions/createSession/openSession/pinSession</code> → <code>ChatDao</code>（Room <code>chats</code> 表）。✅ 正常</td></tr>
+<tr><td><strong>语音通话</strong></td><td><span class="badge b-info">调4590 WS</span></td><td><span class="badge b-ok">已重写(降级)</span></td>
+<td>重写为原生 <code>VoiceCallManager</code>：浏览器 SpeechRecognition/speechSynthesis 被替换为 Android <code>SpeechRecognizer</code>+<code>TextToSpeech</code>+多 Provider ASR/TTS。⚠️ 无真实 WebSocket 信令后端，是"ASR→原生文字聊天→TTS"降级方案，但能跑通。</td></tr>
+<tr><td><strong>工作区 workspace</strong></td><td><span class="badge b-ok">localStorage</span></td><td><span class="badge b-ok">已重写</span></td>
+<td>拦截 <code>setDefaultWorkspace/pickCustomWorkspace</code> → <code>NB.getWorkspacePath/setWorkspacePath/pickWorkspaceFolder</code> → SAF <code>OpenDocumentTree</code>。✅ 正常</td></tr>
+<tr><td><strong>设置-主题</strong></td><td><span class="badge b-ok">localStorage</span></td><td><span class="badge b-ok">已对接</span></td>
+<td>启动时 <code>NB.getAllSettings()</code> 恢复主题，<code>selectTheme</code> 持久化。✅ 正常</td></tr>
+<tr><td><strong>插件状态</strong></td><td><span class="badge b-info">仅切换样式</span></td><td><span class="badge b-ok">已拦截</span></td>
+<td>拦截 <code>togglePresetSwitch</code> → <code>NB.setPluginState</code> → <code>SharedPreferences("webui_plugins")</code>。✅ 正常</td></tr>
+<tr><td><strong>我的作品 novel</strong></td><td><span class="badge b-fake">空壳+alert</span></td><td><span class="badge b-fake">未对接</span></td>
+<td>新建仅 alert 无输入框，无作品数据。<strong>后端已有</strong>：<code>NovelRepository.getAllWorks/insertWork</code> + <code>NovelWorksViewModel</code> + Room <code>novel_works</code> 表。❌ 缺 NB 桥接 + HTML 重写</td></tr>
+<tr><td><strong>写作编辑器 editor</strong></td><td><span class="badge b-fake">textarea不保存</span></td><td><span class="badge b-fake">未对接</span></td>
+<td>textarea 可输入但不保存，字数硬编码"-"，无富文本/Markdown/目录树/章节切换。<strong>后端已有</strong>：<code>NovelEditorViewModel</code>（章节切换/创建/内容更新/字数/自动保存1.5s防抖）+ <code>Chapter</code> 实体 + Markdown 渲染。❌ 完全没接</td></tr>
+<tr><td><strong>资料管理 materials</strong></td><td><span class="badge b-fake">空壳+alert</span></td><td><span class="badge b-fake">未对接</span></td>
+<td>5 类 rail 可切但无数据。<strong>后端已有</strong>：<code>NovelMaterialsViewModel</code> 统一管理 8 类素材（角色/设定/地点/势力/物品/伏笔/参考资料/写作待办），全部 Room CRUD。❌ 完全没接</td></tr>
+<tr><td><strong>写作统计 stats</strong></td><td><span class="badge b-fake">全占位"-"</span></td><td><span class="badge b-fake">未对接</span></td>
+<td>全是"-"占位，无图表。<strong>后端已有</strong>：<code>NovelStatsViewModel</code>（totalWordCount/chapterCount/dailyWordCounts/番茄预设统计）。❌ 完全没接</td></tr>
+<tr><td><strong>写作工具 novelTools</strong></td><td><span class="badge b-fake">6工具全alert</span></td><td><span class="badge b-fake">未对接</span></td>
+<td>精修/爽点/水文/大纲/角色/标题 6 工具仅 alert"将使用AI"。<strong>后端已有</strong>：<code>NovelToolsViewModel</code>（POLISH/CONTINUE/OUTLINE/CHARACTER/SCENE/NAME）+ <code>NovelAgentDispatcher</code>（多轮推敲 MAX=3）+ 59 个 AI 工具。❌ 完全没接</td></tr>
+<tr><td><strong>记忆库 memory</strong></td><td><span class="badge b-fake">空壳</span></td><td><span class="badge b-fake">未对接</span></td>
+<td>空状态，添加按钮无事件。<strong>后端已有</strong>：<code>MemoryRepository</code> + ObjectBox <code>Memory</code>（带向量嵌入）+ <code>MemoryLibrary</code> 自动保存 + 向量检索 + 图谱视图。❌ 完全没接</td></tr>
+<tr><td><strong>工作流 workflow</strong></td><td><span class="badge b-fake">空壳</span></td><td><span class="badge b-fake">未对接</span></td>
+<td>空状态。<strong>后端已有</strong>：<code>WorkflowViewModel</code> + 定时任务/Tasker 集成。❌ 完全没接</td></tr>
+<tr><td><strong>终端 terminal</strong></td><td><span class="badge b-fake">假执行</span></td><td><span class="badge b-fake">未对接</span></td>
+<td>仅回显命令不执行。<strong>后端已有</strong>：<code>TerminalViewModel</code> + Ubuntu/termux 风格内置终端 + Shizuku/root 支持。❌ 完全没接</td></tr>
+<tr><td><strong>智能体 agent</strong></td><td><span class="badge b-info">7预设硬编码</span></td><td><span class="badge b-fake">部分对接</span></td>
+<td>7 个预设智能体（大纲/角色/爽点/水文/标题/去AI味/精修）有完整 System Prompt（可复用资产），详情可看。但<strong>启用开关无 onclick、编辑/测试 alert"开发中"</strong>。<strong>后端已有</strong>：<code>AgentViewModel</code>，但 <code>AgentManagementScreen</code> 自定义智能体创建/编辑/测试仍是 TODO</td></tr>
+<tr><td><strong>设置-模型配置 sub-model</strong></td><td><span class="badge b-fake">空状态</span></td><td><span class="badge b-fake">未对接</span></td>
+<td>显示"暂无模型数据"。<strong>后端已有</strong>：<code>ModelConfigManager</code>（多模型 CRUD，createConfig/saveModelConfig/deleteConfig）+ 连接测试 + 模型列表拉取。❌ 没接进 HTML</td></tr>
+<tr><td><strong>设置-Token用量 sub-token</strong></td><td><span class="badge b-fake">空状态</span></td><td><span class="badge b-fake">未对接</span></td>
+<td>显示"暂无用量数据"。<strong>后端已有</strong>：<code>TokenStatisticsDelegate</code> + <code>MessageEntity</code> 的 inputTokens/outputTokens 字段。❌ 没接</td></tr>
+<tr><td><strong>设置-备份 sub-backup</strong></td><td><span class="badge b-fake">alert模拟</span></td><td><span class="badge b-fake">未对接</span></td>
+<td>导入导出 alert 模拟。<strong>后端已有</strong>：<code>RoomDatabaseBackupManager/RestoreManager</code> + WorkManager 定时备份 + <code>OperitBackupDirs</code>。❌ 没接</td></tr>
+<tr><td><strong>设置-其余子页</strong></td><td><span class="badge b-fake">UI不持久化</span></td><td><span class="badge b-fake">部分拦截</span></td>
+<td>用户偏好/语言/显示行为/布局/功能模型/TTS-STT/权限/聊天记录统计等子页：toggle/radio/slider 仅 UI 变化。<code>WebUIContainer</code> 拦截了 <code>toggleSwitch/selectRadioGroup/sliderClick</code> 但只持久化部分。<strong>后端有</strong> <code>UserPreferencesManager/DisplayPreferencesManager</code> 等 30+ 管理器。⚠️ 覆盖不全</td></tr>
+</tbody>
+</table>
+
+<h2>四、Bug 与不一致问题清单</h2>
+
+<div class="card card-bug">
+<h3>🔴 Bug 1：插件筛选函数未定义（必现崩溃）</h3>
+<p><strong>位置</strong>：<code>完整版.html</code> plugin 页筛选 Tab 的 <code>onclick="filterPluginList(...)"</code></p>
+<p><strong>问题</strong>：JS 中只定义了 <code>switchPluginTab/filterPresetTabs</code>，<strong>没有 <code>filterPluginList</code> 函数</strong>，点击筛选 Tab 会抛 <code>ReferenceError</code>。</p>
+<p><strong>影响</strong>：插件管理页筛选功能完全不可用。Android override 脚本未修复此 bug。</p>
+<p><strong>修复</strong>：在 HTML 中补 <code>function filterPluginList(level){...}</code>，或在 WebUIContainer 注入补丁。</p>
+</div>
+
+<div class="card card-bug">
+<h3>🔴 Bug 2：包名三处不一致</h3>
+<table>
+<tr><th>位置</th><th>写的包名</th><th>实际 applicationId</th></tr>
+<tr><td>sub-about 关于页</td><td><code>com.operit.aificide</code></td><td rowspan="3"><code>com.aificide.app</code><br>（app/build.gradle.kts）</td></tr>
+<tr><td>sub-backup 备份路径</td><td><code>com.aific</code></td></tr>
+<tr><td>sub-about 存储路径</td><td><code>/data/user/0/com.operit.aificide/files</code></td></tr>
+</table>
+<p><strong>影响</strong>：备份路径错误会导致找不到备份目录；关于页信息误导。需统一为 <code>com.aificide.app</code>。</p>
+</div>
+
+<div class="card card-bug">
+<h3>🟡 Bug 3：角色关系图引用外部文件</h3>
+<p><strong>位置</strong>：toolbox 页"角色关系图" <code>window.open('角色关系图.html','_blank')</code></p>
+<p><strong>问题</strong>：该外部 HTML 文件在 assets 中<strong>不存在</strong>（项目原生侧有 <code>ui/features/characterrelationship/</code> 完整实现，但 HTML 没接）。</p>
+<p><strong>修复</strong>：改为 <code>NB.navigateToNative('characterrelationship')</code> 跳原生页面，或补 assets 文件。</p>
+</div>
+
+<h2>五、前后端对接可行性评估（按模块）</h2>
+
+<table>
+<thead><tr><th>模块</th><th>HTML端</th><th>原生后端</th><th>对接难度</th><th>工作量</th></tr></thead>
+<tbody>
+<tr><td>AI 对话</td><td>✅已对接</td><td>✅30+ Provider+流式</td><td>—</td><td>已完成</td></tr>
+<tr><td>会话记录</td><td>✅已对接</td><td>✅Room ChatDao</td><td>—</td><td>已完成</td></tr>
+<tr><td>语音通话</td><td>✅已对接(降级)</td><td>✅ASR/TTS多Provider</td><td>中</td><td>若要完整WS信令需补后端</td></tr>
+<tr><td>作品管理</td><td>❌空壳</td><td>✅NovelRepository</td><td>低</td><td>小：补NB方法+HTML重写</td></tr>
+<tr><td>写作编辑器</td><td>❌textarea不存</td><td>✅Chapter+自动保存+Markdown</td><td>中</td><td>中：需重写编辑器逻辑</td></tr>
+<tr><td>资料管理</td><td>❌空壳</td><td>✅8类素材CRUD</td><td>低</td><td>小：补NB+渲染</td></tr>
+<tr><td>写作统计</td><td>❌占位</td><td>✅NovelStatsViewModel</td><td>低</td><td>小：补数据绑定</td></tr>
+<tr><td>写作工具</td><td>❌alert</td><td>✅Agent+59工具</td><td>低</td><td>小：补NB调用</td></tr>
+<tr><td>记忆库</td><td>❌空壳</td><td>✅ObjectBox+向量检索</td><td>中</td><td>中：向量交互复杂</td></tr>
+<tr><td>工作流</td><td>❌空壳</td><td>✅WorkflowViewModel</td><td>低</td><td>小</td></tr>
+<tr><td>终端</td><td>❌假执行</td><td>✅TerminalViewModel</td><td>中</td><td>中：终端交互需适配</td></tr>
+<tr><td>智能体</td><td>⚠️只读</td><td>⚠️TODO部分</td><td>中</td><td>中：原生侧也有TODO</td></tr>
+<tr><td>模型配置</td><td>❌空壳</td><td>✅ModelConfigManager</td><td>低</td><td>小</td></tr>
+<tr><td>Token统计</td><td>❌空壳</td><td>✅TokenStatisticsDelegate</td><td>低</td><td>小</td></tr>
+<tr><td>备份恢复</td><td>❌alert</td><td>✅BackupManager</td><td>低</td><td>小</td></tr>
+</tbody>
+</table>
+
+<h2>六、项目可用性结论</h2>
+
+<div class="card card-ok">
+<h3>✅ 当前可正常运行的功能（5 大块）</h3>
+<ul>
+<li><strong>AI 对话</strong>：真实流式输出，支持 30+ AI Provider（OpenAI/Claude/Gemini/DeepSeek/Qwen/豆包/Kimi/MiMo + 本地 llama.cpp/MNN），多 API Key 轮询、思考模式、Tool Call、多轮上下文</li>
+<li><strong>会话记录</strong>：新建/列表/搜索/筛选/置顶/删除/导出（JSON/MD）/统计/恢复，完整 CRUD 持久化到 Room</li>
+<li><strong>语音通话</strong>：ASR 语音识别（Sherpa/OpenAI/Deepgram/Silero VAD）→ AI 对话 → TTS 合成（OpenAI/豆包/MiniMax/MiMo/VITS），4 种模式（对话/听写/翻译/角色扮演）+ 总结注入</li>
+<li><strong>工作区 + 文件管理</strong>：SAF 目录选择、文件 CRUD、路径安全校验</li>
+<li><strong>主题 + 插件状态</strong>：5 套配色、插件开关持久化</li>
+</ul>
+</div>
+
+<div class="card card-fake">
+<h3>⚠️ 空壳但后端已就绪的功能（接上就能用）</h3>
+<p>这 10 个页面在 HTML 端是死的，但对应的 Android 原生后端<strong>全部已实现且经过测试</strong>。要激活它们，只需做"补 NativeBridge 方法 + HTML override 重写"的对接工作，<strong>不需要新建任何后端能力</strong>：</p>
+<ul>
+<li>作品管理 → <code>NovelRepository</code>（NovelWork 实体 + CRUD）</li>
+<li>写作编辑器 → <code>NovelEditorViewModel</code>（章节/字数/1.5s 防抖自动保存/Markdown）</li>
+<li>资料管理 → <code>NovelMaterialsViewModel</code>（8 类素材：角色/设定/地点/势力/物品/伏笔/参考/待办）</li>
+<li>写作统计 → <code>NovelStatsViewModel</code>（字数/章节/日更/番茄预设）</li>
+<li>写作工具 → <code>NovelToolsViewModel</code> + <code>NovelAgentDispatcher</code>（6 工具 + 多轮推敲 Agent + 59 个 AI 工具）</li>
+<li>记忆库 → <code>MemoryRepository</code>（ObjectBox + 向量嵌入 + 自动保存 + 图谱）</li>
+<li>工作流 → <code>WorkflowViewModel</code></li>
+<li>终端 → <code>TerminalViewModel</code></li>
+<li>模型配置 → <code>ModelConfigManager</code></li>
+<li>备份恢复 → <code>RoomDatabaseBackupManager</code></li>
+</ul>
+</div>
+
+<div class="card card-ok">
+<h3>✅ 构建可运行性</h3>
+<ul>
+<li>Gradle 构建：AGP 8.13.2 + Kotlin 2.2.0 + Compose BOM 2026.02.01 + Room 2.8.4 + Java 21 + NDK 26.1，组合兼容</li>
+<li>CI/CD：GitHub Actions <code>build.yml</code> 自动构建，<code>pr-check.yml</code> PR 检查</li>
+<li>SDK：minSdk 26（Android 8.0）/ targetSdk 34 / compileSdk 36，versionCode 43</li>
+<li>已知 TODO 约 20 处（多在 UI 层非核心），不影响主功能</li>
+<li>冗余目录：顶层 <code>llama/</code>、<code>mnn/</code> 模块未 include 进 settings.gradle.kts，但 app 内有源码副本，不影响构建</li>
+</ul>
+</div>
+
+<h2>七、可复用资产</h2>
+<div class="tag-list">
+<span>7 个预设智能体 System Prompt（大纲/角色/爽点/水文/标题/去AI味/精修）</span>
+<span>25 个番茄预设（都市/玄幻/穿越/悬疑/女频 5 大类）</span>
+<span>NativeBridge 40+ @JavascriptInterface 方法</span>
+<span>JS 回调机制（_webuiOnAI* 系列）</span>
+<span>voice-call-server（PC 调试用 Node.js mock 后端）</span>
+<span>WebUI 混合架构 override 模式</span>
+</div>
+
+<h2>八、优先级修复建议</h2>
+<table>
+<thead><tr><th>优先级</th><th>事项</th><th>理由</th></tr></thead>
+<tbody>
+<tr><td>P0</td><td>修复 <code>filterPluginList</code> 未定义 bug</td><td>必现崩溃，点插件筛选就报错</td></tr>
+<tr><td>P0</td><td>统一包名为 <code>com.aificide.app</code></td><td>备份路径错误会导致数据丢失风险</td></tr>
+<tr><td>P1</td><td>对接"作品管理 + 写作编辑器"到 HTML</td><td>这是 IDE 的核心功能，目前 HTML 端完全空壳</td></tr>
+<tr><td>P1</td><td>对接"资料管理"8 类素材</td><td>写作必备，后端已完整</td></tr>
+<tr><td>P1</td><td>对接"写作工具"6 工具 + Agent</td><td>核心差异化能力，目前仅 alert</td></tr>
+<tr><td>P2</td><td>对接"写作统计 + 模型配置 + Token用量"</td><td>提升完整度，工作量小</td></tr>
+<tr><td>P2</td><td>修复角色关系图 window.open</td><td>改为跳原生页面</td></tr>
+<tr><td>P2</td><td>对接"备份恢复"</td><td>数据安全，后端已就绪</td></tr>
+<tr><td>P3</td><td>对接"记忆库/工作流/终端"</td><td>进阶功能，交互较复杂</td></tr>
+<tr><td>P3</td><td>补全设置子页持久化</td><td>覆盖 30+ PreferencesManager</td></tr>
+</tbody>
+</table>
+
+<div class="footer">
+<p>本报告由两个子代理并行审计生成：① HTML 设计稿功能解析（4358 行逐行）② Android 项目后端能力深挖（1247 文件树）。核心交叉验证点：MD5 一致性 + WebUIContainer override 注入逻辑。</p>
+<p>审计依据文件：<code>软件改造计划/UI/完整版.html</code> · <code>主要项目AI-Fic-IDE/app/src/main/assets/web/ui/完整版.html</code> · <code>app/src/main/java/com/aificide/app/ui/webui/WebUIContainer.kt</code> · <code>WebUIBridge.kt</code> · <code>voice-call-server/server.js</code></p>
+</div>
+
+</div>
+</body>
+</html>

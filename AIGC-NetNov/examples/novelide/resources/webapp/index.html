@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Fic-IDE - UI 总览</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d1117;color:#e6edf3;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh}
+.hero{text-align:center;padding:60px 20px 40px;background:linear-gradient(135deg,#0d1117 0%,#161b22 50%,#0d1117 100%)}
+.hero .logo{width:72px;height:72px;border-radius:18px;background:linear-gradient(135deg,#58a6ff,#a855f7);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 16px;box-shadow:0 8px 32px rgba(88,166,255,.3)}
+.hero h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;margin-bottom:8px}
+.hero .tagline{color:#8b949e;font-size:16px;margin-bottom:16px}
+.hero .badges{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.hero .badge{padding:4px 14px;border-radius:20px;font-size:12px;font-weight:500}
+.badge-native{background:#3fb95033;color:#3fb950;border:1px solid #3fb95044}
+.badge-platform{background:#58a6ff33;color:#58a6ff;border:1px solid #58a6ff44}
+.badge-version{background:#dda0dd33;color:#dda0dd;border:1px solid #dda0dd44}
+.stats{display:flex;justify-content:center;gap:48px;padding:32px 20px;max-width:800px;margin:0 auto}
+.stat{text-align:center}
+.stat-val{font-size:28px;font-weight:700}
+.stat-label{color:#8b949e;font-size:12px;margin-top:4px}
+.stat.novel .stat-val{color:#a855f7}
+.stat.chat .stat-val{color:#58a6ff}
+.stat.tools .stat-val{color:#3fb950}
+.section{padding:40px 20px;max-width:1200px;margin:0 auto}
+.section h2{font-size:22px;font-weight:700;margin-bottom:24px;display:flex;align-items:center;gap:10px}
+.section h2 .h-icon{font-size:26px}
+.module-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
+.module-card{background:#1c2128;border:1px solid #30363d;border-radius:20px;overflow:hidden;transition:all .2s;cursor:pointer;text-decoration:none;display:block}
+.module-card:hover{border-color:#58a6ff66;transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.module-card .card-preview{height:120px;display:flex;align-items:center;justify-content:center;font-size:48px;position:relative;overflow:hidden}
+.module-card .card-body{padding:20px}
+.module-card .card-body .card-title{color:#e6edf3;font-size:17px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.module-card .card-body .card-desc{color:#8b949e;font-size:13px;line-height:1.5}
+.module-card .card-body .card-tags{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.module-card .card-body .card-tag{padding:2px 10px;border-radius:10px;font-size:11px}
+.preview-nav{display:flex;gap:8px;height:80px;padding:16px 20px;overflow-x:auto;scrollbar-width:none;background:#161b22;border-top:1px solid #30363d}
+.preview-nav::-webkit-scrollbar{display:none}
+.preview-nav .nav-thumb{width:48px;height:48px;border-radius:10px;flex-shrink:0;border:2px solid #30363d;overflow:hidden;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;transition:all .15s}
+.preview-nav .nav-thumb:hover{border-color:#58a6ff;background:#2d333b}
+.footer{text-align:center;padding:40px;color:#484f58;font-size:13px;border-top:1px solid #30363d}
+.footer a{color:#58a6ff;text-decoration:none}
+@media(max-width:768px){.stats{gap:24px}.stat-val{font-size:22px}.module-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+<div class="logo">📖</div>
+<h1>AI-Fic-IDE</h1>
+<div class="tagline">网文写作集成开发环境 · Android 原生 · UI 预览总览</div>
+<div class="badges">
+<span class="badge badge-native">⚡ Kotlin + Jetpack Compose</span>
+<span class="badge badge-platform">📱 Android 8.0+</span>
+<span class="badge badge-version">🎨 Material Design 3</span>
+</div>
+</div>
+
+<div class="stats">
+<div class="stat novel"><div class="stat-val">13</div><div class="stat-label">UI 模块</div></div>
+<div class="stat chat"><div class="stat-val">77+</div><div class="stat-label">页面预览</div></div>
+<div class="stat tools"><div class="stat-val">14</div><div class="stat-label">HTML 文件</div></div>
+</div>
+
+<div class="section">
+<h2><span class="h-icon">📱</span> 模块总览</h2>
+<div class="module-grid">
+
+<a class="module-card" href="导航.html" target="_blank">
+<div class="card-preview" style="background:linear-gradient(135deg,#1f6feb11,#58a6ff22)">
+<span style="font-size:64px;opacity:.8">🧭</span>
+</div>
+<div class="card-body">
+<div class="card-title">🧭 主界面导航</div>
+<div class="card-desc">抽屉菜单 · 手机布局 · 平板双栏 · 作品列表</div>
+<div class="card-tags">
+<span class="card-tag" style="background:#58a6ff33;color:#58a6ff">导航</span>
+<span class="card-tag" style="background:#3fb95033;color:#3fb950">布局</span>
+</div>
+</div>
+</a>
+
+<a class="module-card" href="网文写作.html" target="_blank">
+<div class="card-preview" style="background:linear-gradient(135deg,#a855f711,#dda0dd22)">
+<span style="font-size:64px;opacity:.8">📝</span>
+</div>
+<div class="card-body">
+<div class="card-title">📝 网文写作</div>
+<div class="card-desc">作品管理 · 双编辑器 · 资料/大纲/统计 · 写作工具 · 工作区 · 记忆库</div>
+<div class="card-tags">
+<span class="card-tag" style="background:#dda0dd33;color:#dda0dd">8 屏</span>
+<span class="card-tag" style="background:#f0883e33;color:#f0883e">核心</span>
+</div>
+</div>
+</a>
+
+<a class="module-card" href="AI聊天.html" target="_blank">
+<div class="card-preview" style="background:linear-gradient(135deg,#1f6feb11,#58a6ff22)">
+<span style="font-size:64px;opacity:.8">🤖</span>
+</div>
+<div class="card-body">
+<div class="card-title">🤖 AI 聊天</div>
+<div class="card-desc">对话列表 · 实时聊天 · 模型配置 · 助手管理 · 角色卡系统</div>
+<div class="card-tags">
+<span class="card-tag" style="background:#58a6ff33;color:#58a6ff">5 屏</span>
+<span class="card-tag" style="background:#3fb95033;color:#3fb950">AI</span>
+</div>
+</div>
+</a>
+
+<a class="module-card" href="工具箱.html" target="_blank">
+<div class="card-preview" style="background:linear-gradient(135deg,#3fb95011,#7ee78722)">
+<span style="font-size:64px;opacity:.8">🔧</span>
+</div>
+<div class="card-body">
+<div class="card-title">🔧 工具箱</div>
+<div class="card-desc">文件管理 · SQL 查看 · Logcat · Shell 终端 · 语音 · 权限管理</div>
+<div class="card-tags">
+<span class="card-tag" style="background:#3fb95033;color:#3fb950">6 屏</span>
+<span class="card-tag" style="background:#58a6ff33;color:#58a6ff">工具</span>
+</div>
+</div>
+</a>
+
+<a class="module-card" href="浮动窗口.html" target="_blank">
+<div class="card-preview" style="background:linear-gradient(135deg,#f0883e11,#fbbf2422)">
+<span style="font-size:64px;opacity:.8">💫</span>
+</div>
+<div class="card-body">
+<div class="card-title">💫 浮动窗口</div>
+<div class="card-desc">悬浮球 · 浮动聊天 · 全屏模式 · 屏幕 OCR · 阅读模式</div>
+<div class="card-tags">
+<span class="card-tag" style="background:#f0883e33;color:#f0883e">4 屏</span>
+<span class="card-tag" style="background:#a855f733;color:#a855f7">浮动</span>
+</div>
+</div>
+</a>
+
+<a class="module-card" href="设置.html" target="_blank">
+<div class="card-preview" style="background:linear-gradient(135deg,#484f5811,#8b949e22)">
+<span style="font-size:64px;opacity:.8">⚙️</span>
+</div>
+<div class="card-body">
+<div class="card-title">⚙️ 设置 & 工作流</div>
+<div class="card-desc">主题 · 模型配置 · Token 统计 · 自动化工作流 · 备份</div>
+<div class="card-tags">
+<span class="card-tag" style="background:#8b949e33;color:#8b949e">5 屏</span>
+<span class="card-tag" style="background:#dda0dd33;color:#dda0dd">工作流</span>
+</div>
+</div>
+</a>
+
+<a class="module-card" href="交互原型.html" target="_blank" style="border-color:#58a6ff66">
+<div class="card-preview" style="background:linear-gradient(135deg,#1f6feb22,#58a6ff33)">
+<span style="font-size:64px;opacity:.8">🎮</span>
+</div>
+<div class="card-body">
+<div class="card-title">🎮 交互式原型 <span class="card-tag" style="background:#3fb95033;color:#3fb950;font-size:10px">推荐</span></div>
+<div class="card-desc">可点击操作的完整原型 · 侧边栏 · 聊天 · 编辑器 · 工具 · 设置 · 浮动窗口</div>
+<div class="card-tags">
+<span class="card-tag" style="background:#58a6ff33;color:#58a6ff">13+ 屏</span>
+<span class="card-tag" style="background:#3fb95033;color:#3fb950">交互</span>
+</div>
+</div>
+</a>
+
+<a class="module-card" href="浏览器.html" target="_blank">
+<div class="card-preview" style="background:linear-gradient(135deg,#f8514911,#ff6b9d22)">
+<span style="font-size:64px;opacity:.8">🌐</span>
+</div>
+<div class="card-body">
+<div class="card-title">🌐 浏览器 & 欢迎页</div>
+<div class="card-desc">Web 浏览器 · 启动加载 · 欢迎页 · 权限 · 更新 · 错误 · 小部件</div>
+<div class="card-tags">
+<span class="card-tag" style="background:#f8514933;color:#f85149">7 屏</span>
+<span class="card-tag" style="background:#58a6ff33;color:#58a6ff">浏览器</span>
+</div>
+</div>
+</a>
+
+<!-- 新增补全模块 -->
+<a class="module-card" href="插件市场.html" target="_blank" style="border-color:#a855f744">
+<div class="card-preview" style="background:linear-gradient(135deg,#a855f711,#dda0dd22)">
+<span style="font-size:64px;opacity:.8">📦</span>
+</div>
+<div class="card-body">
+<div class="card-title">📦 包管理/市场/MCP <span class="card-tag" style="background:#f8514933;color:#f85149;font-size:10px">补全</span></div>
+<div class="card-desc">包管理器 · 统一市场 · Artifact · Skill · MCP 服务 · 14 屏补全</div>
+<div class="card-tags">
+<span class="card-tag" style="background:#dda0dd33;color:#dda0dd">14 屏</span>
+<span class="card-tag" style="background:#f8514933;color:#f85149">新增</span>
+</div>
+</div>
+</a>
+
+<a class="module-card" href="设置补全.html" target="_blank" style="border-color:#f0883e44">
+<div class="card-preview" style="background:linear-gradient(135deg,#f0883e11,#fbbf2422)">
+<span style="font-size:64px;opacity:.8">⚙️</span>
+</div>
+<div class="card-body">
+<div class="card-title">⚙️ 设置子页面 <span class="card-tag" style="background:#f8514933;color:#f85149;font-size:10px">补全</span></div>
+<div class="card-desc">工具权限 · 用户偏好 · 语音 · HTTP 聊天 · 模型下载 · Waifu · 标签市场 · 功能配置 · 显示 · 聊天备份</div>
+<div class="card-tags">
+<span class="card-tag" style="background:#f0883e33;color:#f0883e">10 屏</span>
+<span class="card-tag" style="background:#f8514933;color:#f85149">新增</span>
+</div>
+</div>
+</a>
+
+<a class="module-card" href="工具箱补全.html" target="_blank" style="border-color:#3fb95044">
+<div class="card-preview" style="background:linear-gradient(135deg,#3fb95011,#7ee78722)">
+<span style="font-size:64px;opacity:.8">🔧</span>
+</div>
+<div class="card-body">
+<div class="card-title">🔧 工具箱遗漏 <span class="card-tag" style="background:#f8514933;color:#f85149;font-size:10px">补全</span></div>
+<div class="card-desc">UI 调试器 · FFmpeg · Markdown 演示 · 工具测试 · 默认助手 · 终端配置</div>
+<div class="card-tags">
+<span class="card-tag" style="background:#3fb95033;color:#3fb950">6 屏</span>
+<span class="card-tag" style="background:#f8514933;color:#f85149">新增</span>
+</div>
+</div>
+</a>
+
+<a class="module-card" href="关于协议.html" target="_blank" style="border-color:#8b949e44">
+<div class="card-preview" style="background:linear-gradient(135deg,#484f5811,#8b949e22)">
+<span style="font-size:64px;opacity:.8">📋</span>
+</div>
+<div class="card-body">
+<div class="card-title">📋 其他界面 <span class="card-tag" style="background:#f8514933;color:#f85149;font-size:10px">补全</span></div>
+<div class="card-desc">关于 · 协议 · 帮助 · Token · Shizuku · 番茄钟 · GitHub · 工作流详情</div>
+<div class="card-tags">
+<span class="card-tag" style="background:#8b949e33;color:#8b949e">8 屏</span>
+<span class="card-tag" style="background:#f8514933;color:#f85149">新增</span>
+</div>
+</div>
+</a>
+
+<a class="module-card" href="深层界面.html" target="_blank" style="border-color:#ff6b9d44">
+<div class="card-preview" style="background:linear-gradient(135deg,#ff6b9d11,#f8514922)">
+<span style="font-size:64px;opacity:.8">🔩</span>
+</div>
+<div class="card-body">
+<div class="card-title">🔩 深层剩余界面 <span class="card-tag" style="background:#3fb95033;color:#3fb950;font-size:10px">终极补全</span></div>
+<div class="card-desc">主题标签页 · 开源许可 · AutoGLM · 进程限制 · HTML打包 · 模型提示词 · 记忆库细节</div>
+<div class="card-tags">
+<span class="card-tag" style="background:#ff6b9d33;color:#ff6b9d">9 屏</span>
+<span class="card-tag" style="background:#3fb95033;color:#3fb950">终极</span>
+</div>
+</div>
+</a>
+
+<a class="module-card" href="详情页面.html" target="_blank" style="border-color:#3fb95066">
+<div class="card-preview" style="background:linear-gradient(135deg,#3fb95022,#7ee78733)">
+<span style="font-size:64px;opacity:.8">🏆</span>
+</div>
+<div class="card-body">
+<div class="card-title">🏆 最终补全 <span class="card-tag" style="background:#3fb95033;color:#3fb950;font-size:10px">100%</span></div>
+<div class="card-desc">Artifact 详情 · Skill 详情 · 自定义表情 · 上下文摘要 · 偏好引导</div>
+<div class="card-tags">
+<span class="card-tag" style="background:#3fb95033;color:#3fb950">5 屏</span>
+<span class="card-tag" style="background:#3fb95033;color:#3fb950">100%</span>
+</div>
+</div>
+</a>
+
+</div>
+</div>
+
+<div class="section">
+<h2><span class="h-icon">📋</span> 模块清单</h2>
+<div style="background:#1c2128;border:1px solid #30363d;border-radius:16px;overflow:hidden">
+<table style="width:100%;border-collapse:collapse;font-size:14px">
+<thead><tr style="background:#21262d;color:#8b949e;font-size:12px;text-transform:uppercase;letter-spacing:.5px">
+<th style="padding:12px 16px;text-align:left">模块</th>
+<th style="padding:12px 16px;text-align:left">文件名</th>
+<th style="padding:12px 16px;text-align:right">屏幕数</th>
+<th style="padding:12px 16px;text-align:right">大小</th>
+</tr></thead>
+<tbody>
+<tr style="border-top:1px solid #30363d"><td style="padding:10px 16px">🧭 主界面导航</td><td style="color:#58a6ff"><code>导航.html</code></td><td style="text-align:right;color:#8b949e">4</td><td style="text-align:right;color:#8b949e">14 KB</td></tr>
+<tr style="border-top:1px solid #30363d"><td style="padding:10px 16px">📝 网文写作</td><td style="color:#58a6ff"><code>网文写作.html</code></td><td style="text-align:right;color:#8b949e">8</td><td style="text-align:right;color:#8b949e">19 KB</td></tr>
+<tr style="border-top:1px solid #30363d"><td style="padding:10px 16px">🤖 AI 聊天</td><td style="color:#58a6ff"><code>AI聊天.html</code></td><td style="text-align:right;color:#8b949e">5</td><td style="text-align:right;color:#8b949e">16 KB</td></tr>
+<tr style="border-top:1px solid #30363d"><td style="padding:10px 16px">🔧 工具箱</td><td style="color:#58a6ff"><code>工具箱.html</code></td><td style="text-align:right;color:#8b949e">6</td><td style="text-align:right;color:#8b949e">17 KB</td></tr>
+<tr style="border-top:1px solid #30363d"><td style="padding:10px 16px">💫 浮动窗口</td><td style="color:#58a6ff"><code>浮动窗口.html</code></td><td style="text-align:right;color:#8b949e">4</td><td style="text-align:right;color:#8b949e">15 KB</td></tr>
+<tr style="border-top:1px solid #30363d"><td style="padding:10px 16px">⚙️ 设置</td><td style="color:#58a6ff"><code>设置.html</code></td><td style="text-align:right;color:#8b949e">5</td><td style="text-align:right;color:#8b949e">17 KB</td></tr>
+<tr style="border-top:1px solid #30363d"><td style="padding:10px 16px">🌐 浏览器</td><td style="color:#58a6ff"><code>浏览器.html</code></td><td style="text-align:right;color:#8b949e">7</td><td style="text-align:right;color:#8b949e">18 KB</td></tr>
+<tr style="border-top:1px solid #30363d;background:#58a6ff22"><td style="padding:10px 16px">🎮 交互原型</td><td style="color:#58a6ff"><code>preview.html</code></td><td style="text-align:right;color:#8b949e">13+</td><td style="text-align:right;color:#8b949e">45 KB</td></tr>
+<tr style="border-top:1px solid #30363d;background:#a855f722"><td style="padding:10px 16px">📦 市场/MCP</td><td style="color:#58a6ff"><code>插件市场.html</code></td><td style="text-align:right;color:#8b949e">14</td><td style="text-align:right;color:#8b949e">16 KB</td></tr>
+<tr style="border-top:1px solid #30363d;background:#f0883e22"><td style="padding:10px 16px">⚙️ 设置补全</td><td style="color:#58a6ff"><code>设置补全.html</code></td><td style="text-align:right;color:#8b949e">10</td><td style="text-align:right;color:#8b949e">14 KB</td></tr>
+<tr style="border-top:1px solid #30363d;background:#3fb95022"><td style="padding:10px 16px">🔧 工具箱补全</td><td style="color:#58a6ff"><code>工具箱补全.html</code></td><td style="text-align:right;color:#8b949e">6</td><td style="text-align:right;color:#8b949e">12 KB</td></tr>
+<tr style="border-top:1px solid #30363d;background:#8b949e22"><td style="padding:10px 16px">📋 关于/协议</td><td style="color:#58a6ff"><code>关于协议.html</code></td><td style="text-align:right;color:#8b949e">8</td><td style="text-align:right;color:#8b949e">12 KB</td></tr>
+<tr style="border-top:1px solid #30363d;background:#ff6b9d22"><td style="padding:10px 16px">🔩 深层页面</td><td style="color:#58a6ff"><code>深层界面.html</code></td><td style="text-align:right;color:#8b949e">9</td><td style="text-align:right;color:#8b949e">13 KB</td></tr>
+<tr style="border-top:1px solid #30363d;background:#3fb95044"><td style="padding:10px 16px">🏆 详情页面</td><td style="color:#58a6ff"><code>详情页面.html</code></td><td style="text-align:right;color:#8b949e">5</td><td style="text-align:right;color:#8b949e">10 KB</td></tr>
+<tr style="background:#21262d;border-top:1px solid #30363d"><td style="padding:10px 16px;font-weight:600">合计</td><td></td><td style="text-align:right;font-weight:600">77+</td><td style="text-align:right;font-weight:600">190 KB</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="footer">
+<p>AI-Fic-IDE · Android 原生网文写作 IDE</p>
+<p style="margin-top:4px">基于 <a href="https://github.com/AAswordman/Operit">Operit AI</a> · <a href="https://github.com/qq1375828505/AI-Fic-IDE">GitHub</a></p>
+</div>
+
+</body>
+</html>

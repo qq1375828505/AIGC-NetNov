@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>角色关系图 - AI-Fic-IDE</title>
+<style>
+/* ===== Reset & Base ===== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: #0a0a0b;
+  color: #f7f8f8;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ===== Layout ===== */
+.app-layout {
+  display: flex;
+  height: 100vh;
+}
+
+/* ===== Left Panel ===== */
+.left-panel {
+  width: 380px;
+  min-width: 380px;
+  background: #0f1011;
+  border-right: 1px solid #222325;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.panel-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #222325;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.panel-header h2 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #f7f8f8;
+}
+
+.panel-header .badge {
+  background: #5e6ad2;
+  color: #fff;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+/* ===== Tab Bar ===== */
+.tab-bar {
+  display: flex;
+  border-bottom: 1px solid #222325;
+  padding: 0 12px;
+}
+
+.tab-btn {
+  padding: 10px 16px;
+  font-size: 13px;
+  color: #5c5e66;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all .15s;
+  white-space: nowrap;
+}
+
+.tab-btn.active {
+  color: #f7f8f8;
+  border-bottom-color: #5e6ad2;
+}
+
+.tab-btn:hover { color: #c9d1d9; }
+
+/* ===== Data Table ===== */
+.table-container {
+  flex: 1;
+  overflow: auto;
+  padding: 12px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.data-table th {
+  background: #010102;
+  color: #5c5e66;
+  font-weight: 500;
+  padding: 8px 6px;
+  text-align: left;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  border-bottom: 1px solid #222325;
+}
+
+.data-table td {
+  padding: 4px 6px;
+  border-bottom: 1px solid #0f1011;
+  vertical-align: middle;
+}
+
+.data-table input {
+  width: 100%;
+  background: #010102;
+  border: 1px solid #222325;
+  border-radius: 6px;
+  padding: 6px 8px;
+  color: #f7f8f8;
+  font-size: 12px;
+  outline: none;
+  transition: border-color .15s;
+}
+
+.data-table input:focus {
+  border-color: #5e6ad2;
+}
+
+.data-table .row-num {
+  color: #5c5e66;
+  font-size: 11px;
+  text-align: center;
+  width: 30px;
+}
+
+.data-table .color-cell input {
+  width: 80px;
+  font-family: monospace;
+}
+
+/* ===== Control Bar ===== */
+.control-bar {
+  padding: 12px 20px;
+  border-top: 1px solid #222325;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ctrl-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ctrl-row label {
+  font-size: 12px;
+  color: #5c5e66;
+  min-width: 60px;
+}
+
+.ctrl-row input[type="number"] {
+  width: 80px;
+  background: #010102;
+  border: 1px solid #222325;
+  border-radius: 6px;
+  padding: 5px 8px;
+  color: #f7f8f8;
+  font-size: 12px;
+  outline: none;
+}
+
+.ctrl-row input[type="number"]:focus { border-color: #5e6ad2; }
+
+.btn {
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all .15s;
+}
+
+.btn-primary {
+  background: #5e6ad2;
+  color: #fff;
+}
+.btn-primary:hover { background: #6e7ae8; }
+
+.btn-secondary {
+  background: #222325;
+  color: #f7f8f8;
+}
+.btn-secondary:hover { background: #2a2d30; }
+
+.btn-danger {
+  background: #c93c3c;
+  color: #fff;
+}
+.btn-danger:hover { background: #d94c4c; }
+
+.btn-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ===== Right Panel (Graph) ===== */
+.right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #0a0a0b;
+  position: relative;
+  overflow: hidden;
+}
+
+.graph-toolbar {
+  padding: 10px 16px;
+  border-bottom: 1px solid #222325;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #0f1011;
+  z-index: 5;
+}
+
+.graph-toolbar .title {
+  font-size: 13px;
+  color: #5c5e66;
+  flex: 1;
+}
+
+.graph-canvas-wrap {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+#graphCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ===== Legend ===== */
+.legend {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  background: #0f1011cc;
+  backdrop-filter: blur(8px);
+  border: 1px solid #222325;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 5;
+}
+
+.legend-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #f7f8f8;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 0;
+  color: #c9d1d9;
+}
+
+.legend-color {
+  width: 12px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+/* ===== Tooltip ===== */
+.tooltip {
+  position: absolute;
+  background: #1a1b1e;
+  border: 1px solid #222325;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 12px;
+  pointer-events: none;
+  z-index: 20;
+  display: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,.5);
+  min-width: 120px;
+}
+
+.tooltip .tt-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #f7f8f8;
+  margin-bottom: 4px;
+}
+
+.tooltip .tt-rel {
+  color: #5c5e66;
+  font-size: 11px;
+}
+
+/* ===== Avatar upload ===== */
+.avatar-section {
+  padding: 12px 20px;
+  border-top: 1px solid #222325;
+}
+
+.avatar-section select {
+  width: 100%;
+  background: #010102;
+  border: 1px solid #222325;
+  border-radius: 6px;
+  padding: 6px 8px;
+  color: #f7f8f8;
+  font-size: 12px;
+  outline: none;
+  margin-bottom: 8px;
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #222325; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #5c5e66; }
+</style>
+</head>
+<body>
+
+<div class="app-layout">
+  <!-- ===== Left Panel ===== -->
+  <div class="left-panel">
+    <div class="panel-header">
+      <span>🔗</span>
+      <h2>角色关系图</h2>
+      <span class="badge" id="relCount">0 条关系</span>
+    </div>
+
+    <div class="tab-bar">
+      <div class="tab-btn active" onclick="switchTab('data')">数据编辑</div>
+      <div class="tab-btn" onclick="switchTab('avatar')">头像管理</div>
+      <div class="tab-btn" onclick="switchTab('config')">图表设置</div>
+    </div>
+
+    <!-- Data Tab -->
+    <div class="table-container" id="tabData">
+      <table class="data-table" id="dataTable">
+        <thead>
+          <tr>
+            <th style="width:30px">#</th>
+            <th>源头角色</th>
+            <th>目标角色</th>
+            <th>关系类型</th>
+            <th style="width:90px">连线颜色</th>
+            <th style="width:40px"></th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+      <div style="padding:8px 0;display:flex;gap:8px">
+        <button class="btn btn-secondary" onclick="addRow()">+ 添加关系</button>
+        <button class="btn btn-secondary" onclick="loadFromNativeBridge()" style="color:#5e6ad2" title="从作品数据库加载角色和关系">☁ 从作品加载</button>
+        <button class="btn btn-danger" onclick="clearData()">清空</button>
+      </div>
+    </div>
+
+    <!-- Avatar Tab -->
+    <div class="table-container" id="tabAvatar" style="display:none">
+      <div style="color:#5c5e66;font-size:13px;margin-bottom:12px">选择角色并上传自定义头像，未上传则使用随机生成的头像。</div>
+      <select id="avatarSelect"></select>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div id="avatarPreview" style="width:48px;height:48px;border-radius:50%;background:#222325;display:flex;align-items:center;justify-content:center;font-size:20px;color:#5c5e66">?</div>
+        <button class="btn btn-secondary" onclick="uploadAvatar()">上传头像</button>
+        <button class="btn btn-secondary" onclick="randomAvatar()">随机头像</button>
+      </div>
+      <input type="file" id="avatarFileInput" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)">
+    </div>
+
+    <!-- Config Tab -->
+    <div class="table-container" id="tabConfig" style="display:none">
+      <div style="color:#5c5e66;font-size:13px;margin-bottom:12px">调整关系图的显示参数。</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div>
+          <label style="font-size:12px;color:#5c5e66;display:block;margin-bottom:4px">节点大小</label>
+          <input type="range" id="nodeSize" min="20" max="60" value="36" style="width:100%" oninput="updateConfig()">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:#5c5e66"><span>小</span><span id="nodeSizeVal">36</span><span>大</span></div>
+        </div>
+        <div>
+          <label style="font-size:12px;color:#5c5e66;display:block;margin-bottom:4px">连线粗细</label>
+          <input type="range" id="lineWidth" min="1" max="6" value="2" style="width:100%" oninput="updateConfig()">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:#5c5e66"><span>细</span><span id="lineWidthVal">2</span><span>粗</span></div>
+        </div>
+        <div>
+          <label style="font-size:12px;color:#5c5e66;display:block;margin-bottom:4px">引力强度</label>
+          <input type="range" id="gravity" min="1" max="100" value="40" style="width:100%" oninput="updateConfig()">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:#5c5e66"><span>松</span><span id="gravityVal">40</span><span>紧</span></div>
+        </div>
+        <div>
+          <label style="font-size:12px;color:#5c5e66;display:block;margin-bottom:4px">连线曲率</label>
+          <input type="range" id="curve" min="0" max="100" value="30" style="width:100%" oninput="updateConfig()">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:#5c5e66"><span>直</span><span id="curveVal">30</span><span>弯</span></div>
+        </div>
+        <div>
+          <label style="font-size:12px;color:#5c5e66;display:block;margin-bottom:4px">标签字号</label>
+          <input type="range" id="fontSize" min="10" max="20" value="13" style="width:100%" oninput="updateConfig()">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:#5c5e66"><span>小</span><span id="fontSizeVal">13</span><span>大</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Control Bar -->
+    <div class="control-bar">
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="generateGraph()">⚡ 生成关系图</button>
+        <button class="btn btn-secondary" onclick="downloadSVG()">⬇ SVG</button>
+        <button class="btn btn-secondary" onclick="downloadPNG()">⬇ PNG</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Right Panel ===== -->
+  <div class="right-panel">
+    <div class="graph-toolbar">
+      <span style="font-size:16px">🔗</span>
+      <span class="title" id="graphTitle">角色关系图 — 点击「生成」开始</span>
+      <button class="btn btn-secondary" onclick="resetView()">重置视图</button>
+      <button class="btn btn-secondary" onclick="exportData()">导出数据</button>
+    </div>
+
+    <div class="graph-canvas-wrap" id="canvasWrap">
+      <canvas id="graphCanvas"></canvas>
+      <!-- Tooltip -->
+      <div class="tooltip" id="tooltip">
+        <div class="tt-name" id="ttName"></div>
+        <div class="tt-rel" id="ttRel"></div>
+      </div>
+      <!-- Legend -->
+      <div class="legend" id="legend" style="display:none">
+        <div class="legend-title">关系图例</div>
+        <div id="legendItems"></div>
+      </div>
+      <!-- Empty State -->
+      <div id="emptyState" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#5c5e66;gap:12px;z-index:3">
+        <div style="font-size:48px;opacity:.3">🔗</div>
+        <div style="font-size:14px">填写左侧数据后点击「生成关系图」</div>
+        <div style="font-size:12px">支持拖拽节点 / 滚轮缩放 / 右键删除</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Node Edit Dialog ===== -->
+<div id="nodeEditDialog" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;align-items:center;justify-content:center">
+  <div style="background:#1a1b1e;border:1px solid #222325;border-radius:16px;padding:24px;width:360px;max-width:90vw">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <h3 style="font-size:16px;color:#f7f8f8;margin:0">编辑角色</h3>
+      <span style="cursor:pointer;color:#5c5e66;font-size:20px" onclick="closeNodeEditDialog()">✕</span>
+    </div>
+    
+    <div style="margin-bottom:12px">
+      <label style="font-size:12px;color:#5c5e66;display:block;margin-bottom:4px">角色名称</label>
+      <input id="editNodeName" type="text" style="width:100%;background:#010102;border:1px solid #222325;border-radius:8px;padding:8px 12px;color:#f7f8f8;font-size:14px;outline:none">
+    </div>
+    
+    <div style="margin-bottom:12px">
+      <label style="font-size:12px;color:#5c5e66;display:block;margin-bottom:4px">节点颜色</label>
+      <input id="editNodeColor" type="color" style="width:60px;height:36px;border:none;border-radius:8px;cursor:pointer;background:transparent">
+    </div>
+    
+    <div style="margin-bottom:16px">
+      <label style="font-size:12px;color:#5c5e66;display:block;margin-bottom:4px">相关关系</label>
+      <div id="editNodeRelations" style="max-height:120px;overflow-y:auto;padding:8px;background:#010102;border-radius:8px"></div>
+    </div>
+    
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-danger" onclick="deleteSelectedNode()">删除角色</button>
+      <button class="btn btn-secondary" onclick="closeNodeEditDialog()">取消</button>
+      <button class="btn btn-primary" onclick="saveNodeEdit()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Hidden SVG for export ===== -->
+<div id="svgExport" style="position:absolute;left:-9999px;top:-9999px"></div>
+
+<script>
+// ===== State =====
+let characters = new Map();     // name -> { avatar: null, color: string }
+let relations = [];              // { from, to, type, color }
+let config = { nodeSize: 36, lineWidth: 2, gravity: 40, curve: 30, fontSize: 13 };
+
+// Force simulation
+let nodes = [];      // { id, x, y, vx, vy, name, avatar, radius }
+let edges = [];      // { from, to, type, color }
+let animFrame = null;
+let isDragging = false;
+let dragNode = null;
+let mouseX = 0, mouseY = 0;
+let scale = 1, offsetX = 0, offsetY = 0;
+let isPanning = false, panStartX = 0, panStartY = 0;
+
+// ===== Default Demo Data =====
+const DEMO_RELATIONS = [
+  ['周莹','沈星移','朋友','#1c9dd6'],
+  ['沈星移','赵白石','朋友','#69c81e'],
+  ['赵白石','周老四','养女','#957b95'],
+  ['周老四','吴聘','主仆','#a9890b'],
+  ['吴聘','沈四海','仇人','#59d5a4'],
+  ['沈四海','吴蔚文','儿媳','#0a4823'],
+  ['吴蔚文','千红','姐妹','#13806b'],
+  ['千红','吴漪','嫂子','#986570'],
+  ['吴漪','沈月生','哥哥','#bf205c'],
+  ['沈月生','沈老夫人','孙子','#82053e'],
+  ['沈老夫人','吴遇','仇人','#a43c26'],
+  ['杜明礼','周莹','仇人','#e162aa'],
+  ['杜明礼','沈星移','仇人','#75a5ea'],
+  ['吴漪','吴泽','兄妹','#5e8e02'],
+];
+
+const DEMO_CHARACTERS = ['周莹','沈星移','赵白石','周老四','吴聘','沈四海','吴蔚文','千红','吴漪','沈月生','沈老夫人','吴遇','杜明礼','吴泽'];
+
+// ===== Init =====
+function init() {
+  // Load demo data
+  DEMO_CHARACTERS.forEach(name => {
+    characters.set(name, { avatar: null, bgColor: randomColor() });
+  });
+  relations = DEMO_RELATIONS.map(r => ({ from: r[0], to: r[1], type: r[2], color: r[3] }));
+  renderTable();
+  updateAvatarSelect();
+  generateGraph();
+
+  // Canvas events
+  const canvas = document.getElementById('graphCanvas');
+  canvas.addEventListener('mousedown', onMouseDown);
+  canvas.addEventListener('mousemove', onMouseMove);
+  canvas.addEventListener('mouseup', onMouseUp);
+  canvas.addEventListener('mouseleave', onMouseUp);
+  canvas.addEventListener('dblclick', onDoubleClick);
+  canvas.addEventListener('wheel', onWheel, { passive: false });
+  canvas.addEventListener('contextmenu', e => e.preventDefault());
+
+  // Touch events
+  canvas.addEventListener('touchstart', onTouchStart, { passive: false });
+  canvas.addEventListener('touchmove', onTouchMove, { passive: false });
+  canvas.addEventListener('touchend', onTouchEnd);
+
+  // Resize
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+}
+
+// ===== Table =====
+function renderTable() {
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+  relations.forEach((r, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="row-num">${i + 1}</td>
+      <td><input value="${escHtml(r.from)}" onchange="updateRow(${i},'from',this.value)" list="charList"></td>
+      <td><input value="${escHtml(r.to)}" onchange="updateRow(${i},'to',this.value)" list="charList"></td>
+      <td><input value="${escHtml(r.type)}" onchange="updateRow(${i},'type',this.value)"></td>
+      <td class="color-cell"><input value="${escHtml(r.color)}" onchange="updateRow(${i},'color',this.value)" style="font-family:monospace"></td>
+      <td><span style="cursor:pointer;color:#c93c3c;font-size:16px" onclick="deleteRow(${i})">✕</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // Update char datalist
+  let dl = document.getElementById('charList');
+  if (!dl) { dl = document.createElement('datalist'); dl.id = 'charList'; document.body.appendChild(dl); }
+  dl.innerHTML = '';
+  characters.forEach((_, name) => {
+    dl.innerHTML += `<option value="${escHtml(name)}">`;
+  });
+
+  document.getElementById('relCount').textContent = relations.length + ' 条关系';
+}
+
+function addRow() {
+  relations.push({ from: '', to: '', type: '', color: randomColor() });
+  renderTable();
+}
+
+function deleteRow(i) {
+  relations.splice(i, 1);
+  renderTable();
+}
+
+function clearData() {
+  if (!confirm('确定清空所有数据？')) return;
+  relations = [];
+  characters.clear();
+  renderTable();
+  updateAvatarSelect();
+}
+
+function updateRow(i, field, val) {
+  relations[i][field] = val;
+  // Auto-add new character
+  if (field === 'from' || field === 'to') {
+    if (val && !characters.has(val)) {
+      characters.set(val, { avatar: null, bgColor: randomColor() });
+      updateAvatarSelect();
+    }
+  }
+}
+
+// ===== Avatar =====
+function updateAvatarSelect() {
+  const sel = document.getElementById('avatarSelect');
+  sel.innerHTML = '';
+  characters.forEach((_, name) => {
+    const opt = document.createElement('option');
+    opt.value = name;
+    opt.textContent = name;
+    sel.appendChild(opt);
+  });
+  if (characters.size > 0) sel.value = [...characters.keys()][0];
+  updateAvatarPreview();
+}
+
+function uploadAvatar() {
+  document.getElementById('avatarFileInput').click();
+}
+
+function handleAvatarUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    const name = document.getElementById('avatarSelect').value;
+    characters.get(name).avatar = ev.target.result;
+    updateAvatarPreview();
+    if (nodes.length > 0) generateGraph();
+  };
+  reader.readAsDataURL(file);
+}
+
+function randomAvatar() {
+  const name = document.getElementById('avatarSelect').value;
+  const ch = characters.get(name);
+  ch.avatar = null;
+  ch.bgColor = randomColor();
+  updateAvatarPreview();
+}
+
+function updateAvatarPreview() {
+  const name = document.getElementById('avatarSelect').value;
+  if (!name) return;
+  const ch = characters.get(name);
+  const prev = document.getElementById('avatarPreview');
+  if (ch.avatar) {
+    prev.style.background = `url(${ch.avatar}) center/cover`;
+    prev.textContent = '';
+  } else {
+    prev.style.background = ch.bgColor + '22';
+    prev.style.border = `2px solid ${ch.bgColor}`;
+    prev.textContent = name.charAt(0);
+    prev.style.color = ch.bgColor;
+  }
+}
+
+// ===== Tabs =====
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', ['data','avatar','config'][i] === tab);
+  });
+  document.getElementById('tabData').style.display = tab === 'data' ? '' : 'none';
+  document.getElementById('tabAvatar').style.display = tab === 'avatar' ? '' : 'none';
+  document.getElementById('tabConfig').style.display = tab === 'config' ? '' : 'none';
+}
+
+// ===== Config =====
+function updateConfig() {
+  config.nodeSize = +document.getElementById('nodeSize').value;
+  config.lineWidth = +document.getElementById('lineWidth').value;
+  config.gravity = +document.getElementById('gravity').value;
+  config.curve = +document.getElementById('curve').value;
+  config.fontSize = +document.getElementById('fontSize').value;
+  document.getElementById('nodeSizeVal').textContent = config.nodeSize;
+  document.getElementById('lineWidthVal').textContent = config.lineWidth;
+  document.getElementById('gravityVal').textContent = config.gravity;
+  document.getElementById('curveVal').textContent = config.curve;
+  document.getElementById('fontSizeVal').textContent = config.fontSize;
+  if (nodes.length > 0) { stopSim(); startSim(); }
+}
+
+// ===== Generate Graph =====
+function generateGraph() {
+  // Collect all characters from relations
+  relations.forEach(r => {
+    if (r.from && !characters.has(r.from)) characters.set(r.from, { avatar: null, bgColor: randomColor() });
+    if (r.to && !characters.has(r.to)) characters.set(r.to, { avatar: null, bgColor: randomColor() });
+  });
+
+  const charList = [...characters.keys()];
+  const w = document.getElementById('canvasWrap').clientWidth;
+  const h = document.getElementById('canvasWrap').clientHeight;
+
+  nodes = charList.map((name, i) => {
+    const angle = (i / charList.length) * Math.PI * 2;
+    const rx = w / 2 + Math.cos(angle) * Math.min(w, h) * 0.3;
+    const ry = h / 2 + Math.sin(angle) * Math.min(w, h) * 0.3;
+    return {
+      id: name,
+      x: rx, y: ry,
+      vx: 0, vy: 0,
+      name,
+      radius: config.nodeSize / 2,
+      color: characters.get(name).bgColor
+    };
+  });
+
+  edges = relations
+    .filter(r => r.from && r.to)
+    .map(r => ({
+      from: r.from,
+      to: r.to,
+      type: r.type,
+      color: r.color || '#5c5e66'
+    }));
+
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('legend').style.display = '';
+  renderLegend();
+  document.getElementById('graphTitle').textContent = `角色关系图 — ${charList.length} 个角色，${edges.length} 条关系`;
+
+  stopSim();
+  startSim();
+}
+
+// ===== Force Simulation =====
+function startSim() {
+  if (animFrame) return;
+  function tick() {
+    simStep();
+    draw();
+    animFrame = requestAnimationFrame(tick);
+  }
+  tick();
+}
+
+function stopSim() {
+  if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null; }
+}
+
+function simStep() {
+  const grav = config.gravity / 1000;
+  const w = document.getElementById('canvasWrap').clientWidth;
+  const h = document.getElementById('canvasWrap').clientHeight;
+  const cx = w / 2, cy = h / 2;
+
+  // Repulsion (nodes push apart)
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      let dx = nodes[j].x - nodes[i].x;
+      let dy = nodes[j].y - nodes[i].y;
+      let dist = Math.sqrt(dx * dx + dy * dy) || 1;
+      let force = 8000 / (dist * dist);
+      let fx = (dx / dist) * force;
+      let fy = (dy / dist) * force;
+      nodes[i].vx -= fx;
+      nodes[i].vy -= fy;
+      nodes[j].vx += fx;
+      nodes[j].vy += fy;
+    }
+  }
+
+  // Attraction (edges pull together)
+  edges.forEach(e => {
+    const ni = nodes.findIndex(n => n.name === e.from);
+    const nj = nodes.findIndex(n => n.name === e.to);
+    if (ni < 0 || nj < 0) return;
+    let dx = nodes[nj].x - nodes[ni].x;
+    let dy = nodes[nj].y - nodes[ni].y;
+    let dist = Math.sqrt(dx * dx + dy * dy) || 1;
+    let force = grav * (dist - 120);
+    let fx = (dx / dist) * force;
+    let fy = (dy / dist) * force;
+    nodes[ni].vx += fx;
+    nodes[ni].vy += fy;
+    nodes[nj].vx -= fx;
+    nodes[nj].vy -= fy;
+  });
+
+  // Center gravity
+  nodes.forEach(n => {
+    n.vx += (cx - n.x) * 0.005;
+    n.vy += (cy - n.y) * 0.005;
+  });
+
+  // Update positions
+  nodes.forEach(n => {
+    if (n === dragNode) return;
+    n.vx *= 0.85;
+    n.vy *= 0.85;
+    n.x += n.vx;
+    n.y += n.vy;
+    // Keep in bounds
+    const r = n.radius * scale;
+    n.x = Math.max(r, Math.min(w - r, n.x));
+    n.y = Math.max(r, Math.min(h - r, n.y));
+  });
+}
+
+// ===== Draw =====
+function draw() {
+  const canvas = document.getElementById('graphCanvas');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+
+  ctx.clearRect(0, 0, w, h);
+
+  ctx.save();
+  ctx.translate(offsetX, offsetY);
+  ctx.scale(scale, scale);
+
+  // Draw edges
+  edges.forEach(e => {
+    const ni = nodes.find(n => n.name === e.from);
+    const nj = nodes.find(n => n.name === e.to);
+    if (!ni || !nj) return;
+
+    const curveAmt = config.curve / 100;
+    const mx = (ni.x + nj.x) / 2;
+    const my = (ni.y + nj.y) / 2;
+    const nx = -(nj.y - ni.y);
+    const ny = (nj.x - ni.x);
+    const nl = Math.sqrt(nx * nx + ny * ny) || 1;
+    const cx = mx + (nx / nl) * 40 * curveAmt;
+    const cy = my + (ny / nl) * 40 * curveAmt;
+
+    ctx.beginPath();
+    ctx.moveTo(ni.x, ni.y);
+    ctx.quadraticCurveTo(cx, cy, nj.x, nj.y);
+    ctx.strokeStyle = e.color || '#5c5e66';
+    ctx.lineWidth = config.lineWidth;
+    ctx.globalAlpha = 0.6;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+
+    // Draw relationship label at midpoint
+    if (e.type && config.fontSize >= 11) {
+      const lx = cx, ly = cy;
+      ctx.font = `${config.fontSize - 2}px sans-serif`;
+      const tw = ctx.measureText(e.type).width;
+      ctx.fillStyle = 'rgba(10,10,11,0.75)';
+      ctx.fillRect(lx - tw / 2 - 4, ly - config.fontSize / 2 - 4, tw + 8, config.fontSize + 4);
+      ctx.fillStyle = '#8b8d94';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(e.type, lx, ly);
+    }
+  });
+
+  // Draw nodes
+  nodes.forEach(n => {
+    const r = n.radius;
+    const isHighlighted = n.highlighted;
+    const isHovered = n === dragNode || (mouseX && mouseY && findNode((mouseX - offsetX) / scale, (mouseY - offsetY) / scale) === n);
+
+    // Shadow / highlight glow
+    if (isHighlighted) {
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, r + 8, 0, Math.PI * 2);
+      ctx.fillStyle = n.color + '44';
+      ctx.fill();
+    }
+
+    // Circle bg
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+    ctx.fillStyle = isHighlighted ? n.color + '55' : (isHovered ? n.color + '44' : n.color + '33');
+    ctx.fill();
+    ctx.strokeStyle = isHighlighted ? '#fff' : n.color;
+    ctx.lineWidth = isHighlighted ? 3 : 2;
+    ctx.stroke();
+
+    // Avatar text
+    ctx.fillStyle = '#fff';
+    ctx.font = `bold ${r * 0.6}px sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(n.name.charAt(0), n.x, n.y);
+
+    // Name label
+    ctx.fillStyle = isHighlighted ? '#fff' : '#f7f8f8';
+    ctx.font = `500 ${config.fontSize}px sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    ctx.fillText(n.name, n.x, n.y + r + 6);
+  });
+
+  ctx.restore();
+}
+
+// ===== Canvas Events =====
+function getCanvasPos(e) {
+  const canvas = document.getElementById('graphCanvas');
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: (e.clientX - rect.left - offsetX) / scale,
+    y: (e.clientY - rect.top - offsetY) / scale
+  };
+}
+
+function findNode(x, y) {
+  for (let i = nodes.length - 1; i >= 0; i--) {
+    const n = nodes[i];
+    const dx = x - n.x, dy = y - n.y;
+    if (dx * dx + dy * dy < n.radius * n.radius) return n;
+  }
+  return null;
+}
+
+function onMouseDown(e) {
+  if (e.button === 2 || e.button === 1) {
+    isPanning = true;
+    panStartX = e.clientX - offsetX;
+    panStartY = e.clientY - offsetY;
+    return;
+  }
+  const pos = getCanvasPos(e);
+  const node = findNode(pos.x, pos.y);
+  if (node) {
+    isDragging = true;
+    dragNode = node;
+    node.vx = 0;
+    node.vy = 0;
+  } else {
+    isPanning = true;
+    panStartX = e.clientX - offsetX;
+    panStartY = e.clientY - offsetY;
+  }
+}
+
+function onMouseMove(e) {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+
+  if (isDragging && dragNode) {
+    const pos = getCanvasPos(e);
+    dragNode.x = pos.x;
+    dragNode.y = pos.y;
+  } else if (isPanning) {
+    offsetX = e.clientX - panStartX;
+    offsetY = e.clientY - panStartY;
+  } else {
+    // Hover tooltip
+    const pos = getCanvasPos(e);
+    const node = findNode(pos.x, pos.y);
+    const tooltip = document.getElementById('tooltip');
+    if (node) {
+      const rels = edges.filter(e2 => e2.from === node.name || e2.to === node.name);
+      document.getElementById('ttName').textContent = node.name;
+      document.getElementById('ttRel').textContent = rels.map(r => `${r.from} —${r.type}→ ${r.to}`).join('\n');
+      tooltip.style.display = 'block';
+      tooltip.style.left = (e.clientX + 16) + 'px';
+      tooltip.style.top = (e.clientY - 10) + 'px';
+    } else {
+      tooltip.style.display = 'none';
+    }
+  }
+}
+
+function onMouseUp(e) {
+  if (e.button === 2 && dragNode) {
+    // Right-click: remove node (optional)
+  }
+  isDragging = false;
+  dragNode = null;
+  isPanning = false;
+}
+
+function onWheel(e) {
+  e.preventDefault();
+  const delta = e.deltaY > 0 ? 0.92 : 1.08;
+  scale = Math.max(0.2, Math.min(3, scale * delta));
+}
+
+// Touch
+let lastTouchDist = 0;
+function onTouchStart(e) {
+  e.preventDefault();
+  if (e.touches.length === 1) {
+    const pos = getCanvasPos(e.touches[0]);
+    const node = findNode(pos.x, pos.y);
+    if (node) { isDragging = true; dragNode = node; }
+  } else if (e.touches.length === 2) {
+    lastTouchDist = getTouchDist(e.touches);
+  }
+}
+function onTouchMove(e) {
+  e.preventDefault();
+  if (e.touches.length === 1 && isDragging && dragNode) {
+    const pos = getCanvasPos(e.touches[0]);
+    dragNode.x = pos.x;
+    dragNode.y = pos.y;
+  } else if (e.touches.length === 2) {
+    const dist = getTouchDist(e.touches);
+    scale = Math.max(0.2, Math.min(3, scale * (dist / lastTouchDist)));
+    lastTouchDist = dist;
+  }
+}
+function onTouchEnd(e) { isDragging = false; dragNode = null; }
+function getTouchDist(touches) {
+  const dx = touches[0].clientX - touches[1].clientX;
+  const dy = touches[0].clientY - touches[1].clientY;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+// ===== Resize =====
+function resizeCanvas() {
+  const wrap = document.getElementById('canvasWrap');
+  const canvas = document.getElementById('graphCanvas');
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = wrap.clientWidth * dpr;
+  canvas.height = wrap.clientHeight * dpr;
+  canvas.style.width = wrap.clientWidth + 'px';
+  canvas.style.height = wrap.clientHeight + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  if (nodes.length > 0) draw();
+}
+
+// ===== Legend =====
+function renderLegend() {
+  const container = document.getElementById('legendItems');
+  const relTypes = [...new Set(edges.map(e => e.type))];
+  container.innerHTML = '';
+  // Show character colors
+  const shown = new Set();
+  nodes.forEach(n => {
+    if (shown.has(n.name)) return;
+    shown.add(n.name);
+    container.innerHTML += `<div class="legend-item"><div class="legend-color" style="background:${n.color}"></div>${n.name}</div>`;
+  });
+}
+
+// ===== Export =====
+function downloadSVG() {
+  if (nodes.length === 0) return alert('请先生成关系图');
+  const w = 800, h = 600;
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" style="background:#0a0a0b">`;
+
+  // Edges
+  edges.forEach(e => {
+    const ni = nodes.find(n => n.name === e.from);
+    const nj = nodes.find(n => n.name === e.to);
+    if (!ni || !nj) return;
+    svg += `<line x1="${ni.x / 2}" y1="${ni.y / 2}" x2="${nj.x / 2}" y2="${nj.y / 2}" stroke="${e.color}" stroke-width="2" opacity="0.6"/>`;
+  });
+
+  // Nodes
+  nodes.forEach(n => {
+    const x = n.x / 2, y = n.y / 2, r = n.radius / 2;
+    svg += `<circle cx="${x}" cy="${y}" r="${r}" fill="${n.color}33" stroke="${n.color}" stroke-width="2"/>`;
+    svg += `<text x="${x}" y="${y + 4}" text-anchor="middle" fill="#fff" font-size="${r * 0.6}" font-weight="bold">${n.name.charAt(0)}</text>`;
+    svg += `<text x="${x}" y="${y + r + 14}" text-anchor="middle" fill="#f7f8f8" font-size="12">${n.name}</text>`;
+  });
+
+  svg += '</svg>';
+
+  const blob = new Blob([svg], { type: 'image/svg+xml' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '角色关系图.svg';
+  a.click();
+}
+
+function downloadPNG() {
+  if (nodes.length === 0) return alert('请先生成关系图');
+  const canvas = document.getElementById('graphCanvas');
+  const a = document.createElement('a');
+  a.href = canvas.toDataURL('image/png');
+  a.download = '角色关系图.png';
+  a.click();
+}
+
+function exportData() {
+  const data = { characters: [...characters.keys()], relations };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '角色关系数据.json';
+  a.click();
+}
+
+function resetView() {
+  scale = 1; offsetX = 0; offsetY = 0;
+  if (nodes.length > 0) { stopSim(); startSim(); }
+}
+
+// ===== Utils =====
+function randomColor() {
+  const colors = ['#5e6ad2','#7b84e0','#4caf50','#ff9800','#f44336','#2196f3','#9c27b0','#00bcd4','#ff5722','#8bc34a','#e91e63','#009688'];
+  return colors[Math.floor(Math.random() * colors.length)];
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ===== Node Click & Edit =====
+let selectedNodeForEdit = null;
+let editDialogVisible = false;
+
+function onNodeClick(node) {
+  selectedNodeForEdit = node;
+  showNodeEditDialog(node);
+}
+
+function showNodeEditDialog(node) {
+  const dialog = document.getElementById('nodeEditDialog');
+  if (!dialog) return;
+  
+  document.getElementById('editNodeName').value = node.name;
+  document.getElementById('editNodeColor').value = node.color;
+  
+  // 显示相关关系
+  const rels = edges.filter(e => e.from === node.name || e.to === node.name);
+  const relList = document.getElementById('editNodeRelations');
+  relList.innerHTML = rels.map(r => 
+    `<div style="padding:4px 0;font-size:12px;color:#c9d1d9">
+      <span style="color:${r.color}">●</span> 
+      ${r.from} → ${r.to} <span style="color:#5c5e66">(${r.type})</span>
+    </div>`
+  ).join('');
+  
+  dialog.style.display = 'flex';
+  editDialogVisible = true;
+}
+
+function closeNodeEditDialog() {
+  const dialog = document.getElementById('nodeEditDialog');
+  if (dialog) dialog.style.display = 'none';
+  editDialogVisible = false;
+  selectedNodeForEdit = null;
+}
+
+function saveNodeEdit() {
+  if (!selectedNodeForEdit) return;
+  
+  const newName = document.getElementById('editNodeName').value.trim();
+  const newColor = document.getElementById('editNodeColor').value;
+  
+  if (!newName) return;
+  
+  // 更新节点数据
+  const oldName = selectedNodeForEdit.name;
+  if (newName !== oldName) {
+    // 更新 characters map
+    const charData = characters.get(oldName);
+    characters.delete(oldName);
+    characters.set(newName, charData);
+    
+    // 更新 relations
+    relations.forEach(r => {
+      if (r.from === oldName) r.from = newName;
+      if (r.to === oldName) r.to = newName;
+    });
+    
+    // 更新 nodes
+    selectedNodeForEdit.name = newName;
+  }
+  
+  selectedNodeForEdit.color = newColor;
+  characters.get(newName).bgColor = newColor;
+  
+  renderTable();
+  updateAvatarSelect();
+  generateGraph();
+  closeNodeEditDialog();
+}
+
+function deleteSelectedNode() {
+  if (!selectedNodeForEdit) return;
+  
+  const name = selectedNodeForEdit.name;
+  if (!confirm(`确定删除角色「${name}」及其所有关系？`)) return;
+  
+  // 删除相关关系
+  relations = relations.filter(r => r.from !== name && r.to !== name);
+  
+  // 删除角色
+  characters.delete(name);
+  
+  renderTable();
+  updateAvatarSelect();
+  generateGraph();
+  closeNodeEditDialog();
+}
+
+// ===== Double Click to Edit =====
+function onDoubleClick(e) {
+  const pos = getCanvasPos(e);
+  const node = findNode(pos.x, pos.y);
+  if (node) {
+    onNodeClick(node);
+  }
+}
+
+// ===== Start =====
+window.onload = init;
+
+// ===== Bridge Command Handler =====
+function handleBridgeCommand(cmd) {
+  try {
+    const data = JSON.parse(cmd);
+    switch (data.action) {
+      case 'addRelation':
+        relations.push({ 
+          from: data.from, 
+          to: data.to, 
+          type: data.type || '', 
+          color: data.color || randomColor() 
+        });
+        if (data.from && !characters.has(data.from)) characters.set(data.from, { avatar: null, bgColor: randomColor() });
+        if (data.to && !characters.has(data.to)) characters.set(data.to, { avatar: null, bgColor: randomColor() });
+        renderTable();
+        updateAvatarSelect();
+        generateGraph();
+        break;
+      case 'removeRelation':
+        const idx = relations.findIndex(r => r.from === data.from && r.to === data.to);
+        if (idx >= 0) relations.splice(idx, 1);
+        renderTable();
+        generateGraph();
+        break;
+      case 'highlightNode':
+        const targetNode = nodes.find(n => n.name === data.name);
+        if (targetNode) {
+          scale = 1.5;
+          offsetX = canvasWrap.clientWidth / 2 - targetNode.x * scale;
+          offsetY = canvasWrap.clientHeight / 2 - targetNode.y * scale;
+        }
+        break;
+      case 'exportNetwork':
+        if (data.format === 'svg') downloadSVG();
+        else if (data.format === 'png') downloadPNG();
+        break;
+      case 'filterByType':
+        // 筛选关系类型
+        if (data.type === 'all') {
+          edges = relations.filter(r => r.from && r.to).map(r => ({ from: r.from, to: r.to, type: r.type, color: r.color }));
+        } else {
+          edges = relations.filter(r => r.from && r.to && r.type === data.type).map(r => ({ from: r.from, to: r.to, type: r.type, color: r.color }));
+        }
+        draw();
+        break;
+      case 'searchCharacter':
+        // 高亮搜索的角色
+        const searchName = data.query;
+        nodes.forEach(n => {
+          n.highlighted = n.name.includes(searchName);
+        });
+        draw();
+        break;
+      case 'resetView':
+        resetView();
+        break;
+      case 'refreshData':
+        // 重新加载数据
+        break;
+      case 'toggleGraphToolbar':
+        const toolbar = document.querySelector('.graph-toolbar');
+        if (toolbar) toolbar.style.display = data.visible ? 'flex' : 'none';
+        break;
+    }
+  } catch (e) {
+    console.error('Bridge command error:', e);
+  }
+}
+
+// ===== NativeBridge Integration =====
+function loadFromNativeBridge() {
+  if (typeof window.NativeBridge === 'undefined' || !window.NativeBridge) {
+    alert('NativeBridge 不可用，请在 App 中打开此页面');
+    return;
+  }
+  // 1. 获取作品列表让用户选择
+  let works = [];
+  try {
+    works = JSON.parse(window.NativeBridge.getNovelWorks()) || [];
+  } catch (e) {
+    alert('获取作品列表失败: ' + e.message);
+    return;
+  }
+  if (works.length === 0) {
+    alert('暂无作品，请先创建作品并添加角色');
+    return;
+  }
+  // 用户选择作品
+  let options = works.map((w, i) => (i + 1) + '. ' + (w.title || '未命名')).join('\n');
+  let choice = prompt('请选择作品序号：\n' + options, '1');
+  if (!choice) return;
+  let idx = parseInt(choice, 10) - 1;
+  if (isNaN(idx) || idx < 0 || idx >= works.length) { alert('无效选择'); return; }
+  let workId = works[idx].id;
+  let workTitle = works[idx].title || '未命名';
+
+  // 2. 加载角色
+  let chars = [];
+  try {
+    chars = JSON.parse(window.NativeBridge.getCharacters(workId)) || [];
+  } catch (e) {}
+
+  // 3. 加载关系
+  let rels = [];
+  try {
+    rels = JSON.parse(window.NativeBridge.getCharacterRelationships(workId)) || [];
+  } catch (e) {}
+
+  if (chars.length === 0 && rels.length === 0) {
+    alert('作品「' + workTitle + '」暂无角色和关系数据');
+    return;
+  }
+
+  // 清空现有数据并导入
+  characters.clear();
+  relations = [];
+
+  // 构建角色 name -> id 映射
+  let idToName = {};
+  chars.forEach(c => {
+    let name = c.name || '未命名';
+    characters.set(name, { avatar: null, bgColor: randomColor() });
+    idToName[c.id] = name;
+  });
+
+  // 导入关系
+  rels.forEach(r => {
+    let fromName = idToName[r.sourceCharacterId] || r.sourceCharacterId || '';
+    let toName = idToName[r.targetCharacterId] || r.targetCharacterId || '';
+    let relType = r.relationType || r.type || '';
+    if (fromName && toName) {
+      relations.push({ from: fromName, to: toName, type: relType, color: randomColor() });
+    }
+  });
+
+  renderTable();
+  updateAvatarSelect();
+  if (relations.length > 0) generateGraph();
+  document.getElementById('graphTitle').textContent = '角色关系图 — ' + workTitle + ' (' + chars.length + '角色, ' + rels.length + '关系)';
+}
+</script>
+</body>
+</html>

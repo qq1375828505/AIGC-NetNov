@@ -1,0 +1,60 @@
+# Android 构建输出
+*.apk
+*.aab
+build/
+app/build/
+
+# Kotlin 编译输出
+build_kotlin.txt
+build_kotlin2.txt
+build_log.txt
+build_errors*.txt
+build_output.txt
+errors_only.txt
+full_diff.txt
+
+# CI 日志
+build-logs/
+ci_logs/
+
+# IDE 文件
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+
+# 原生构建
+.externalNativeBuild/
+.cxx/
+obj/
+CMakeFiles/
+
+# 预编译库
+jniLibs/
+models/
+subpack/
+libs/*
+
+# 日志文件
+*.log
+*.txt
+
+# 系统文件
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 密钥和证书
+*.keystore
+*.jks
+*.p12
+local.properties
+
+# 临时文件
+*.tmp
+*.temp
+*~
+
+# Windows 快捷方式
+*.lnk
