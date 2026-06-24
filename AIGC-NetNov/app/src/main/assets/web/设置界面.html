@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>设置界面 — AI-Fic-IDE</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d1117;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
+
+.phone-frame{width:393px;height:852px;background:#010102;border-radius:54px;border:3px solid #222325;overflow:hidden;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.7);flex-shrink:0}
+.phone-screen{width:100%;height:100%;overflow:hidden;position:relative;background:#010102;display:flex;flex-direction:column}
+
+/* Status Bar */
+.status-bar{display:flex;justify-content:space-between;padding:14px 28px 6px;color:#f7f8f8;font-size:13px;font-weight:600;background:#010102}
+
+/* Top Bar */
+.top-bar{display:flex;align-items:center;padding:4px 12px;gap:4px;background:#010102;min-height:48px}
+.menu-btn{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#8b8d94;font-size:20px;cursor:pointer;transition:all .15s}
+.menu-btn:hover{background:#18191b;color:#f7f8f8}
+.title{flex:1;color:#f7f8f8;font-size:17px;font-weight:600;margin-left:4px}
+.actions span{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#8b8d94;font-size:16px;cursor:pointer;transition:all .15s}
+
+/* Scroll Area */
+.scroll-area{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#222325 transparent}
+.scroll-area::-webkit-scrollbar{width:2px}
+.scroll-area::-webkit-scrollbar-thumb{background:#222325;border-radius:2px}
+
+/* Section */
+.section{padding:16px 4px 6px}
+.section-label{padding:10px 16px 6px;color:#5c5e66;font-size:11px;text-transform:uppercase;letter-spacing:.8px;font-weight:600}
+
+/* Setting Item */
+.setting-item{display:flex;align-items:center;padding:13px 16px;gap:10px;border-bottom:1px solid #18191b;cursor:pointer;transition:all .12s;-webkit-tap-highlight-color:transparent}
+.setting-item:hover,.setting-item:active{background:#0a0a0b}
+.setting-item:last-child{border-bottom:none}
+.si-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.si-info{flex:1;min-width:0}
+.si-title{color:#f7f8f8;font-size:13px;font-weight:500}
+.si-desc{color:#5c5e66;font-size:11px;margin-top:2px}
+.si-val{color:#5c5e66;font-size:12px;margin-left:auto;margin-right:6px}
+.si-chevron{color:#5c5e66;font-size:11px}
+
+/* Toggle Switch */
+.toggle{width:40px;height:22px;border-radius:11px;position:relative;cursor:pointer;flex-shrink:0;transition:background .2s}
+.toggle.on{background:#5e6ad2}
+.toggle.off{background:#222325}
+.toggle .thumb{width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;top:3px;transition:left .2s,right .2s}
+.toggle.on .thumb{right:3px;left:auto}
+.toggle.off .thumb{left:3px}
+
+/* Badge */
+.si-badge{background:#5e6ad220;color:#5e6ad2;font-size:9px;padding:2px 7px;border-radius:8px;font-weight:600;margin-left:auto;margin-right:6px}
+
+/* Slider */
+.slider-row{display:flex;align-items:center;padding:13px 16px;gap:12px;border-bottom:1px solid #18191b}
+.slider-row .si-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.slider-info{flex:1}
+.slider-title{color:#f7f8f8;font-size:13px;font-weight:500}
+.slider-desc{color:#5c5e66;font-size:11px;margin-top:2px}
+.slider-wrap{display:flex;align-items:center;gap:8px;width:130px}
+.slider-track{flex:1;height:4px;border-radius:2px;background:#222325;position:relative}
+.slider-fill{position:absolute;left:0;top:0;height:100%;border-radius:2px;background:#5e6ad2;width:60%}
+.slider-thumb{width:14px;height:14px;border-radius:50%;background:#5e6ad2;position:absolute;right:-7px;top:-5px;border:2px solid #010102;box-shadow:0 1px 4px rgba(94,106,210,.4)}
+.slider-val{color:#5e6ad2;font-size:11px;font-weight:600;width:28px;text-align:right;flex-shrink:0}
+
+/* Danger item */
+.danger .si-title{color:#ef4444}
+
+/* Version footer */
+.version-footer{text-align:center;padding:24px 0 32px;color:#3a3b40;font-size:11px}
+.version-footer .v-text{color:#5c5e66}
+.version-footer .v-link{color:#5e6ad2;text-decoration:none}
+
+/* Sub-page (for nested screens) */
+.sub-screen{display:none;position:absolute;top:0;left:0;width:100%;height:100%;background:#010102;z-index:60;flex-direction:column}
+.sub-screen.open{display:flex}
+
+/* Theme preview colors */
+.theme-colors{display:flex;gap:10px;padding:12px 16px}
+.theme-dot{width:36px;height:36px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .15s}
+.theme-dot.active{border-color:#f7f8f8;transform:scale(1.1);box-shadow:0 0 12px currentColor}
+.theme-dot.d1{background:#5e6ad2}
+.theme-dot.d2{background:#06b6d4}
+.theme-dot.d3{background:#8b5cf6}
+.theme-dot.d4{background:#ec4899}
+.theme-dot.d5{background:#10b981}
+.theme-dot.d6{background:#f59e0b}
+
+/* Model card in sub page */
+.model-card{display:flex;align-items:center;padding:14px 16px;gap:12px;border-bottom:1px solid #18191b;transition:all .12s}
+.model-card:hover{background:#0a0a0b}
+.model-radio{width:22px;height:22px;border-radius:50%;border:2px solid #5c5e66;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.model-radio.active{border-color:#5e6ad2}
+.model-radio.active::after{content:'';width:10px;height:10px;border-radius:50%;background:#5e6ad2}
+.model-info{flex:1}
+.model-name{color:#f7f8f8;font-size:13px;font-weight:500}
+.model-meta{color:#5c5e66;font-size:11px;margin-top:2px}
+.model-tag{font-size:9px;padding:2px 7px;border-radius:8px;font-weight:500}
+.model-tag.local{background:#4caf5020;color:#4caf50}
+.model-tag.cloud{background:#5e6ad220;color:#5e6ad2}
+.model-tag.pro{background:#f59e0b20;color:#f59e0b}
+
+/* Token usage bars */
+.token-bars{padding:0 16px 16px}
+.token-bar-item{margin-bottom:12px}
+.token-bar-head{display:flex;justify-content:space-between;margin-bottom:4px}
+.token-bar-label{color:#f7f8f8;font-size:12px}
+.token-bar-val{color:#5c5e66;font-size:11px}
+.token-bar-bg{height:6px;border-radius:3px;background:#222325}
+.token-bar-fill{height:100%;border-radius:3px;transition:width .3s}
+.token-bar-fill.blue{background:#5e6ad2}
+.token-bar-fill.green{background:#4caf50}
+.token-bar-fill.orange{background:#ff9800}
+.token-bar-fill.red{background:#ef4444}
+
+/* Responsive */
+@media(max-width:420px){.phone-frame{width:100%;height:100vh;border-radius:0;border:none}}
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+<div class="phone-screen">
+
+  <!-- Status Bar -->
+  <div class="status-bar"><span id="stTime">11:41</span><span>📶 🔋 94%</span></div>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <span class="menu-btn" onclick="historyBack()">☰</span>
+    <span class="title">⚙️ 设置</span>
+    <div class="actions"><span>🔍</span></div>
+  </div>
+
+  <!-- ===== Main Settings List ===== -->
+  <div class="scroll-area" id="settingsMain">
+
+    <!-- ── 外观 ── -->
+    <div class="section">
+      <div class="section-label">外观与显示</div>
+      <div class="setting-item" onclick="openSub('sub-theme')">
+        <div class="si-icon" style="background:#5e6ad215;color:#5e6ad2">🎨</div>
+        <div class="si-info"><div class="si-title">主题设置</div><div class="si-desc">深色主题 · 强调色 #5E6AD2</div></div>
+        <span class="si-chevron">›</span>
+      </div>
+      <div class="setting-item" onclick="openSub('sub-font')">
+        <div class="si-icon" style="background:#7b84e015;color:#7b84e0">🔤</div>
+        <div class="si-info"><div class="si-title">字体大小</div><div class="si-desc">标准 · 14px</div></div>
+        <span class="si-chevron">›</span>
+      </div>
+      <div class="setting-item">
+        <div class="si-icon" style="background:#00bcd415;color:#00bcd4">🌐</div>
+        <div class="si-info"><div class="si-title">语言</div><div class="si-desc">简体中文</div></div>
+        <span class="si-chevron">›</span>
+      </div>
+      <div class="slider-row">
+        <div class="si-icon" style="background:#9c27b015;color:#9c27b0">☀️</div>
+        <div class="slider-info"><div class="slider-title">屏幕亮度</div><div class="slider-desc">编辑器区域亮度调节</div></div>
+        <div class="slider-wrap">
+          <div class="slider-track"><div class="slider-fill"></div><div class="slider-thumb"></div></div>
+          <span class="slider-val">60%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── AI 与模型 ── -->
+    <div class="section">
+      <div class="section-label">AI 与模型</div>
+      <div class="setting-item" onclick="openSub('sub-model')">
+        <div class="si-icon" style="background:#e91e6315;color:#e91e63">🧠</div>
+        <div class="si-info"><div class="si-title">模型配置</div><div class="si-desc">DeepSeek-7B · 本地运行中</div></div>
+        <span class="si-badge">● 运行中</span>
+        <span class="si-chevron">›</span>
+      </div>
+      <div class="setting-item">
+        <div class="si-icon" style="background:#ff980015;color:#ff9800">🎯</div>
+        <div class="si-info"><div class="si-title">系统提示词</div><div class="si-desc">自定义 AI 行为风格</div></div>
+        <span class="si-chevron">›</span>
+      </div>
+      <div class="setting-item">
+        <div class="si-icon" style="background:#607d8b15;color:#607d8b">🌡️</div>
+        <div class="si-info"><div class="si-title">温度 / 创造性</div><div class="si-desc">控制回复随机程度</div></div>
+        <span class="si-val" style="color:#5e6ad2">0.72</span>
+        <span class="si-chevron">›</span>
+      </div>
+      <div class="setting-item">
+        <div class="si-icon" style="background:#79554815;color:#795548">📏</div>
+        <div class="si-info"><div class="si-title">最大输出长度</div><div class="si-desc">单次回复上限</div></div>
+        <span class="si-val" style="color:#5e6ad2">2048</span>
+        <span class="si-chevron">›</span>
+      </div>
+    </div>
+
+    <!-- ── 聊天 ── -->
+    <div class="section">
+      <div class="section-label">聊天与消息</div>
+      <div class="setting-item">
+        <div class="si-icon" style="background:#4caf5015;color:#4caf50">💬</div>
+        <div class="si-info"><div class="si-title">聊天设置</div><div class="si-desc">历史记录 · 上下文 · 备份</div></div>
+        <span class="si-chevron">›</span>
+      </div>
+      <div class="setting-item">
+        <div class="si-icon" style="background:#5e6ad215;color:#5e6ad2">📜</div>
+        <div class="si-info"><div class="si-title">上下文窗口</div><div class="si-desc">保留最近对话轮数</div></div>
+        <span class="si-val" style="color:#5e6ad2">20 轮</span>
+        <span class="si-chevron">›</span>
+      </div>
+      <div class="setting-item">
+        <div class="si-icon" style="background:#00968815;color:#009688">🔄</div>
+        <div class="si-info"><div class="si-title">自动发送</div><div class="si-desc">回车键直接发送消息</div></div>
+        <div class="toggle on" onclick="toggleSwitch(this)"><div class="thumb"></div></div>
+      </div>
+      <div class="setting-item">
+        <div class="si-icon" style="background:#673ab715;color:#673ab7">📋</div>
+        <div class="si-info"><div class="si-title">复制代码块格式</div><div class="si-desc">自动添加 Markdown 标记</div></div>
+        <div class="toggle off" onclick="toggleSwitch(this)"><div class="thumb"></div></div>
+      </div>
+      <div class="setting-item">
+        <div class="si-icon" style="background:#f4433615;color:#f44336">🔔</div>
+        <div class="si-info"><div class="si-title">新消息通知</div><div class="si-desc">后台运行时推送提醒</div></div>
+        <div class="toggle on" onclick="toggleSwitch(this)"><div class="thumb"></div></div>
+      </div>
+    </div>
+
+    <!-- ── 编辑器 ── -->
+    <div class="section">
+      <div class="section-label">编辑器</div>
+      <div class="setting-item">
+        <div class="si-icon" style="background:#ff572215;color:#ff5722">✍️</div>
+        <div class="si-info"><div class="si-title">自动保存</div><div class="si-desc">每 30 秒自动保存草稿</div></div>
+        <div class="toggle on" onclick="toggleSwitch(this)"><div class="thumb"></div></div>
+      </div>
+      <div class="setting-item">
+        <div class="si-icon" style="background:#3f51b515;color:#3f51b5">📐</div>
+        <div class="si-info"><div class="si-title">行号显示</div><div class="si-desc">在左侧显示行号</div></div>
+        <div class="toggle on" onclick="toggleSwitch(this)"><div class="thumb"></div></div>
+      </div>
+      <div class="setting-item">
+        <div class="si-icon" style="background:#00bcd415;color:#00bcd4">✨</div>
+        <div class="si-info"><div class="si-title">智能补全</div><div class="si-desc">AI 驱动的文本补全建议</div></div>
+        <div class="toggle on" onclick="toggleSwitch(this)"><div class="thumb"></div></div>
+      </div>
+      <div class="setting-item">
+        <div class="si-icon" style="background:#8bc34a15;color:#8bc34a">🔤</div>
+        <div class="si-info"><div class="si-title">字数统计</div><div class="si-desc">实时显示字数和段落数</div></div>
+        <div class="toggle on" onclick="toggleSwitch(this)"><div class="thumb"></div></div>
+      </div>
+    </div>
+
+    <!-- ── 数据与存储 ── -->
+    <div class="section">
+      <div class="section-label">数据与存储</div>
+      <div class="setting-item" onclick="openSub('sub-token')">
+        <div class="si-icon" style="background:#ff980015;color:#ff9800">📊</div>
+        <div class="si-info"><div class="si-title">Token 用量</div><div class="si-desc">今日: 21.1K Tokens</div></div>
+        <span class="si-chevron">›</span>
+      </div>
+      <div class="setting-item">
+        <div class="si-icon" style="background:#79554815;color:#795548">💾</div>
+        <div class="si-info"><div class="si-title">存储管理</div><div class="si-desc">已用 128MB / 可用 2.1GB</div></div>
+        <span class="si-chevron">›</span>
+      </div>
+      <div class="setting-item">
+        <div class="si-icon" style="background:#607d8b15;color:#607d8b">☁️</div>
+        <div class="si-info"><div class="si-title">云同步</div><div class="si-desc">跨设备同步写作数据</div></div>
+        <div class="toggle off" onclick="toggleSwitch(this)"><div class="thumb"></div></div>
+      </div>
+      <div class="setting-item">
+        <div class="si-icon" style="background:#00968815;color:#009688">📦</div>
+        <div class="si-info"><div class="si-title">数据导出</div><div class="si-desc">导出全部作品和资料</div></div>
+        <span class="si-chevron">›</span>
+      </div>
+      <div class="setting-item danger">
+        <div class="si-icon" style="background:#ef444415;color:#ef4444">🗑️</div>
+        <div class="si-info"><div class="si-title">清除缓存</div><div class="si-desc">清除临时文件和缓存 (23MB)</div></div>
+        <span class="si-chevron">›</span>
+      </div>
+    </div>
+
+    <!-- ── 安全与隐私 ── -->
+    <div class="section">
+      <div class="section-label">安全与隐私</div>
+      <div class="setting-item">
+        <div class="si-icon" style="background:#5e6ad215;color:#5e6ad2">🔒</div>
+        <div class="si-info"><div class="si-title">应用锁</div><div class="si-desc">启动时需要生物识别验证</div></div>
+        <div class="toggle off" onclick="toggleSwitch(this)"><div class="thumb"></div></div>
+      </div>
+      <div class="setting-item">
+        <div class="si-icon" style="background:#4caf5015;color:#4caf50">👆</div>
+        <div class="si-info"><div class="si-title">生物识别解锁</div><div class="si-desc">支持 Face ID / 指纹</div></div>
+        <div class="toggle on" onclick="toggleSwitch(this)"><div class="thumb"></div></div>
+      </div>
+      <div class="setting-item">
+        <div class="si-icon" style="background:#9c27b015;color:#9c27b0">🛡️</div>
+        <div class="si-info"><div class="si-title">隐私模式</div><div class="si-desc">不收集使用数据和诊断信息</div></div>
+        <div class="toggle off" onclick="toggleSwitch(this)"><div class="thumb"></div></div>
+      </div>
+    </div>
+
+    <!-- ── 关于 ── -->
+    <div class="section">
+      <div class="section-label">关于</div>
+      <div class="setting-item" onclick="openSub('sub-about')">
+        <div class="si-icon" style="background:#222325;color:#8b8d94">ℹ️</div>
+        <div class="si-info"><div class="si-title">关于</div><div class="si-desc">v2.2.0 · LGPLv3</div></div>
+        <span class="si-chevron">›</span>
+      </div>
+      <div class="setting-item">
+        <div class="si-icon" style="background:#222325;color:#8b8d94">⭐</div>
+        <div class="si-info"><div class="si-title">给我们评分</div><div class="si-desc">您的支持是我们最大的动力</div></div>
+        <span class="si-chevron">›</span>
+      </div>
+      <div class="setting-item">
+        <div class="si-icon" style="background:#222325;color:#8b8d94">🐛</div>
+        <div class="si-info"><div class="si-title">反馈问题</div><div class="si-desc">提交 Bug 或功能建议</div></div>
+        <span class="si-chevron">›</span>
+      </div>
+    </div>
+
+    <div class="version-footer">
+      <div class="v-text">AI-Fic-IDE v2.2.0 Build 2024.06.17</div><br>
+      <a class="v-link" href="#">查看更新日志 →</a>
+    </div>
+  </div>
+
+  <!-- ===== SUB SCREEN: 主题 ===== -->
+  <div class="sub-screen" id="sub-theme">
+    <div class="top-bar">
+      <span class="menu-btn" onclick="closeSub()">←</span>
+      <span class="title" style="font-size:15px">🎨 主题设置</span>
+    </div>
+    <div class="scroll-area">
+      <div class="section">
+        <div class="setting-item">
+          <div class="si-icon" style="background:#222325;color:#8b8d94">🌙</div>
+          <div class="si-info"><div class="si-title">深色模式</div><div class="si-desc">保护眼睛，省电</div></div>
+          <div class="toggle on" onclick="toggleSwitch(this)"><div class="thumb"></div></div>
+        </div>
+        <div class="setting-item">
+          <div class="si-icon" style="background:#fff3;color:#333">☀️</div>
+          <div class="si-info"><div class="si-title">跟随系统</div><div class="si-desc">自动切换日间/夜间模式</div></div>
+          <div class="toggle off" onclick="toggleSwitch(this)"><div class="thumb"></div></div>
+        </div>
+      </div>
+      <div class="section-label">强调色</div>
+      <div class="theme-colors">
+        <div class="theme-dot d1 active" title="#5E6AD2"></div>
+        <div class="theme-dot d2" title="#06B6D4"></div>
+        <div class="theme-dot d3" title="#8B5CF6"></div>
+        <div class="theme-dot d4" title="#EC4899"></div>
+        <div class="theme-dot d5" title="#10B981"></div>
+        <div class="theme-dot d6" title="#F59E0B"></div>
+      </div>
+      <div class="section">
+        <div class="section-label">预览</div>
+        <div style="margin:0 16px;padding:20px;border-radius:14px;background:#0f1011;border:1px solid #222325">
+          <div style="color:#f7f8f8;font-size:13px;font-weight:600;margin-bottom:8px">标题文字示例</div>
+          <div style="color:#5c5e66;font-size:12px;line-height:1.6">这是正文内容的预览效果。深色背景配合柔和的文字颜色，长时间阅读也不容易疲劳。</div>
+          <div style="display:flex;gap:8px;margin-top:12px">
+            <span style="padding:6px 14px;border-radius:18px;background:#5e6ad2;color:#fff;font-size:11px">主要按钮</span>
+            <span style="padding:6px 14px;border-radius:18px;background:#222325;color:#8b8d94;font-size:11px;border:1px solid #333">次要按钮</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SUB SCREEN: 模型配置 ===== -->
+  <div class="sub-screen" id="sub-model">
+    <div class="top-bar">
+      <span class="menu-btn" onclick="closeSub()">←</span>
+      <span class="title" style="font-size:15px">🧠 模型配置</span>
+    </div>
+    <div class="scroll-area">
+      <div class="section">
+        <div class="section-label">可用模型</div>
+        <div class="model-card">
+          <div class="model-radio active"></div>
+          <div class="model-info"><div class="model-name">DeepSeek-7B</div><div class="model-meta">本地运行 · 量化 INT4</div></div>
+          <span class="model-tag local">本地</span>
+        </div>
+        <div class="model-card">
+          <div class="model-radio"></div>
+          <div class="model-info"><div class="model-name">DeepSeek-R1</div><div class="model-meta">本地运行 · 推理增强</div></div>
+          <span class="model-tag local">本地</span>
+        </div>
+        <div class="model-card">
+          <div class="model-radio"></div>
+          <div class="model-info"><div class="model-name">GPT-4o-mini</div><div class="model-meta">API 调用 · OpenAI 兼容</div></div>
+          <span class="model-tag cloud">云端</span>
+        </div>
+        <div class="model-card">
+          <div class="model-radio"></div>
+          <div class="model-info"><div class="model-name">Claude 3.5 Sonnet</div><div class="model-meta">API 调用 · Anthropic</div></div>
+          <span class="model-tag pro">Pro</span>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-label">性能信息</div>
+        <div style="margin:0 16px;padding:14px;background:#0f1011;border:1px solid #222325;border-radius:10px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="color:#5c5e66;font-size:11px">VRAM 占用</span><span style="color:#f7f8f8;font-size:12px;font-weight:500">4.2 GB / 8 GB</span></div>
+          <div style="height:4px;border-radius:2px;background:#222325"><div style="height:100%;width:52%;border-radius:2px;background:#5e6ad2"></div></div>
+          <div style="display:flex;justify-content:space-between;margin-top:8px"><span style="color:#5c5e66;font-size:11px">推理速度</span><span style="color:#4caf50;font-size:12px;font-weight:500">~18 tok/s</span></div>
+          <div style="display:flex;justify-content:space-between;margin-top:6px"><span style="color:#5c5e66;font-size:11px">上下文长度</span><span style="color:#f7f8f8;font-size:12px;font-weight:500">8192 tokens</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SUB SCREEN: Token 用量 ===== -->
+  <div class="sub-screen" id="sub-token">
+    <div class="top-bar">
+      <span class="menu-btn" onclick="closeSub()">←</span>
+      <span class="title" style="font-size:15px">📊 Token 用量</span>
+    </div>
+    <div class="scroll-area">
+      <div class="token-bars">
+        <div class="token-bar-item">
+          <div class="token-bar-head"><span class="token-bar-label">今日已用</span><span class="token-bar-val">21.1K / 50K</span></div>
+          <div class="token-bar-bg"><div class="token-bar-fill blue" style="width:42%"></div></div>
+        </div>
+        <div class="token-bar-item">
+          <div class="token-bar-head"><span class="token-bar-label">本周累计</span><span class="token-bar-val">142K / 200K</span></div>
+          <div class="token-bar-bg"><div class="token-bar-fill green" style="width:71%"></div></div>
+        </div>
+        <div class="token-bar-item">
+          <div class="token-bar-head"><span class="token-bar-label">本月额度</span><span class="token-bar-val">892K / 1M</span></div>
+          <div class="token-bar-bg"><div class="token-bar-fill orange" style="width:89%"></div></div>
+        </div>
+        <div class="token-bar-item">
+          <div class="token-bar-head"><span class="token-bar-label">免费额度剩余</span><span class="token-bar-val" style="color:#ef4444">8% · 即将耗尽</span></div>
+          <div class="token-bar-bg"><div class="token-bar-fill red" style="width:92%"></div></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-label">详细统计</div>
+        <div class="setting-item">
+          <div class="si-icon" style="background:#5e6ad215;color:#5e6ad2">📝</div>
+          <div class="si-info"><div class="si-title">文本生成</div></div>
+          <span class="si-val" style="color:#5e6ad2">+15.2K</span>
+        </div>
+        <div class="setting-item">
+          <div class="si-icon" style="background:#4caf5015;color:#4caf50">✍️</div>
+          <div class="si-info"><div class="si-title">编辑润色</div></div>
+          <span class="si-val">+4.8K</span>
+        </div>
+        <div class="setting-item">
+          <div class="si-icon" style="background:#ff980015;color:#ff9800">🧠</div>
+          <div class="si-info"><div class="si-title">角色分析</div></div>
+          <span class="si-val">+1.1K</span>
+        </div>
+      </div>
+      <div class="version-footer">
+        <a class="v-link" href="#">购买更多额度 →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SUB SCREEN: 关于 ===== -->
+  <div class="sub-screen" id="sub-about">
+    <div class="top-bar">
+      <span class="menu-btn" onclick="closeSub()">←</span>
+      <span class="title" style="font-size:15px">ℹ️ 关于</span>
+    </div>
+    <div class="scroll-area">
+      <div style="text-align:center;padding:30px 16px 16px">
+        <div style="width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,#5e6ad2,#7b84e0);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:26px;font-weight:700;margin-bottom:12px">AI</div>
+        <div style="color:#f7f8f8;font-size:18px;font-weight:700">AI-Fic-IDE</div>
+        <div style="color:#5c5e66;font-size:12px;margin-top:4px">网文写作助手</div>
+        <div style="color:#5e6ad2;font-size:13px;margin-top:6px">v2.2.0 (Build 2024.06.17)</div>
+      </div>
+      <div class="section">
+        <div class="section-label">许可证</div>
+        <div class="setting-item">
+          <div class="si-icon" style="background:#222325;color:#8b8d94">📄</div>
+          <div class="si-info"><div class="si-title">开源协议</div><div class="si-desc">GNU Lesser General Public License v3</div></div>
+        </div>
+        <div class="setting-item">
+          <div class="si-icon" style="background:#222325;color:#8b8d94">👥</div>
+          <div class="si-info"><div class="si-title">开发者</div><div class="si-desc">OperitAI 开源社区</div></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-label">系统</div>
+        <div class="setting-item">
+          <div class="si-icon" style="background:#222325;color:#8b8d94">📱</div>
+          <div class="si-info"><div class="si-title">设备信息</div><div class="si-desc">Android 14 · ARM64-v8a</div></div>
+        </div>
+        <div class="setting-item">
+          <div class="si-icon" style="background:#222325;color:#8b8d94">🗂️</div>
+          <div class="si-info"><div class="si-title">存储路径</div><div class="si-desc">/data/user/0/com.operit.aificide/files</div></div>
+        </div>
+        <div class="setting-item">
+          <div class="si-icon" style="background:#4caf5015;color:#4caf50">🔄</div>
+          <div class="si-info"><div class="si-title">检查更新</div><div class="si-desc">已是最新版本</div></div>
+          <span style="color:#4caf50;font-size:11px">✓ 最新</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+// Clock
+function updateClock() {
+  const now = new Date();
+  document.getElementById('stTime').textContent =
+    String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+}
+updateClock();
+setInterval(updateClock, 10000);
+
+// Toggle
+function toggleSwitch(el) {
+  el.classList.toggle('on');
+  el.classList.toggle('off');
+}
+
+// Sub screen navigation
+function openSub(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeSub() {
+  document.querySelectorAll('.sub-screen').forEach(s => s.classList.remove('open'));
+}
+function historyBack() {
+  // In standalone this would go back, here just show toast
+  alert('返回上一级');
+}
+
+// Theme color selection
+document.querySelectorAll('.theme-dot').forEach(dot => {
+  dot.addEventListener('click', function() {
+    document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// Model radio selection
+document.querySelectorAll('.model-card').forEach(card => {
+  card.addEventListener('click', function() {
+    document.querySelectorAll('.model-radio').forEach(r => r.classList.remove('active'));
+    this.querySelector('.model-radio').classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>

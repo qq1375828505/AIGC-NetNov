@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "toolpkg_id": "com.operit.novelide",
+  "version": "0.1.0",
+  "main": "dist/main.js",
+  "display_name": {
+    "zh": "网文写作",
+    "en": "Novel Writing IDE",
+    "default": "Novel Writing IDE"
+  },
+  "description": {
+    "zh": "专业网文写作 IDE，支持作品管理、章节编辑、AI 续写、资料管理、番茄钟等功能。",
+    "en": "Professional novel writing IDE with work management, chapter editing, AI writing, material management, and pomodoro timer.",
+    "default": "Professional novel writing IDE for web novel authors."
+  },
+  "enabled_by_default": true,
+  "subpackages": [],
+  "resources": [
+    {
+      "key": "novel_web_assets",
+      "path": "resources/webapp",
+      "mime": "inode/directory"
+    }
+  ],
+  "workflow_templates": [],
+  "workspace_templates": []
+}

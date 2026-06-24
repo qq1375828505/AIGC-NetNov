@@ -1,0 +1,31 @@
+{
+  "timestamp": "2026-06-24T21:38:41.261Z",
+  "totalFiles": 3,
+  "results": [
+    {
+      "file": "tests/novel_tools.test.ts",
+      "status": "error",
+      "duration": 6741,
+      "error": "Command failed: npx tsx --test tests/novel_tools.test.ts"
+    },
+    {
+      "file": "tests/native_bridge_integration.test.ts",
+      "status": "error",
+      "duration": 1598,
+      "error": "Command failed: npx tsx --test tests/native_bridge_integration.test.ts"
+    },
+    {
+      "file": "tests/performance.test.ts",
+      "status": "success",
+      "duration": 19572,
+      "summary": {
+        "tests": 24,
+        "pass": 24,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "output": "\n数据大小: 2.00 KB\n\n=== JSON.parse - 10 条记录 ===\n  总耗时: 122.75ms\n  迭代次数: 10000\n  平均每次: 0.0123ms\n  P50: 0.0103ms\n  P95: 0.0187ms\n  P99: 0.0255ms\n\n\n数据大小: 20.27 KB\n\n=== JSON.parse - 100 条记录 ===\n  总耗时: 592.75ms\n  迭代次数: 5000\n  平均每次: 0.1185ms\n  P50: 0.0996ms\n  P95: 0.1921ms\n  P99: 0.2962ms\n\n\n数据大小: 205.63 KB\n\n=== JSON.parse - 1000 条记录 ===\n  总耗时: 1135.23ms\n  迭代次数: 1000\n  平均每次: 1.1352ms\n  P50: 1.0302ms\n  P95: 1.7445ms\n  P99: 1.9978ms\n\n\n=== JSON.parse - 空数组 ===\n  总耗时: 15.80ms\n  迭代次数: 100000\n  平均每次: 0.0002ms\n  P50: 0.0001ms\n  P95: 0.0003ms\n  P99: 0.0003ms\n\n\n数据大小: 50.29 KB\n\n=== JSON.parse - 复杂嵌套对象 ===\n  总耗时: 97.04ms\n  迭代次数: 1000\n  平均每次: 0.0970ms\n  P50: 0.0873ms\n  P95: 0.1218ms\n  P99: 0.1596ms\n\n\n模拟数据库查询延迟: 10ms\n\n=== runBlocking 模拟 - 10ms 延迟 ===\n  总耗时: 999.22ms\n  迭代次数: 100\n  平均每次: 9.9922ms\n  P50: 9.9996ms\n  P95: 10.0366ms\n  P99: 10.0732ms\n\n\n模拟连续 5 次数据库查询，每次 10ms\n连续 5 次 runBlocking 总阻塞时间: 49.77ms\n\n模拟 exportWork 场景：5 个表查询，每个 10ms\nexportWork 模拟阻塞时间: 49.48ms\n\n模拟 importFile 场景：文件解析 + 多次数据库写入\nimportFile 模拟阻塞时间: 99.30ms\n\n初始会话数: 0\n创建 20 个会话后: 20\n关闭 10 个会话后: 10\n\n历史记录数: 50 (创建了 60 条)\n\n单个会话内存占用估算: 5.43 KB\n7 个 Agent × 每个 10 个会话 = 70 个会话\n总内存占用估算: 380.15 KB\n\n模拟 getCustomItems N+1 查询模式\n场景：10 个文件夹，每个文件夹 5 个条目\nN+1 查询模式总耗时: 109.59ms\n查询次数: 11 次\n\n模拟 getCustomItems 批量查询模式\n场景：10 个文件夹，每个文件夹 5 个条目\n批量查询模式总耗时: 15.09ms\n查询次数: 1 次\n\n=== N+1 vs 批量查询性能对比 ===\n\n=== N+1 查询模式 ===\n  总耗时: 11015.58ms\n  迭代次数: 100\n  平均每次: 110.1558ms\n  P50: 109.9992ms\n  P95: 110.0202ms\n  P99: 118.9972ms\n\n\n=== 批量查询模式 ===\n  总耗时: 1499.94ms\n  迭代次数: 100\n  平均每次: 14.9994ms\n  P50: 14.9992ms\n  P95: 15.0095ms\n  P99: 15.1063ms\n\n性能提升: 7.3x\n\n模拟完整调用链路: UI → Bridge → Kotlin → DB → 返回\n▶ 性能测试 - JSON.parse 基准\n  ✔ 小型数据集 (10 条记录) JSON.parse 性能 (130.2593ms)\n  ✔ 中型数据集 (100 条记录) JSON.parse 性能 (597.3259ms)\n  ✔ 大型数据集 (1000 条记录) JSON.parse 性能 (1138.8352ms)\n  ✔ 空数组 JSON.parse 性能 (45.5388ms)\n  ✔ 复杂嵌套对象 JSON.parse 性能 (98.4822ms)\n✔ 性能测试 - JSON.parse 基准 (2012.0746ms)\n▶ 性能测试 - runBlocking 阻塞模拟\n  ✔ 模拟单次 runBlocking 调用阻塞时间 (1000.2044ms)\n  ✔ 模拟连续 runBlocking 调用累积阻塞 (50.4262ms)\n  ✔ 模拟 exportWork 多表查询阻塞 (50.0382ms)\n  ✔ 模拟 importFile 长时间阻塞 (100.2501ms)\n✔ 性能测试 - runBlocking 阻塞模拟 (1201.523ms)\n▶ 性能测试 - AgentManager 内存泄漏检测\n  ✔ AgentManager 会话创建和泄漏检测 (10.2762ms)\n  ✔ AgentManager 历史记录限制检测 (0.9142ms)\n  ✔ AgentManager 内存占用估算 (0.5965ms)\n✔ 性能测试 - AgentManager 内存泄漏检测 (12.1362ms)\n▶ 性能测试 - N+1 查询模式对比\n  ✔ 模拟 N+1 查询模式（当前实现） (110.1873ms)\n  ✔ 模拟批量查询模式（优化后） (16.1454ms)\n  ✔ N+1 vs 批量查询性能对比 (12516.5177ms)\n✔ 性能测试 - N+1 查询模式对比 (12643.1182ms)\n\n=== NativeBridge 调用链路性能 ===\n迭代次数: 50\n平均耗时: 15.70ms\nP50: 15.98ms\nP95: 16.15ms\nP99: 17.85ms\n\n测试 JSON.stringify 序列化性能\n\n=== JSON.stringify 序列化 ===\n  总耗时: 135.99ms\n  迭代次数: 10000\n  平均每次: 0.0136ms\n  P50: 0.0122ms\n  P95: 0.0181ms\n  P99: 0.0289ms\n\n\n测试双向序列化/反序列化性能\n\n=== 双向序列化/反序列化 ===\n  总耗时: 333.26ms\n  迭代次数: 5000\n  平均每次: 0.0667ms\n  P50: 0.0642ms\n  P95: 0.0760ms\n  P99: 0.1049ms\n\n\n测试大量对象创建的内存影响\n初始堆内存: 20.60 MB\n创建 10000 个对象后堆内存: 24.39 MB\n内存增加: 3.79 MB\n\n测试 JSON.parse 内存分配\nJSON.parse 100 次后内存增加: -8.49 MB\n\n测试超大 JSON 字符串解析\n数据大小: 1041.09 KB\n\n=== 超大 JSON 解析 (5000 条) ===\n  总耗时: 483.25ms\n  迭代次数: 100\n  平均每次: 4.8325ms\n  P50: 4.7536ms\n  P95: 5.8314ms\n  P99: 7.8274ms\n\n\n测试高频小 JSON 解析（模拟频繁 API 调用）\n\n=== 高频小 JSON 解析 ===\n  总耗时: 39.88ms\n  迭代次数: 100000\n  平均每次: 0.0004ms\n  P50: 0.0004ms\n  P95: 0.0005ms\n  P99: 0.0006ms\n\n\n测试并发 NativeBridge 调用\n▶ 性能测试 - NativeBridge 调用链路\n  ✔ 模拟完整 NativeBridge 调用链路耗时 (785.9017ms)\n  ✔ 模拟 JSON.stringify 开销 (139.2887ms)\n  ✔ 模拟双向序列化/反序列化开销 (335ms)\n✔ 性能测试 - NativeBridge 调用链路 (1260.4163ms)\n▶ 性能测试 - 内存使用监控\n  ✔ 大量对象创建内存占用 (2.2747ms)\n  ✔ JSON.parse 内存分配 (46.8583ms)\n✔ 性能测试 - 内存使用监控 (49.2691ms)\n▶ 性能测试 - 边界条件\n  ✔ 超大 JSON 字符串解析性能 (490.3865ms)\n  ✔ 高频小 JSON 解析性能 (58.3337ms)\n10 个并发调用总耗时: 32.17ms\n平均每个调用: 3.22ms\n\n============================================================\nAIGC-NetNov 性能测试汇总报告\n============================================================\n\n关键发现:\n  1. JSON.parse 性能：小型数据 <1ms，大型数据 <50ms\n  2. runBlocking 阻塞：单次 10ms，多表查询累积 50-100ms\n  3. N+1 查询效率：比批量查询慢 5-10 倍\n  4. AgentManager 内存：会话无自动清理机制\n  5. NativeBridge 链路：完整调用约 15-20ms\n\n优化建议:\n  1. P0: 将 runBlocking 改为异步回调模式\n  2. P0: 为 AgentManager 添加自动清理定时器\n  3. P1: 添加 JSON.parse 结果缓存\n  4. P1: 优化 getCustomItems 为批量查询\n  5. P1: 复用 WebView 实例避免重复创建\n\n============================================================\n  ✔ 并发 NativeBridge 调用模拟 (32.5954ms)\n✔ 性能测试 - 边界条件 (581.5669ms)\n▶ 性能测试 - 汇总报告\n  ✔ 生成性能测试汇总报告 (1.0938ms)\n✔ 性能测试 - 汇总报告 (1.1714ms)\nℹ tests 24\nℹ suites 8\nℹ pass 24\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 17940.8392\n"
+    }
+  ]
+}

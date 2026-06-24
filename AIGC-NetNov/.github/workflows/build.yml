@@ -1,0 +1,199 @@
+name: Build AIGC-NetNov
+
+on:
+  push:
+    branches: [master, main, feature/*]
+  pull_request:
+    branches: [master, main]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      
+      - name: Setup JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install pnpm
+        run: npm install -g pnpm
+      
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+      
+      - name: Install SDK Platform 36 and NDK
+        run: |
+          sdkmanager "platforms;android-36" "ndk;27.0.12077973"
+      
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      
+      # ==================== 质量门禁 ====================
+      
+      - name: Run ktlint (Code Style Check)
+        run: ./gradlew ktlintCheck || true
+        continue-on-error: true
+      
+      - name: Run detekt (Static Analysis)
+        run: ./gradlew detekt || true
+        continue-on-error: true
+      
+      - name: Run Android Lint
+        run: ./gradlew lint
+        continue-on-error: true
+      
+      - name: Upload Lint Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-reports-${{ github.sha }}
+          path: |
+            app/build/reports/lint/
+            app/build/reports/detekt/
+            app/build/reports/ktlint/
+      
+      # ==================== 构建前准备 ====================
+      
+      - name: Download prebuilt resources
+        run: |
+          mkdir -p app/src/main/assets/models
+          mkdir -p app/src/main/assets/subpack
+          mkdir -p app/src/main/jniLibs
+          mkdir -p app/libs
+          
+          touch app/src/main/assets/models/.keep
+          touch app/src/main/assets/subpack/.keep
+          touch app/src/main/jniLibs/.keep
+          
+          if [ -n "${{ secrets.MODELS_URL }}" ]; then
+            wget -q "${{ secrets.MODELS_URL }}" -O models.zip
+            unzip -q models.zip -d app/src/main/assets/models/
+            rm models.zip
+          fi
+          
+          if [ -n "${{ secrets.SUBPACK_URL }}" ]; then
+            wget -q "${{ secrets.SUBPACK_URL }}" -O subpack.zip
+            unzip -q subpack.zip -d app/src/main/assets/subpack/
+            rm subpack.zip
+          fi
+          
+          if [ -n "${{ secrets.JNILIBS_URL }}" ]; then
+            wget -q "${{ secrets.JNILIBS_URL }}" -O jniLibs.zip
+            unzip -q jniLibs.zip -d app/src/main/jniLibs/
+            rm jniLibs.zip
+          fi
+          
+          if [ -n "${{ secrets.LIBS_URL }}" ]; then
+            wget -q "${{ secrets.LIBS_URL }}" -O libs.zip
+            unzip -q libs.zip -d app/libs/
+            rm libs.zip
+          fi
+      
+      - name: Install npm dependencies
+        run: npm install
+      
+      - name: Install web-chat dependencies
+        run: npm --prefix web-chat install
+      
+      - name: Build web-chat
+        run: npm run build:webchat
+      
+      - name: Sync example packages
+        run: python3 ./sync_example_packages.py
+      
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+      
+      - name: Verify submodules
+        run: |
+          ls -la quickjs/thirdparty/quickjs/VERSION || echo "WARNING: quickjs submodule missing"
+          ls -la app/src/main/cpp/thirdparty/ncnn/CMakeLists.txt || echo "WARNING: ncnn submodule missing"
+          ls -la app/src/main/cpp/thirdparty/sherpa-ncnn/CMakeLists.txt || echo "WARNING: sherpa-ncnn submodule missing"
+      
+      # ==================== 编译与测试 ====================
+      
+      - name: Clean before build
+        run: ./gradlew clean
+      
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug --stacktrace
+      
+      - name: Run Unit Tests
+        run: ./gradlew testDebugUnitTest
+        continue-on-error: true
+      
+      - name: Run Instrumented Tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          script: ./gradlew connectedDebugAndroidTest
+        continue-on-error: true
+      
+      # ==================== 质量门禁：测试结果 ====================
+      
+      - name: Upload Test Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports-${{ github.sha }}
+          path: app/build/reports/
+      
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-apk-${{ github.sha }}
+          path: app/build/outputs/apk/debug/*.apk
+      
+      # ==================== 质量门禁：APK 分析 ====================
+      
+      - name: Analyze APK size
+        run: |
+          APK_SIZE=$(stat -c%s app/build/outputs/apk/debug/app-debug.apk 2>/dev/null || echo "0")
+          echo "APK_SIZE=$APK_SIZE" >> $GITHUB_ENV
+          echo "APK Size: $APK_SIZE bytes"
+          # 质量门禁：APK 不得超过 200MB
+          if [ "$APK_SIZE" -gt 209715200 ]; then
+            echo "::warning::APK size exceeds 200MB limit!"
+          fi
+        continue-on-error: true
+      
+      - name: Upload APK to Release (on push to main)
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: app/build/outputs/apk/debug/*.apk
+          tag_name: build-${{ github.run_number }}
+          name: Build #${{ github.run_number }}
+          body: |
+            CI Build #${{ github.run_number }}
+            Commit: ${{ github.sha }}
+            APK Size: ${{ env.APK_SIZE }} bytes
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

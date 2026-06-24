@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Fic-IDE - 设置子页面</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d1117;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;padding:40px 20px;min-height:100vh}
+h1{color:#e6edf3;font-size:28px;margin-bottom:8px;letter-spacing:-0.5px}
+.sub{color:#8b949e;font-size:14px;margin-bottom:40px;text-align:center}
+.grid{display:flex;flex-wrap:wrap;gap:32px;justify-content:center;max-width:1400px}
+.phone{width:400px;height:844px;background:#1c2128;border-radius:44px;border:2px solid #30363d;overflow:hidden;position:relative;box-shadow:0 25px 50px -12px rgba(0,0,0,.5)}
+.phone-inner{height:100%;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#30363d transparent}
+.phone-inner::-webkit-scrollbar{width:4px}
+.phone-inner::-webkit-scrollbar-thumb{background:#30363d;border-radius:2px}
+.status-bar{display:flex;justify-content:space-between;padding:12px 24px 8px;color:#e6edf3;font-size:12px;font-weight:600}
+.top-bar{display:flex;align-items:center;padding:4px 16px;gap:8px;position:sticky;top:0;background:#1c2128;z-index:10}
+.top-bar .back-btn{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#e6edf3;font-size:20px}
+.top-bar .title{flex:1;color:#e6edf3;font-size:16px;font-weight:600}
+.top-bar .actions{display:flex;gap:4px}
+.top-bar .actions span{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#e6edf3;font-size:18px}
+.content{padding:12px 16px}
+.section-title{padding:16px 16px 6px;color:#8b949e;font-size:11px;text-transform:uppercase;letter-spacing:.8px;font-weight:600}
+.setting-row{display:flex;align-items:center;padding:14px 16px;gap:12px;border-bottom:1px solid #21262d;cursor:pointer}
+.setting-row:hover{background:#2d333b}
+.setting-row .s-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.setting-row .s-info{flex:1;min-width:0}
+.setting-row .s-title{color:#e6edf3;font-size:14px;font-weight:500}
+.setting-row .s-desc{color:#8b949e;font-size:11px;margin-top:2px}
+.setting-row .s-val{color:#8b949e;font-size:13px;margin-right:8px}
+.setting-row .s-chevron{color:#8b949e;font-size:12px;flex-shrink:0}
+.switch{width:44px;height:24px;border-radius:12px;position:relative;cursor:pointer;flex-shrink:0}
+.switch.on{background:#1f6feb}
+.switch.off{background:#30363d}
+.switch .thumb{width:18px;height:18px;background:#fff;border-radius:50%;position:absolute;top:3px;transition:left .15s}
+.switch.on .thumb{right:3px;left:auto}
+.switch.off .thumb{left:3px}
+.btn{padding:10px 24px;border-radius:10px;border:none;font-size:13px;font-weight:500;cursor:pointer;display:inline-block}
+.btn-primary{background:#1f6feb;color:#fff}
+.btn-outline{background:transparent;border:1px solid #30363d;color:#e6edf3}
+.card{background:#21262d;border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid #30363d}
+.card-title{color:#e6edf3;font-size:14px;font-weight:600;margin-bottom:4px}
+.card-desc{color:#8b949e;font-size:12px;line-height:1.5}
+.tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:8px;font-weight:500}
+.tag-blue{background:#58a6ff33;color:#58a6ff}
+.tag-green{background:#3fb95033;color:#3fb950}
+@media(max-width:768px){.phone{width:380px}}
+</style>
+</head>
+<body>
+<h1>⚙️ 设置子页面</h1>
+<div class="sub">Settings Detail — 工具权限 · 偏好 · 语音 · 模型下载 · 角色卡 · 标签市场 · 更多</div>
+<div class="grid">
+
+<!-- 1: 工具权限设置 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="top-bar"><div class="back-btn">←</div><div class="title">🔑 工具权限</div></div>
+<div class="content">
+<div class="setting-row"><div class="s-icon" style="background:#3fb95033;color:#3fb950">🪟</div><div class="s-info"><div class="s-title">悬浮窗</div><div class="s-desc">浮动聊天窗口 · 全屏模式</div></div><span class="s-val"><span class="tag tag-green">已授权</span></span></div>
+<div class="setting-row"><div class="s-icon" style="background:#f0883e33;color:#f0883e">♿</div><div class="s-info"><div class="s-title">无障碍服务</div><div class="s-desc">屏幕分析 · OCR · 自动化</div></div><span class="s-val"><span style="color:#f85149;font-size:12px">未授权</span></span></div>
+<div class="setting-row"><div class="s-icon" style="background:#58a6ff33;color:#58a6ff">🔔</div><div class="s-info"><div class="s-title">通知监听</div><div class="s-desc">消息读取 · 自动回复</div></div><span class="s-val"><span class="tag tag-green">已授权</span></span></div>
+<div class="setting-row"><div class="s-icon" style="background:#dda0dd33;color:#dda0dd">🎤</div><div class="s-info"><div class="s-title">麦克风</div><div class="s-desc">语音输入 · TTS</div></div><span class="s-val"><span class="tag tag-green">已授权</span></span></div>
+<div class="setting-row"><div class="s-icon" style="background:#f8514933;color:#f85149">📂</div><div class="s-info"><div class="s-title">文件读写</div><div class="s-desc">工作区 · 导出备份</div></div><span class="s-val"><span class="tag tag-green">已授权</span></span></div>
+</div></div></div>
+
+<!-- 2: 用户偏好设置 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="top-bar"><div class="back-btn">←</div><div class="title">👤 用户偏好</div></div>
+<div class="content">
+<div class="setting-row"><div class="s-info"><div class="s-title">字体选择</div></div><span class="s-val">系统默认</span><span class="s-chevron">›</span></div>
+<div class="setting-row"><div class="s-info"><div class="s-title">编辑器字体大小</div></div><span class="s-val">16sp</span><span class="s-chevron">›</span></div>
+<div class="setting-row"><div class="s-info"><div class="s-title">行间距</div></div><span class="s-val">1.5</span><span class="s-chevron">›</span></div>
+<div class="setting-row"><div class="s-info"><div class="s-title">自动保存间隔</div></div><span class="s-val">1.5秒</span><span class="s-chevron">›</span></div>
+<div class="setting-row"><div class="s-info"><div class="s-title">显示行号</div></div><div class="switch on"><div class="thumb"></div></div></div>
+<div class="setting-row"><div class="s-info"><div class="s-title">统计工具栏</div></div><div class="switch on"><div class="thumb"></div></div></div>
+</div></div></div>
+
+<!-- 3: 语音服务 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="top-bar"><div class="back-btn">←</div><div class="title">🎙️ 语音服务</div></div>
+<div class="content">
+<div class="card"><div class="card-title">语音转文字 (ASR)</div><div class="card-desc">引擎：离线中文模型 · 采样率 16kHz</div></div>
+<div class="card"><div class="card-title">文字转语音 (TTS)</div><div class="card-desc">引擎：系统 TTS · 语速 1.0x · 音色：女声</div></div>
+<div class="setting-row"><div class="s-info"><div class="s-title">离线语音包下载</div></div><span class="s-chevron">›</span></div>
+<div class="setting-row"><div class="s-info"><div class="s-title">语音唤醒</div></div><div class="switch off"><div class="thumb"></div></div></div>
+</div></div></div>
+
+<!-- 4: 外部 HTTP 聊天设置 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="top-bar"><div class="back-btn">←</div><div class="title" style="font-size:14px">🌐 外部 HTTP 聊天</div></div>
+<div class="content">
+<div class="card"><div class="card-title">自定义 API 端点</div><div class="card-desc">兼容 OpenAI 格式的第三方 API</div></div>
+<div class="form-field"><label>API 地址</label><input value="https://api.openai.com/v1"></div>
+<div class="form-field"><label>API Key</label><input type="password" value="sk-••••••••••"></div>
+<div class="form-field"><label>模型</label><input value="gpt-4o"></div>
+<button class="btn btn-primary" style="width:100%;margin-top:4px">测试连接</button>
+</div></div></div>
+
+<!-- 5: MNN 模型下载 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="top-bar"><div class="back-btn">←</div><div class="title" style="font-size:14px">🧠 模型下载</div></div>
+<div class="content">
+<div class="card"><div class="card-flex" style="display:flex;align-items:center;gap:12px">
+<div style="flex:1"><div class="card-title">DeepSeek-R1-7B-Q4</div><div class="card-desc">2.3 GB · 进度 73%</div></div>
+<div style="width:60px;text-align:right"><span class="tag tag-blue">下载中</span></div>
+</div>
+<div style="height:4px;background:#30363d;border-radius:2px;margin-top:10px"><div style="width:73%;height:100%;background:#58a6ff;border-radius:2px"></div></div>
+</div>
+<div class="card"><div class="card-flex" style="display:flex;align-items:center;gap:12px">
+<div style="flex:1"><div class="card-title">Qwen2.5-7B-Q4</div><div class="card-desc">3.8 GB · 已下载</div></div>
+<div style="width:60px;text-align:right"><span class="tag tag-green">就绪</span></div>
+</div></div>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+<span class="tag tag-blue" style="padding:4px 12px;font-size:12px;cursor:pointer">+ 添加模型</span>
+<span class="tag tag-blue" style="padding:4px 12px;font-size:12px;cursor:pointer">HuggingFace 镜像</span>
+</div>
+</div></div></div>
+
+<!-- 6: Waifu 模式 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="top-bar"><div class="back-btn">←</div><div class="title">🌸 Waifu 模式</div></div>
+<div class="content">
+<div class="card"><div class="card-flex" style="display:flex;gap:16px;align-items:center">
+<div style="width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,#ff6b9d,#a855f7);display:flex;align-items:center;justify-content:center;font-size:28px">🌸</div>
+<div style="flex:1"><div class="card-title">Waifu 模式</div><div class="card-desc">启用后 AI 将以角色扮演风格回复</div></div>
+<div class="switch off"><div class="thumb"></div></div>
+</div></div>
+<div class="setting-row"><div class="s-info"><div class="s-title">角色名称</div></div><span class="s-val">助手酱</span><span class="s-chevron">›</span></div>
+<div class="setting-row"><div class="s-info"><div class="s-title">语气风格</div></div><span class="s-val">元气少女</span><span class="s-chevron">›</span></div>
+<div class="setting-row"><div class="s-info"><div class="s-title">自定义提示词</div></div><span class="s-chevron">›</span></div>
+</div></div></div>
+
+<!-- 7: 标签市场 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="top-bar"><div class="back-btn">←</div><div class="title">🏷️ 标签市场</div><div class="actions"><span>🔍</span></div></div>
+<div class="content">
+<div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
+<span class="tag tag-blue" style="padding:6px 14px;font-size:12px;cursor:pointer">热门</span>
+<span class="tag tag-green" style="padding:6px 14px;font-size:12px;cursor:pointer;background:#3fb95033;color:#3fb950">仙侠</span>
+<span class="tag tag-orange" style="padding:6px 14px;font-size:12px;cursor:pointer;background:#f0883e33;color:#f0883e">科幻</span>
+<span class="tag tag-purple" style="padding:6px 14px;font-size:12px;cursor:pointer;background:#dda0dd33;color:#dda0dd">都市</span>
+</div>
+<div class="card"><div class="card-flex"><div style="flex:1"><div class="card-title">🔥 系统流</div><div class="card-desc">426 个对话使用 · ⭐4.7</div></div><span class="tag tag-green">已安装</span></div></div>
+<div class="card"><div class="card-flex"><div style="flex:1"><div class="card-title">🔥 重生复仇</div><div class="card-desc">312 个对话使用 · ⭐4.5</div></div><span class="tag tag-blue">免费</span></div></div>
+<div class="card"><div class="card-flex"><div style="flex:1"><div class="card-title">🏆 签到升级</div><div class="card-desc">287 个对话使用 · ⭐4.3</div></div><span class="tag tag-blue">免费</span></div></div>
+</div></div></div>
+
+<!-- 8: 聊天历史 & 备份 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="top-bar"><div class="back-btn">←</div><div class="title">💬 聊天设置</div></div>
+<div class="section-title" style="padding-left:16px">历史记录</div>
+<div class="setting-row"><div class="s-info"><div class="s-title">保存聊天历史</div></div><div class="switch on"><div class="thumb"></div></div></div>
+<div class="setting-row"><div class="s-info"><div class="s-title">最大历史条数</div></div><span class="s-val">1000</span><span class="s-chevron">›</span></div>
+<div class="section-title" style="padding-left:16px">备份</div>
+<div class="setting-row"><div class="s-info"><div class="s-title">自动备份聊天</div></div><div class="switch on"><div class="thumb"></div></div></div>
+<div class="setting-row"><div class="s-info"><div class="s-title">备份频率</div></div><span class="s-val">每 30 分钟</span><span class="s-chevron">›</span></div>
+<div class="setting-row"><div class="s-info"><div class="s-title">导出所有聊天</div></div><span class="s-chevron">›</span></div>
+<div class="content"><button class="btn btn-outline" style="width:100%">🗑️ 清除所有聊天历史</button></div>
+</div></div></div>
+
+<!-- 9: 功能配置 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="top-bar"><div class="back-btn">←</div><div class="title">🎯 功能配置</div></div>
+<div class="content">
+<div class="setting-row"><div class="s-info"><div class="s-title">WebView 增强</div><div class="s-desc">启用 JS/DOM/文件访问</div></div><div class="switch on"><div class="thumb"></div></div></div>
+<div class="setting-row"><div class="s-info"><div class="s-title">桌面小部件</div><div class="s-desc">主屏幕写作 Widget</div></div><div class="switch on"><div class="thumb"></div></div></div>
+<div class="setting-row"><div class="s-info"><div class="s-title">Git 集成</div><div class="s-desc">版本控制支持</div></div><div class="switch off"><div class="thumb"></div></div></div>
+<div class="setting-row"><div class="s-info"><div class="s-title">Markdown 渲染</div></div><div class="switch on"><div class="thumb"></div></div></div>
+</div></div></div>
+
+<!-- 10: 全局显示设置 -->
+<div class="phone">
+<div class="phone-inner">
+<div class="status-bar"><span>10:12</span><span>📶 🔋</span></div>
+<div class="top-bar"><div class="back-btn">←</div><div class="title">🖥️ 显示设置</div></div>
+<div class="content">
+<div class="setting-row"><div class="s-info"><div class="s-title">界面语言</div></div><span class="s-val">简体中文</span><span class="s-chevron">›</span></div>
+<div class="setting-row"><div class="s-info"><div class="s-title">动态取色</div><div class="s-desc">根据壁纸生成主题色</div></div><div class="switch on"><div class="thumb"></div></div></div>
+<div class="setting-row"><div class="s-info"><div class="s-title">毛玻璃效果</div></div><div class="switch on"><div class="thumb"></div></div></div>
+<div class="setting-row"><div class="s-info"><div class="s-title">动画速度</div></div><span class="s-val">默认</span><span class="s-chevron">›</span></div>
+<div class="setting-row"><div class="s-info"><div class="s-title">布局调整</div></div><span class="s-chevron">›</span></div>
+</div></div></div>
+
+</div>
+<div class="sub" style="margin-top:32px;color:#8b949e">设置子页面模块（10屏）· 补全设置覆盖至 ~58%</div>
+
+<!--
+  设置补全.html — NativeBridge 集成说明
+  本页为设置子页面设计原型。NovelNativeBridge.kt 不包含应用级设置 API。
+  设置功能需要通过 Operit 主桥接层的 Preferences API 实现。
+-->
+</body>
+</html>

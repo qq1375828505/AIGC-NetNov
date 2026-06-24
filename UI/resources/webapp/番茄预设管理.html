@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>番茄预设管理 - AI-Fic-IDE</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            max-width: 414px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .app-container {
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+        
+        /* 顶部导航 */
+        .top-bar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .top-bar h1 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .back-btn, .search-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            color: white;
+            font-size: 18px;
+        }
+        
+        /* 统计卡片 */
+        .stats-card {
+            margin: 16px;
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .stats-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #333;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 12px 8px;
+            border-radius: 12px;
+            background: #f8f9fa;
+        }
+        
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .stat-number.s-level { color: #ff4757; }
+        .stat-number.a-level { color: #ffa502; }
+        .stat-number.b-level { color: #2ed573; }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* 当前预设 */
+        .current-preset {
+            margin: 16px;
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-left: 4px solid #667eea;
+        }
+        
+        .current-preset-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .current-preset-label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .current-preset-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .current-preset-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        /* 筛选栏 */
+        .filter-bar {
+            margin: 16px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        
+        .filter-bar::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .filter-chip {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            font-size: 14px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-chip.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        /* 预设列表 */
+        .preset-list {
+            margin: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .preset-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .preset-card:active {
+            transform: scale(0.98);
+        }
+        
+        .preset-card.active {
+            border: 2px solid #667eea;
+            background: #f8f9ff;
+        }
+        
+        .preset-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .preset-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .preset-level {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .preset-level.s-level {
+            background: #ffe0e3;
+            color: #ff4757;
+        }
+        
+        .preset-level.a-level {
+            background: #fff3e0;
+            color: #ffa502;
+        }
+        
+        .preset-level.b-level {
+            background: #e0ffe5;
+            color: #2ed573;
+        }
+        
+        .preset-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+        
+        .preset-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        
+        .preset-tag {
+            padding: 4px 10px;
+            border-radius: 8px;
+            background: #f0f0f0;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .preset-formula {
+            font-size: 13px;
+            color: #888;
+            line-height: 1.4;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .preset-shortcuts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .shortcut-btn {
+            padding: 6px 12px;
+            border-radius: 8px;
+            background: #667eea;
+            color: white;
+            font-size: 12px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .use-preset-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+        
+        /* Agent管理 */
+        .agent-section {
+            margin: 16px;
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .agent-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .agent-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .agent-item {
+            padding: 12px;
+            border-radius: 12px;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .agent-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+        }
+        
+        .agent-info {
+            flex: 1;
+        }
+        
+        .agent-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .agent-desc {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .agent-toggle {
+            width: 44px;
+            height: 24px;
+            border-radius: 12px;
+            background: #667eea;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .agent-toggle::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            top: 2px;
+            right: 2px;
+            transition: all 0.3s;
+        }
+        
+        /* 底部导航 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 414px;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: #999;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 8px 16px;
+        }
+        
+        .nav-item.active {
+            color: #667eea;
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 顶部导航 -->
+        <div class="top-bar">
+            <button class="back-btn" onclick="history.back()">←</button>
+            <h1>🍅 番茄预设管理</h1>
+            <button class="search-btn">🔍</button>
+        </div>
+        
+        <!-- 统计卡片 -->
+        <div class="stats-card">
+            <div class="stats-title">📊 预设统计</div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number s-level">5</div>
+                    <div class="stat-label">S级顶流</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number a-level">10</div>
+                    <div class="stat-label">A级热门</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number b-level">10</div>
+                    <div class="stat-label">B级潜力</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 当前使用预设 -->
+        <div class="current-preset">
+            <div class="current-preset-header">
+                <span class="current-preset-label">当前使用：</span>
+                <span class="current-preset-name">规则怪谈·发疯破局流</span>
+            </div>
+            <div class="current-preset-desc">
+                主角能看见隐藏规则，靠发疯创死NPC通关副本。首章留存60%+，男女通吃。
+            </div>
+        </div>
+        
+        <!-- 筛选栏 -->
+        <div class="filter-bar">
+            <div class="filter-chip active" onclick="filterPresets('all')">全部 (25)</div>
+            <div class="filter-chip" onclick="filterPresets('S')">S级 (5)</div>
+            <div class="filter-chip" onclick="filterPresets('A')">A级 (10)</div>
+            <div class="filter-chip" onclick="filterPresets('B')">B级 (10)</div>
+            <div class="filter-chip" onclick="filterPresets('男频')">男频</div>
+            <div class="filter-chip" onclick="filterPresets('女频')">女频</div>
+            <div class="filter-chip" onclick="filterPresets('系统')">系统</div>
+        </div>
+        
+        <!-- 预设列表 -->
+        <div class="preset-list" id="presetList">
+            <!-- S级预设 -->
+            <div class="preset-card active" data-level="S" data-tags="男频,女频,无限流,规则怪谈">
+                <div class="preset-header">
+                    <span class="preset-name">规则怪谈·发疯破局流</span>
+                    <span class="preset-level s-level">S级</span>
+                </div>
+                <div class="preset-desc">
+                    主角能看见隐藏规则，靠发疯创死NPC通关副本
+                </div>
+                <div class="preset-tags">
+                    <span class="preset-tag">男频</span>
+                    <span class="preset-tag">女频</span>
+                    <span class="preset-tag">无限流</span>
+                    <span class="preset-tag">规则怪谈</span>
+                </div>
+                <div class="preset-formula">
+                    <strong>核心公式：</strong>死亡游戏/诡异副本 + 主角能看见隐藏规则/修改规则 + 乐子人心态创死NPC + 单元剧+主线暗线
+                </div>
+                <div class="preset-shortcuts">
+                    <button class="shortcut-btn">📋 生成本章规则</button>
+                    <button class="shortcut-btn">👻 添加诡异NPC</button>
+                    <button class="shortcut-btn">🔄 生成反转点</button>
+                </div>
+                <button class="use-preset-btn">✅ 当前使用</button>
+            </div>
+            
+            <div class="preset-card" data-level="S" data-tags="男频,系统,都市,爽文">
+                <div class="preset-header">
+                    <span class="preset-name">县城振兴·全民分红系统</span>
+                    <span class="preset-level s-level">S级</span>
+                </div>
+                <div class="preset-desc">
+                    绑定故土振兴系统，带动全村/全县逆袭，爽点从个人炫富变成集体致富
+                </div>
+                <div class="preset-tags">
+                    <span class="preset-tag">男频</span>
+                    <span class="preset-tag">系统</span>
+                    <span class="preset-tag">都市</span>
+                </div>
+                <div class="preset-formula">
+                    <strong>核心公式：</strong>重生/穿越回贫困县城 + 绑定故土振兴系统 + 全民分红机制 + 基建/农业/工业落地
+                </div>
+                <div class="preset-shortcuts">
+                    <button class="shortcut-btn">👥 生成村民反应</button>
+                    <button class="shortcut-btn">💰 计算收入</button>
+                </div>
+                <button class="use-preset-btn" onclick="usePreset(this)">🔄 切换使用</button>
+            </div>
+            
+            <div class="preset-card" data-level="S" data-tags="男频,修仙,系统,搞笑">
+                <div class="preset-header">
+                    <span class="preset-name">修仙职场化·KPI考核系统</span>
+                    <span class="preset-level s-level">S级</span>
+                </div>
+                <div class="preset-desc">
+                    把宗门变成互联网公司，修炼变成打工人KPI，渡劫变成晋升答辩
+                </div>
+                <div class="preset-tags">
+                    <span class="preset-tag">男频</span>
+                    <span class="preset-tag">修仙</span>
+                    <span class="preset-tag">系统</span>
+                </div>
+                <div class="preset-formula">
+                    <strong>核心公式：</strong>现代社畜穿越修仙界 + 绑定职场修仙系统 + 摸鱼/划水/甩锅涨修为 + 打脸卷王弟子
+                </div>
+                <div class="preset-shortcuts">
+                    <button class="shortcut-btn">📊 生成宗门会议</button>
+                    <button class="shortcut-btn">🐟 生成摸鱼情节</button>
+                </div>
+                <button class="use-preset-btn" onclick="usePreset(this)">🔄 切换使用</button>
+            </div>
+            
+            <div class="preset-card" data-level="S" data-tags="女频,无CP,重生,搞钱">
+                <div class="preset-header">
+                    <span class="preset-name">无CP大女主搞钱流</span>
+                    <span class="preset-level s-level">S级</span>
+                </div>
+                <div class="preset-desc">
+                    彻底告别恋爱脑，男人都是工具人，主线只有搞钱和复仇
+                </div>
+                <div class="preset-tags">
+                    <span class="preset-tag">女频</span>
+                    <span class="preset-tag">无CP</span>
+                    <span class="preset-tag">重生</span>
+                </div>
+                <div class="preset-formula">
+                    <strong>核心公式：</strong>重生/穿书 + 开局手撕渣男贱女 + 利用先知优势搞钱 + 建立商业帝国
+                </div>
+                <div class="preset-shortcuts">
+                    <button class="shortcut-btn">💡 生成赚钱点子</button>
+                    <button class="shortcut-btn">👋 生成打脸情节</button>
+                </div>
+                <button class="use-preset-btn" onclick="usePreset(this)">🔄 切换使用</button>
+            </div>
+            
+            <div class="preset-card" data-level="S" data-tags="男频,女频,系统,爽文,搞笑">
+                <div class="preset-header">
+                    <span class="preset-name">情绪发疯系统</span>
+                    <span class="preset-level s-level">S级</span>
+                </div>
+                <div class="preset-desc">
+                    与其内耗自己，不如创死别人，系统奖励主角发疯行为
+                </div>
+                <div class="preset-tags">
+                    <span class="preset-tag">男频</span>
+                    <span class="preset-tag">女频</span>
+                    <span class="preset-tag">系统</span>
+                </div>
+                <div class="preset-formula">
+                    <strong>核心公式：</strong>社畜/学生被欺负 + 绑定发疯系统 + 怼人/摆烂/掀桌子获得奖励 + 所有人都怕我
+                </div>
+                <div class="preset-shortcuts">
+                    <button class="shortcut-btn">🤪 生成发疯名场面</button>
+                    <button class="shortcut-btn">😱 生成社死反转</button>
+                </div>
+                <button class="use-preset-btn" onclick="usePreset(this)">🔄 切换使用</button>
+            </div>
+            
+            <!-- A级预设示例 -->
+            <div class="preset-card" data-level="A" data-tags="男频,都市,脑洞">
+                <div class="preset-header">
+                    <span class="preset-name">长生家族·千年底蕴流</span>
+                    <span class="preset-level a-level">A级</span>
+                </div>
+                <div class="preset-desc">
+                    整个家族传承千年，底蕴深不可测，主角身份层层揭秘
+                </div>
+                <div class="preset-tags">
+                    <span class="preset-tag">男频</span>
+                    <span class="preset-tag">都市</span>
+                    <span class="preset-tag">脑洞</span>
+                </div>
+                <div class="preset-formula">
+                    <strong>核心公式：</strong>现代普通青年 + 突然曝光家族身份 + 层层揭秘家族实力 + 打脸各方势力
+                </div>
+                <button class="use-preset-btn" onclick="usePreset(this)">🔄 切换使用</button>
+            </div>
+            
+            <div class="preset-card" data-level="A" data-tags="男频,玄幻,系统,反派">
+                <div class="preset-header">
+                    <span class="preset-name">天命大反派·背景编辑系统</span>
+                    <span class="preset-level a-level">A级</span>
+                </div>
+                <div class="preset-desc">
+                    穿越成小说反派，能编辑自己和他人的背景设定，收割天命之子
+                </div>
+                <div class="preset-tags">
+                    <span class="preset-tag">男频</span>
+                    <span class="preset-tag">玄幻</span>
+                    <span class="preset-tag">系统</span>
+                </div>
+                <div class="preset-formula">
+                    <strong>核心公式：</strong>穿越成即将被主角打脸的反派 + 绑定背景编辑系统 + 不断升级背景 + 收割天命之子
+                </div>
+                <button class="use-preset-btn" onclick="usePreset(this)">🔄 切换使用</button>
+            </div>
+        </div>
+        
+        <!-- Agent管理 -->
+        <div class="agent-section">
+            <div class="agent-title">🤖 本地AI Agent（5个）</div>
+            <div class="agent-list">
+                <div class="agent-item">
+                    <div class="agent-icon">📝</div>
+                    <div class="agent-info">
+                        <div class="agent-name">大纲生成Agent</div>
+                        <div class="agent-desc">输入一句话简介，自动生成番茄爆款大纲</div>
+                    </div>
+                    <div class="agent-toggle"></div>
+                </div>
+                
+                <div class="agent-item">
+                    <div class="agent-icon">👤</div>
+                    <div class="agent-info">
+                        <div class="agent-name">角色生成Agent</div>
+                        <div class="agent-desc">自动生成角色设定、性格、外貌、背景故事</div>
+                    </div>
+                    <div class="agent-toggle"></div>
+                </div>
+                
+                <div class="agent-item">
+                    <div class="agent-icon">🔥</div>
+                    <div class="agent-info">
+                        <div class="agent-name">爽点检查Agent</div>
+                        <div class="agent-desc">扫描全文，标记爽点密度不足的章节</div>
+                    </div>
+                    <div class="agent-toggle"></div>
+                </div>
+                
+                <div class="agent-item">
+                    <div class="agent-icon">💧</div>
+                    <div class="agent-info">
+                        <div class="agent-name">水文检测Agent</div>
+                        <div class="agent-desc">检测冗余内容，建议删除或改写</div>
+                    </div>
+                    <div class="agent-toggle"></div>
+                </div>
+                
+                <div class="agent-item">
+                    <div class="agent-icon">🔤</div>
+                    <div class="agent-info">
+                        <div class="agent-name">标题生成Agent</div>
+                        <div class="agent-desc">根据章节内容，生成10个符合番茄风格的爆款标题</div>
+                    </div>
+                    <div class="agent-toggle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部导航 -->
+    <div class="bottom-nav">
+        <div class="nav-item">
+            <span class="nav-icon">📝</span>
+            <span>写作</span>
+        </div>
+        <div class="nav-item">
+            <span class="nav-icon">📚</span>
+            <span>小说</span>
+        </div>
+        <div class="nav-item active">
+            <span class="nav-icon">🍅</span>
+            <span>预设</span>
+        </div>
+        <div class="nav-item">
+            <span class="nav-icon">🤖</span>
+            <span>Agent</span>
+        </div>
+        <div class="nav-item">
+            <span class="nav-icon">⚙️</span>
+            <span>设置</span>
+        </div>
+    </div>
+    
+    <script>
+        // 筛选预设
+        function filterPresets(filter) {
+            const chips = document.querySelectorAll('.filter-chip');
+            chips.forEach(chip => chip.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const cards = document.querySelectorAll('.preset-card');
+            cards.forEach(card => {
+                if (filter === 'all') {
+                    card.style.display = 'block';
+                } else {
+                    const level = card.dataset.level;
+                    const tags = card.dataset.tags;
+                    
+                    if (level === filter || tags.includes(filter)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                }
+            });
+        }
+        
+        // 使用预设
+        function usePreset(btn) {
+            const card = btn.closest('.preset-card');
+            const presetName = card.querySelector('.preset-name').textContent;
+            
+            // 移除所有active状态
+            document.querySelectorAll('.preset-card').forEach(c => {
+                c.classList.remove('active');
+                const btn = c.querySelector('.use-preset-btn');
+                btn.textContent = '🔄 切换使用';
+                btn.onclick = function() { usePreset(this); };
+            });
+            
+            // 添加active状态
+            card.classList.add('active');
+            btn.textContent = '✅ 当前使用';
+            btn.onclick = null;
+            
+            // 更新当前预设显示
+            document.querySelector('.current-preset-name').textContent = presetName;
+            document.querySelector('.current-preset-desc').textContent = card.querySelector('.preset-desc').textContent;
+            
+            alert('已切换到预设：' + presetName);
+        }
+        
+        // 搜索功能
+        document.querySelector('.search-btn').addEventListener('click', function() {
+            const keyword = prompt('请输入搜索关键词：');
+            if (keyword) {
+                const cards = document.querySelectorAll('.preset-card');
+                cards.forEach(card => {
+                    const name = card.querySelector('.preset-name').textContent;
+                    const desc = card.querySelector('.preset-desc').textContent;
+                    const tags = card.dataset.tags;
+                    
+                    if (name.includes(keyword) || desc.includes(keyword) || tags.includes(keyword)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
