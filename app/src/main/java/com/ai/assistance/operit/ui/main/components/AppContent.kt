@@ -275,8 +275,8 @@ fun AppContent(
                                         currentScreen is Screen.AiChat && !customChatTitle.isNullOrEmpty() ->
                                             customChatTitle!!
                                         // 优先使用Screen的标题
-                                        currentScreen.getTitle().isNotBlank() ->
-                                            currentScreen.getTitle()
+                                        currentScreen.title.isNotBlank() ->
+                                            currentScreen.title
                                         // 回退到导航项的标题资源
                                         selectedItem?.titleResId != null &&
                                             selectedItem.titleResId != 0 ->
