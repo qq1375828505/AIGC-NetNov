@@ -48,9 +48,9 @@ android {
         } else if (fallbackKeystore.exists()) {
             create("release") {
                 storeFile = fallbackKeystore
-                storePassword = "aigc123"
+                storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "aigc123"
                 keyAlias = "aigc-netnov"
-                keyPassword = "aigc123"
+                keyPassword = System.getenv("KEY_PASSWORD") ?: "aigc123"
             }
         }
     }
