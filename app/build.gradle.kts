@@ -22,7 +22,7 @@ if (localPropertiesFile.exists()) {
 android {
     namespace = "com.ai.assistance.novelide"
     compileSdk = 36
-    ndkVersion = "27.0.12077973"
+    ndkVersion = "26.1.10909125"
 
     signingConfigs {
         val releaseKeystorePath = localProperties.getProperty("RELEASE_STORE_FILE")
@@ -30,24 +30,28 @@ android {
         val releaseKeyAlias = localProperties.getProperty("RELEASE_KEY_ALIAS")
         val releaseKeyPassword = localProperties.getProperty("RELEASE_KEY_PASSWORD")
 
-        if (releaseKeystorePath != null &&
+        val localKeystoreValid = releaseKeystorePath != null &&
             releaseStorePassword != null &&
             releaseKeyAlias != null &&
             releaseKeyPassword != null &&
             File(releaseKeystorePath).exists()
-        ) {
+
+        val fallbackKeystore = file("release.keystore")
+
+        if (localKeystoreValid) {
             create("release") {
                 storeFile = file(releaseKeystorePath)
                 storePassword = releaseStorePassword
                 keyAlias = releaseKeyAlias
                 keyPassword = releaseKeyPassword
             }
-        }
-    }
-
-    externalNativeBuild {
-        cmake {
-            path = file("src/main/cpp/CMakeLists.txt")
+        } else if (fallbackKeystore.exists()) {
+            create("release") {
+                storeFile = fallbackKeystore
+                storePassword = "aigc123"
+                keyAlias = "aigc-netnov"
+                keyPassword = "aigc123"
+            }
         }
     }
 
@@ -68,13 +72,6 @@ android {
             // terminal now also ships x86_64 runtime binaries for the Android Studio emulator,
             // while the rest of the app remains primarily ARM-focused.
             abiFilters.addAll(listOf("arm64-v8a"))
-        }
-
-        externalNativeBuild {
-            cmake {
-                cppFlags("-std=c++17")
-                arguments("-DANDROID_STL=c++_shared")
-            }
         }
 
         buildConfigField("String", "GITHUB_CLIENT_ID", "\"${localProperties.getProperty("GITHUB_CLIENT_ID")}\"")
@@ -120,7 +117,6 @@ android {
                 signingConfig = releaseSigningConfig
             }
             matchingFallbacks += listOf("release")
-            signingConfig = signingConfigs.getByName("debug")
         }
     }
     applicationVariants.all {
