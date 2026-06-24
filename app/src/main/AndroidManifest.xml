@@ -114,7 +114,7 @@
             tools:node="remove" />
 
         <activity
-            android:name=".core.tools.defaultTool.websession.browser.WebSessionPermissionRequestActivity"
+            android:name="com.ai.assistance.operit.core.tools.defaultTool.websession.browser.WebSessionPermissionRequestActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:finishOnTaskLaunch="true"
@@ -122,7 +122,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <activity
-            android:name=".core.tools.defaultTool.websession.userscript.install.UserscriptImportPickerActivity"
+            android:name="com.ai.assistance.operit.core.tools.defaultTool.websession.userscript.install.UserscriptImportPickerActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:finishOnTaskLaunch="true"
@@ -165,7 +165,7 @@
         
         <!-- Workspace Documents Provider for SAF -->
         <provider
-            android:name=".provider.WorkspaceDocumentsProvider"
+            android:name="com.ai.assistance.operit.provider.WorkspaceDocumentsProvider"
             android:authorities="${applicationId}.documents.workspace"
             android:exported="true"
             android:grantUriPermissions="true"
@@ -176,7 +176,7 @@
         </provider>
 
         <provider
-            android:name=".provider.MemoryDocumentsProvider"
+            android:name="com.ai.assistance.operit.provider.MemoryDocumentsProvider"
             android:authorities="${applicationId}.documents.memory"
             android:exported="true"
             android:grantUriPermissions="true"
@@ -199,7 +199,7 @@
         </provider>
         
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name="com.ai.assistance.operit.ui.main.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:configChanges="orientation|keyboardHidden|screenSize|screenLayout"
@@ -254,7 +254,7 @@
 
         <!-- Standard ASSIST entry for system assistant pickers -->
         <activity
-            android:name=".services.assistant.OperitAssistActivity"
+            android:name="com.ai.assistance.operit.services.assistant.OperitAssistActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:finishOnTaskLaunch="true"
@@ -272,14 +272,14 @@
 
         <!-- Crash Report Activity -->
         <activity
-            android:name=".ui.error.CrashReportActivity"
+            android:name="com.ai.assistance.operit.ui.error.CrashReportActivity"
             android:exported="false"
             android:label="@string/title_activity_crash_report"
             android:process=":crash"
             android:theme="@style/Theme.Operit" />
         
         <activity
-            android:name=".integrations.tasker.ActivityConfigAIAgentAction"
+            android:name="com.ai.assistance.operit.integrations.tasker.ActivityConfigAIAgentAction"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
             android:label="AI Agent Action">
@@ -289,26 +289,26 @@
         </activity>
 
         <activity
-            android:name=".core.tools.system.ScreenCaptureActivity"
+            android:name="com.ai.assistance.operit.core.tools.system.ScreenCaptureActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:excludeFromRecents="true"
             android:exported="false" />
         
         <!-- Floating Chat Service -->
         <service
-            android:name=".services.FloatingChatService"
+            android:name="com.ai.assistance.operit.services.FloatingChatService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
 
         <service
-            android:name=".core.tools.system.ScreenCaptureService"
+            android:name="com.ai.assistance.operit.core.tools.system.ScreenCaptureService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="mediaProjection" />
 
         <service
-            android:name=".services.notification.OperitNotificationListenerService"
+            android:name="com.ai.assistance.operit.services.notification.OperitNotificationListenerService"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
@@ -319,7 +319,7 @@
 
         <!-- AI 前台服务 - 保持网络连接稳定 -->
         <service
-            android:name=".api.chat.AIForegroundService"
+            android:name="com.ai.assistance.operit.api.chat.AIForegroundService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="dataSync|microphone|specialUse">
@@ -330,7 +330,7 @@
         
         <!-- 添加广播接收器配置 -->
         <receiver
-            android:name=".core.tools.javascript.ScriptExecutionReceiver"
+            android:name="com.ai.assistance.operit.core.tools.javascript.ScriptExecutionReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.ai.assistance.operit.EXECUTE_JS" />
@@ -338,7 +338,7 @@
         </receiver>
 
         <receiver
-            android:name=".core.tools.packTool.ToolPkgDebugInstallReceiver"
+            android:name="com.ai.assistance.operit.core.tools.packTool.ToolPkgDebugInstallReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.ai.assistance.operit.DEBUG_INSTALL_TOOLPKG" />
@@ -346,7 +346,7 @@
         </receiver>
 
         <receiver
-            android:name=".core.tools.packTool.PackageDebugRefreshReceiver"
+            android:name="com.ai.assistance.operit.core.tools.packTool.PackageDebugRefreshReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.ai.assistance.operit.DEBUG_REFRESH_PACKAGES" />
@@ -354,7 +354,7 @@
         </receiver>
 
         <receiver
-            android:name=".core.tools.packTool.ToolPkgComposeDslDebugDumpReceiver"
+            android:name="com.ai.assistance.operit.core.tools.packTool.ToolPkgComposeDslDebugDumpReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.ai.assistance.operit.DUMP_COMPOSE_DSL_UI" />
@@ -362,7 +362,7 @@
         </receiver>
 
         <receiver
-            android:name=".integrations.intent.ExternalChatReceiver"
+            android:name="com.ai.assistance.operit.integrations.intent.ExternalChatReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.ai.assistance.operit.EXTERNAL_CHAT" />
@@ -370,7 +370,7 @@
         </receiver>
 
         <service
-            android:name=".services.UIDebuggerService"
+            android:name="com.ai.assistance.operit.services.UIDebuggerService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="specialUse">
@@ -381,7 +381,7 @@
         
         <!-- Voice Assistant Widget Receiver -->
         <receiver
-            android:name=".widget.VoiceAssistantWidgetReceiver"
+            android:name="com.ai.assistance.operit.widget.VoiceAssistantWidgetReceiver"
             android:exported="true"
             android:enabled="true">
             <intent-filter>
@@ -393,7 +393,7 @@
         </receiver>
 
         <receiver
-            android:name=".widget.ToolPkgDesktopWidgetReceiver"
+            android:name="com.ai.assistance.operit.widget.ToolPkgDesktopWidgetReceiver"
             android:exported="true"
             android:enabled="true"
             android:label="@string/toolpkg_widget_host_label">
@@ -406,7 +406,7 @@
         </receiver>
 
         <activity
-            android:name=".widget.ToolPkgDesktopWidgetConfigActivity"
+            android:name="com.ai.assistance.operit.widget.ToolPkgDesktopWidgetConfigActivity"
             android:exported="true"
             android:excludeFromRecents="true"
             android:label="@string/toolpkg_widget_picker_title"
@@ -418,7 +418,7 @@
 
         <!-- Receive Shower Binder handoff broadcast from the Shower server (Shizuku-style) -->
         <receiver
-            android:name=".core.tools.agent.ShowerBinderReceiver"
+            android:name="com.ai.assistance.operit.core.tools.agent.ShowerBinderReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.ai.assistance.operit.action.SHOWER_BINDER_READY" />
@@ -427,7 +427,7 @@
         
         <!-- Workflow Tasker Plugin Activity -->
         <activity
-            android:name=".integrations.tasker.WorkflowTaskerActivityConfig"
+            android:name="com.ai.assistance.operit.integrations.tasker.WorkflowTaskerActivityConfig"
             android:exported="true"
             android:label="Operit Workflow"
             android:icon="@mipmap/ic_launcher">
@@ -438,7 +438,7 @@
         
         <!-- Workflow Tasker Receiver -->
         <receiver
-            android:name=".integrations.tasker.WorkflowTaskerReceiver"
+            android:name="com.ai.assistance.operit.integrations.tasker.WorkflowTaskerReceiver"
             android:exported="true"
             android:enabled="true">
             <intent-filter>
@@ -449,7 +449,7 @@
         
         <!-- Boot Completed Receiver for rescheduling workflows -->
         <receiver
-            android:name=".integrations.tasker.WorkflowBootReceiver"
+            android:name="com.ai.assistance.operit.integrations.tasker.WorkflowBootReceiver"
             android:exported="true"
             android:enabled="true">
             <intent-filter>
@@ -459,7 +459,7 @@
         
         <!-- Voice Interaction Service for system default assistant -->
         <service
-            android:name=".services.assistant.OperitVoiceInteractionService"
+            android:name="com.ai.assistance.operit.services.assistant.OperitVoiceInteractionService"
             android:label="@string/app_name"
             android:permission="android.permission.BIND_VOICE_INTERACTION"
             android:exported="true">
@@ -473,7 +473,7 @@
         
         <!-- Voice Interaction Session Service -->
         <service
-            android:name=".services.assistant.OperitVoiceInteractionSessionService"
+            android:name="com.ai.assistance.operit.services.assistant.OperitVoiceInteractionSessionService"
             android:permission="android.permission.BIND_VOICE_INTERACTION"
             android:exported="true" />
         
