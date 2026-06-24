@@ -20,6 +20,9 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+# 保留 Application 类
+-keep class com.ai.assistance.operit.core.application.OperitApplication { *; }
+
 # 保留 Shizuku 相关类
 -keep class rikka.shizuku.** { *; }
 
