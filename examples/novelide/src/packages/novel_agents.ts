@@ -118,10 +118,10 @@ export const AGENT_CONFIGS = {
   }
 };
 
-// Agent 调度器
+// Agent 调度器 - 支持流式响应
 export class NovelAgentDispatcher {
   /**
-   * 调用子 Agent
+   * 调用子 Agent（非流式）
    */
   static async dispatch(agentId: string, task: string, context?: any): Promise<string> {
     const agent = AGENT_CONFIGS[agentId as keyof typeof AGENT_CONFIGS];
@@ -129,7 +129,6 @@ export class NovelAgentDispatcher {
       throw new Error(`未知的 Agent: ${agentId}`);
     }
 
-    // 构建上下文
     let fullPrompt = task;
     if (context?.workTitle) {
       fullPrompt = `作品：${context.workTitle}\n${fullPrompt}`;
@@ -138,20 +137,70 @@ export class NovelAgentDispatcher {
       fullPrompt = `章节：${context.chapterTitle}\n${fullPrompt}`;
     }
 
-    // 调用 AI
+    const fullMessage = `[系统指令] ${agent.systemPrompt}\n\n[用户请求] ${fullPrompt}`;
+
     try {
-      const result = await Tools.Chat({
-        messages: [{ role: "user", content: fullPrompt }],
-        systemPrompt: agent.systemPrompt
+      const result = await Tools.Chat.sendMessage(fullMessage);
+      if (!result) {
+        throw new Error(`Agent ${agentId} 返回了空结果`);
+      }
+      const aiReply = (result.aiResponse ?? "").trim();
+      if (!aiReply) {
+        throw new Error(`Agent ${agentId} 返回了空回复`);
+      }
+      return aiReply;
+    } catch (error) {
+      Logger.error(`Agent ${agentId} 调用失败`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * 调用子 Agent（流式）
+   */
+  static async dispatchStreaming(
+    agentId: string,
+    task: string,
+    context?: any,
+    onChunk?: (chunk: string, accumulated: string) => void
+  ): Promise<string> {
+    const agent = AGENT_CONFIGS[agentId as keyof typeof AGENT_CONFIGS];
+    if (!agent) {
+      throw new Error(`未知的 Agent: ${agentId}`);
+    }
+
+    let fullPrompt = task;
+    if (context?.workTitle) {
+      fullPrompt = `作品：${context.workTitle}\n${fullPrompt}`;
+    }
+    if (context?.chapterTitle) {
+      fullPrompt = `章节：${context.chapterTitle}\n${fullPrompt}`;
+    }
+
+    const fullMessage = `[系统指令] ${agent.systemPrompt}\n\n[用户请求] ${fullPrompt}`;
+    let accumulated = "";
+
+    try {
+      const result = await Tools.Chat.sendMessageStreaming(fullMessage, undefined, undefined, undefined, {
+        onIntermediateResult: (event) => {
+          if (event.type === "chunk" && event.chunk) {
+            accumulated += event.chunk;
+            onChunk?.(event.chunk, accumulated);
+          }
+        },
       });
 
       if (!result) {
         throw new Error(`Agent ${agentId} 返回了空结果`);
       }
 
-      return result;
+      const aiReply = (result.aiResponse ?? accumulated).trim();
+      if (!aiReply) {
+        throw new Error(`Agent ${agentId} 返回了空回复`);
+      }
+      return aiReply;
     } catch (error) {
-      Logger.error(`Agent ${agentId} 调用失败`, error);
+      Logger.error(`Agent ${agentId} 流式调用失败`, error);
       throw error;
     }
   }
