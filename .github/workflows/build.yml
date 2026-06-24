@@ -2,7 +2,7 @@ name: Build AIGC-NetNov
 
 on:
   push:
-    branches: [master, main, feature/*]
+    branches: [master, main, feature/*, restore-master]
   pull_request:
     branches: [master, main]
 
