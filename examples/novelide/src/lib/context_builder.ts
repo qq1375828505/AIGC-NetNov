@@ -1,137 +1,128 @@
-/**
- * 上下文管理器 - 组装章节上下文供AI使用
- * 从 NativeBridge 获取作品、章节、角色、设定、大纲等数据，
- * 拼装为统一的 ChapterContext，再格式化为 AI prompt 文本。
- */
+// 上下文构建器 - 为 AI 调用构建作品上下文
 
-export interface ChapterContext {
-  workTitle: string;
-  volumeName: string;
-  chapterTitle: string;
-  chapterContent: string;
-  previousChapters: string[];
-  characterProfiles: any[];
-  settingProfiles: any[];
-  outlineNodes: any[];
+/**
+ * 作品上下文
+ */
+export interface WorkContext {
+  /** 纯文本上下文（用于 prompt 拼接） */
+  text: string;
+  /** 作品标题 */
+  title?: string;
+  /** 作品类型 */
+  genre?: string;
+  /** 作品描述 */
+  description?: string;
 }
 
-export class ContextBuilder {
-  private workId: string;
+/**
+ * 章节上下文
+ */
+export interface ChapterContext extends WorkContext {
+  /** 章节标题 */
+  chapterTitle?: string;
+  /** 章节内容 */
+  chapterContent?: string;
+  /** 章节序号 */
+  chapterOrder?: number;
+}
 
-  constructor(workId: string) {
-    this.workId = workId;
+/**
+ * 构建作品上下文
+ * @param workId 作品 ID
+ * @returns 作品上下文
+ */
+export async function buildWorkContext(workId?: string): Promise<WorkContext> {
+  if (!workId) {
+    return { text: "" };
   }
 
-  async buildChapterContext(chapterId: string): Promise<ChapterContext> {
-    const ctx: ChapterContext = {
-      workTitle: "",
-      volumeName: "",
-      chapterTitle: "",
-      chapterContent: "",
-      previousChapters: [],
-      characterProfiles: [],
-      settingProfiles: [],
-      outlineNodes: [],
+  try {
+    const worksRaw = await Tools.callNative("getNovelWorks", []);
+    const works = JSON.parse(worksRaw);
+    const work = works.find((w: any) => w.id === workId);
+    if (!work) {
+      return { text: "" };
+    }
+
+    const parts: string[] = [];
+    parts.push(`作品：${work.title}`);
+    if (work.genre) parts.push(`类型：${work.genre}`);
+    if (work.description) parts.push(`简介：${work.description}`);
+
+    return {
+      text: parts.join("\n"),
+      title: work.title,
+      genre: work.genre,
+      description: work.description,
     };
+  } catch (e) {
+    console.warn("[NovelIDE] [WARN] 获取作品上下文失败:", e);
+    return { text: "" };
+  }
+}
 
-    try {
-      const worksRaw = await Tools.callNative("getNovelWorks", []);
-      const works = JSON.parse(worksRaw);
-      const work = works.find((w: any) => w.id === this.workId);
-      if (work) {
-        ctx.workTitle = work.title || "";
+/**
+ * 构建章节上下文
+ * @param chapterId 章节 ID
+ * @param workId 作品 ID（可选，用于附加作品信息）
+ * @returns 章节上下文
+ */
+export async function buildChapterContext(
+  chapterId: string,
+  workId?: string
+): Promise<ChapterContext> {
+  const workCtx = await buildWorkContext(workId);
+
+  try {
+    const content = await Tools.callNative("getChapterContent", [chapterId]);
+    const chaptersRaw = await Tools.callNative("getChapters", [workId || ""]);
+    const chapters = JSON.parse(chaptersRaw);
+    const chapter = chapters.find((c: any) => c.id === chapterId);
+
+    const parts: string[] = workCtx.text ? [workCtx.text] : [];
+    if (chapter?.title) parts.push(`章节：${chapter.title}`);
+
+    return {
+      ...workCtx,
+      text: parts.join("\n"),
+      chapterTitle: chapter?.title,
+      chapterContent: typeof content === "string" ? content : JSON.stringify(content),
+      chapterOrder: chapter?.order,
+    };
+  } catch (e) {
+    console.warn("[NovelIDE] [WARN] 获取章节上下文失败:", e);
+    return workCtx;
+  }
+}
+
+/**
+ * 构建角色上下文
+ * @param workId 作品 ID
+ * @param characterId 角色 ID（可选）
+ * @returns 角色描述文本
+ */
+export async function buildCharacterContext(
+  workId: string,
+  characterId?: string
+): Promise<string> {
+  try {
+    const charactersRaw = await Tools.callNative("getCharacters", [workId]);
+    const characters = JSON.parse(charactersRaw);
+
+    if (characterId) {
+      const char = characters.find((c: any) => c.id === characterId);
+      if (char) {
+        return `角色：${char.name}（${char.role || "未指定"}）`;
       }
-    } catch (e) {
-      console.warn("[ContextBuilder] 获取作品信息失败:", e);
     }
 
-    try {
-      const chapterRaw = await Tools.callNative("getChapterContent", [chapterId]);
-      if (chapterRaw) {
-        const chapter = JSON.parse(chapterRaw);
-        ctx.chapterTitle = chapter.title || "";
-        ctx.chapterContent = chapter.content || "";
-        ctx.volumeName = chapter.volumeName || "";
-      }
-    } catch (e) {
-      console.warn("[ContextBuilder] 获取章节内容失败:", e);
+    if (characters.length > 0) {
+      const names = characters.map((c: any) => `${c.name}(${c.role || "?"})`).join("、");
+      return `主要角色：${names}`;
     }
-
-    try {
-      const prevRaw = await Tools.callNative("getPreviousChapters", [chapterId, 3]);
-      if (prevRaw) {
-        const prevChapters = JSON.parse(prevRaw);
-        ctx.previousChapters = prevChapters.map((ch: any) => ch.content || "");
-      }
-    } catch (e) {
-      console.warn("[ContextBuilder] 获取前文章节失败:", e);
-    }
-
-    try {
-      const charsRaw = await Tools.callNative("getCharacterProfiles", [this.workId]);
-      if (charsRaw) {
-        ctx.characterProfiles = JSON.parse(charsRaw);
-      }
-    } catch (e) {
-      console.warn("[ContextBuilder] 获取角色设定失败:", e);
-    }
-
-    try {
-      const settingsRaw = await Tools.callNative("getSettingProfiles", [this.workId]);
-      if (settingsRaw) {
-        ctx.settingProfiles = JSON.parse(settingsRaw);
-      }
-    } catch (e) {
-      console.warn("[ContextBuilder] 获取场景设定失败:", e);
-    }
-
-    try {
-      const outlineRaw = await Tools.callNative("getOutlineNodes", [this.workId]);
-      if (outlineRaw) {
-        ctx.outlineNodes = JSON.parse(outlineRaw);
-      }
-    } catch (e) {
-      console.warn("[ContextBuilder] 获取大纲节点失败:", e);
-    }
-
-    return ctx;
+  } catch (e) {
+    console.warn("[NovelIDE] [WARN] 获取角色上下文失败:", e);
   }
 
-  formatForAI(context: ChapterContext): string {
-    let prompt = `作品：${context.workTitle}\n`;
-    prompt += `卷：${context.volumeName}\n`;
-    prompt += `章节：${context.chapterTitle}\n\n`;
-
-    if (context.previousChapters.length > 0) {
-      prompt += `前文内容：\n${context.previousChapters.join("\n---\n")}\n\n`;
-    }
-
-    if (context.characterProfiles.length > 0) {
-      prompt += `角色设定：\n`;
-      context.characterProfiles.forEach((c: any) => {
-        prompt += `- ${c.name}: ${c.description}\n`;
-      });
-      prompt += "\n";
-    }
-
-    if (context.settingProfiles.length > 0) {
-      prompt += `场景设定：\n`;
-      context.settingProfiles.forEach((s: any) => {
-        prompt += `- ${s.name}: ${s.description}\n`;
-      });
-      prompt += "\n";
-    }
-
-    if (context.outlineNodes.length > 0) {
-      prompt += `大纲要点：\n`;
-      context.outlineNodes.forEach((n: any) => {
-        prompt += `- ${n.title || n.content}\n`;
-      });
-      prompt += "\n";
-    }
-
-    prompt += `当前章节内容：\n${context.chapterContent}`;
-
-    return prompt;
-  }
+  return "";
 }
