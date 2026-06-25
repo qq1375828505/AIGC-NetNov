@@ -41,13 +41,20 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.webkit.ScriptHandler
 import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
+import com.ai.assistance.novelide.bridge.NovelNativeBridge
+import com.ai.assistance.novelide.data.repository.novel.NovelRepository
 import com.ai.assistance.operit.core.tools.javascript.JsEngine
 import com.ai.assistance.operit.core.tools.javascript.JsJavaBridgeDelegates
 import com.ai.assistance.operit.core.tools.javascript.extractJsExecutionErrorMessage
 import com.ai.assistance.operit.core.tools.packTool.ToolPkgComposeDslNode
 import com.ai.assistance.operit.core.tools.packTool.ToolPkgComposeDslParser
+import com.ai.assistance.operit.data.db.AppDatabase
 import com.ai.assistance.operit.ui.features.token.webview.WebViewConfig
 import com.ai.assistance.operit.util.AppLogger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import org.json.JSONObject
 import java.io.ByteArrayInputStream
 import java.io.File
@@ -70,6 +77,11 @@ private const val WEBVIEW_BRIDGE_HTML_MARKER = "data-operit-webview-bridge-runti
 private const val WEBVIEW_NAVIGATION_TIMEOUT_MS = 5_000L
 private const val WEBVIEW_RESOURCE_TIMEOUT_MS = 3_000L
 private const val WEBVIEW_BRIDGE_TIMEOUT_MS = 20_000L
+
+// Toolpkg whose WebView HTML uses `window.NativeBridge.xxx()` as the JS API name.
+// For this toolpkg we auto-construct a NovelNativeBridge and expose it under that
+// name so the visual design renders with live data instead of empty placeholders.
+private const val NOVELIDE_PACKAGE_NAME = "com.operit.novelide"
 
 internal val composeDslWebViewMainHandler by lazy { Handler(Looper.getMainLooper()) }
 
@@ -160,6 +172,7 @@ private class ComposeDslWebViewActionLane(label: String) {
 internal class ComposeDslWebViewHostContext(
     val routeInstanceId: String,
     val executionContextKey: String,
+    val containerPackageName: String?,
     private val jsEngine: JsEngine,
     private val runtimeOptionsProvider: () -> Map<String, Any?>,
     private val applyRenderResult: (String, Any?) -> Unit
@@ -1616,11 +1629,34 @@ internal fun renderWebViewNode(
             )
         }
 
+    val novelideScopeRef = remember(webViewScopeKey) { AtomicReference<CoroutineScope?>(null) }
+    val novelideBridgeRef = remember(webViewScopeKey) { AtomicReference<NovelNativeBridge?>(null) }
+
     val webView = remember(context) {
         WebViewConfig.createWebView(context).apply {
             webViewRef.set(this)
             disposedRef.set(false)
             addJavascriptInterface(pageBridge, WEBVIEW_INTERNAL_JS_INTERFACE_BRIDGE_NAME)
+            // For com.operit.novelide, the WebView's HTML expects to call
+            // `window.NativeBridge.xxx()` (see examples/novelide/resources/webapp/*.html).
+            // We construct a NovelNativeBridge instance and expose it under that name so
+            // the visual design from the novelide toolpkg renders with live data.
+            if (hostContext?.containerPackageName == NOVELIDE_PACKAGE_NAME) {
+                runCatching {
+                    val database = AppDatabase.getDatabase(context)
+                    val novelDao = database.novelDao()
+                    val outlineDao = database.outlineDao()
+                    val novelRepository = NovelRepository(novelDao, outlineDao)
+                    val bridgeScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+                    val novelBridge = NovelNativeBridge(context, novelRepository, bridgeScope)
+                    novelBridge.setWebView(this)
+                    addJavascriptInterface(novelBridge, "NativeBridge")
+                    novelideScopeRef.set(bridgeScope)
+                    novelideBridgeRef.set(novelBridge)
+                }.getOrElse { error ->
+                    AppLogger.e(TAG, "Failed to inject NovelNativeBridge for $NOVELIDE_PACKAGE_NAME", error)
+                }
+            }
             if (WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
                 scriptHandlerRef.set(
                     runCatching {
@@ -2217,10 +2253,16 @@ internal fun renderWebViewNode(
             scriptHandlerRef.getAndSet(null)?.let { handler ->
                 runCatching { handler.remove() }
             }
+            // Tear down the novelide NovelNativeBridge (if any) BEFORE destroying the
+            // WebView: cancel its coroutine scope so in-flight async operations stop,
+            // and remove the JS interface so the bridge can be GC'd.
+            novelideScopeRef.getAndSet(null)?.cancel()
+            novelideBridgeRef.getAndSet(null)
             webViewRef.set(null)
             actionLane.shutdown()
             try {
                 webView.removeJavascriptInterface(WEBVIEW_INTERNAL_JS_INTERFACE_BRIDGE_NAME)
+                webView.removeJavascriptInterface("NativeBridge")
                 webView.stopLoading()
                 webView.loadUrl("about:blank")
                 webView.clearHistory()

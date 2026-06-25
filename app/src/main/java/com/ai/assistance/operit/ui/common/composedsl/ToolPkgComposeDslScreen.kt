@@ -702,10 +702,11 @@ fun ToolPkgComposeDslToolScreen(
     }
 
     val webViewHostContext =
-        remember(routeInstanceId, executionContextKey, jsEngine) {
+        remember(routeInstanceId, executionContextKey, containerPackageName, jsEngine) {
             ComposeDslWebViewHostContext(
                 routeInstanceId = routeInstanceId,
                 executionContextKey = executionContextKey,
+                containerPackageName = containerPackageName,
                 jsEngine = jsEngine,
                 runtimeOptionsProvider = ::buildActionRuntimeOptions,
                 applyRenderResult = ::applyBlockingRenderResult
