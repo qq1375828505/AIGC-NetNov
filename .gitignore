@@ -39,6 +39,7 @@ libs/*
 # 日志文件
 *.log
 *.txt
+!packages_whitelist.txt
 
 # 系统文件
 .DS_Store
