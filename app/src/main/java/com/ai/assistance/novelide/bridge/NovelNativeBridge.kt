@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.jvm.JvmOverloads
 
 /**
  * 网文写作 NativeBridge
@@ -135,7 +136,8 @@ class NovelNativeBridge(
     }
 
     @JavascriptInterface
-    fun createWork(title: String, genre: String, description: String): String {
+    @JvmOverloads
+    fun createWork(title: String, genre: String = "", description: String = ""): String {
         val callId = "cwork_${System.currentTimeMillis()}"
         executeAsync(callId) {
             try {
@@ -207,7 +209,8 @@ class NovelNativeBridge(
     }
 
     @JavascriptInterface
-    fun createChapter(workId: String, title: String, order: Int): String {
+    @JvmOverloads
+    fun createChapter(workId: String, title: String, order: Int = 0): String {
         val callId = "cchapter_${System.currentTimeMillis()}"
         executeAsync(callId) {
             try {
@@ -2183,7 +2186,16 @@ class NovelNativeBridge(
     }
 
     @JavascriptInterface
-    fun aiPolish(text: String, style: String): String {
+    fun goBack(): String {
+        // HTML 端希望工具包能返回上一级；目前工具包由原生 Compose 托管，
+        // 通过 pendingNativeRoute 触发原生侧 popBackStack（参见 ToolPkgComposeDslWebView 中的轮询/事件桥）。
+        pendingNativeRoute = "pop"
+        return gson.toJson(mapOf("success" to true, "action" to "pop"))
+    }
+
+    @JavascriptInterface
+    @JvmOverloads
+    fun aiPolish(text: String, style: String = "文学化、保持原意"): String {
         val callId = "aipolish_${System.currentTimeMillis()}"
         executeAsync(callId) {
             try {
@@ -2218,7 +2230,8 @@ class NovelNativeBridge(
     }
 
     @JavascriptInterface
-    fun aiContinue(text: String, length: Int): String {
+    @JvmOverloads
+    fun aiContinue(text: String, length: Int = 500): String {
         val callId = "aicontinue_${System.currentTimeMillis()}"
         executeAsync(callId) {
             try {
@@ -2534,7 +2547,8 @@ class NovelNativeBridge(
     // ==================== 补全方法：记忆库 ====================
 
     @JavascriptInterface
-    fun getMemories(workId: String): String {
+    @JvmOverloads
+    fun getMemories(workId: String = ""): String {
         val callId = "mems_${System.currentTimeMillis()}"
         executeAsync(callId) {
             try {
