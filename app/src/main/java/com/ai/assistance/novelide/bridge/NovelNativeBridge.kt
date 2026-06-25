@@ -2,6 +2,7 @@ package com.ai.assistance.novelide.bridge
 
 import android.content.Context
 import android.net.Uri
+import android.os.Environment
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import com.ai.assistance.novelide.data.agent.AgentDatabase
@@ -2798,7 +2799,7 @@ class NovelNativeBridge(
             return gson.toJson(mapOf("success" to false, "error" to "拒绝执行危险命令"))
         }
         return try {
-            val parts = cmd.split(" ")
+            val parts = cmd.split(" ").toTypedArray()
             val process = Runtime.getRuntime().exec(parts)
             val output = process.inputStream.bufferedReader().readText()
             process.waitFor()
