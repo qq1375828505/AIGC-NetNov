@@ -2145,4 +2145,249 @@ class NovelNativeBridge(
             "{}"
         }
     }
+
+    // ==================== 补全方法：导航 + AI + 备份 ====================
+
+    /** 待导航原生路由，由 navigateToNative 设置，原生侧通过轮询消费 */
+    @Volatile
+    var pendingNativeRoute: String? = null
+        private set
+
+    @JavascriptInterface
+    fun navigateToNative(route: String) {
+        pendingNativeRoute = route
+    }
+
+    @JavascriptInterface
+    fun aiPolish(text: String, style: String): String {
+        val callId = "aipolish_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                gson.toJson(mapOf(
+                    "success" to true,
+                    "result" to "AI 润色功能待接入 provider: ${text.take(50)}",
+                    "placeholder" to true,
+                    "style" to style
+                ))
+            } catch (e: Exception) {
+                AppLogger.e("NovelNativeBridge", "aiPolish failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "润色失败")))
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
+    }
+
+    @JavascriptInterface
+    fun aiContinue(text: String, length: Int): String {
+        val callId = "aicontinue_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                gson.toJson(mapOf(
+                    "success" to true,
+                    "result" to "AI 续写功能待接入 provider: ${text.take(50)}",
+                    "placeholder" to true,
+                    "length" to length
+                ))
+            } catch (e: Exception) {
+                AppLogger.e("NovelNativeBridge", "aiContinue failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "续写失败")))
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
+    }
+
+    @JavascriptInterface
+    fun voiceInput(): String {
+        return gson.toJson(mapOf("success" to false, "error" to "语音功能待接入"))
+    }
+
+    @JavascriptInterface
+    fun getChapterTitle(chapterId: String): String {
+        val callId = "chaptertitle_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                val chapter = repository.getChapterById(chapterId)
+                gson.toJson(mapOf("success" to true, "title" to (chapter?.title ?: "")))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "getChapterTitle failed", e)
+                gson.toJson(mapOf("success" to false, "error" to "查询失败"))
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
+    }
+
+    @JavascriptInterface
+    fun executeNovelTool(workId: String, toolType: String, input: String): String {
+        val callId = "noveltool_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                gson.toJson(mapOf("success" to true, "result" to "工具 $toolType 暂未实现"))
+            } catch (e: Exception) {
+                AppLogger.e("NovelNativeBridge", "executeNovelTool failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "工具执行失败")))
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
+    }
+
+    // ==================== 补全方法：备份 ====================
+
+    @JavascriptInterface
+    fun exportBackup(): String {
+        val callId = "exportbackup_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                val timestamp = java.text.SimpleDateFormat("yyyyMMdd_HHmmss", java.util.Locale.getDefault())
+                    .format(java.util.Date())
+                val dir = context.getExternalFilesDir(null)
+                val file = java.io.File(dir, "novel_backup_$timestamp.json")
+                val works = repository.getAllWorks().first()
+                val backupData = mapOf(
+                    "version" to 1,
+                    "timestamp" to System.currentTimeMillis(),
+                    "works" to works
+                )
+                file.writeText(gson.toJson(backupData), Charsets.UTF_8)
+                gson.toJson(mapOf("success" to true, "path" to file.absolutePath))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "exportBackup failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "备份失败")))
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
+    }
+
+    @JavascriptInterface
+    fun importBackup(path: String): String {
+        return gson.toJson(mapOf("success" to false, "error" to "恢复功能待接入"))
+    }
+
+    // ==================== 补全方法：Agent 管理 ====================
+
+    @JavascriptInterface
+    fun getAgents(): String {
+        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：getAgents"))
+    }
+
+    @JavascriptInterface
+    fun createAgent(agentJson: String): String {
+        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：createAgent"))
+    }
+
+    @JavascriptInterface
+    fun updateAgent(agentJson: String): String {
+        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：updateAgent"))
+    }
+
+    @JavascriptInterface
+    fun deleteAgent(agentId: String): String {
+        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：deleteAgent"))
+    }
+
+    @JavascriptInterface
+    fun toggleAgent(agentId: String, enabled: Boolean): String {
+        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：toggleAgent"))
+    }
+
+    @JavascriptInterface
+    fun testAgent(agentId: String, input: String): String {
+        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：testAgent"))
+    }
+
+    // ==================== 补全方法：记忆库 ====================
+
+    @JavascriptInterface
+    fun getMemories(workId: String): String {
+        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：getMemories"))
+    }
+
+    @JavascriptInterface
+    fun createMemory(memoryJson: String): String {
+        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：createMemory"))
+    }
+
+    @JavascriptInterface
+    fun deleteMemory(memoryId: String): String {
+        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：deleteMemory"))
+    }
+
+    @JavascriptInterface
+    fun searchMemories(query: String): String {
+        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：searchMemories"))
+    }
+
+    // ==================== 补全方法：工作流 ====================
+
+    @JavascriptInterface
+    fun getWorkflows(): String {
+        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：getWorkflows"))
+    }
+
+    @JavascriptInterface
+    fun createWorkflow(workflowJson: String): String {
+        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：createWorkflow"))
+    }
+
+    @JavascriptInterface
+    fun deleteWorkflow(workflowId: String): String {
+        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：deleteWorkflow"))
+    }
+
+    // ==================== 补全方法：模型配置 ====================
+
+    @JavascriptInterface
+    fun getModelConfigs(): String {
+        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：getModelConfigs"))
+    }
+
+    @JavascriptInterface
+    fun createModelConfig(configJson: String): String {
+        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：createModelConfig"))
+    }
+
+    @JavascriptInterface
+    fun deleteModelConfig(configId: String): String {
+        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：deleteModelConfig"))
+    }
+
+    @JavascriptInterface
+    fun testModelConfig(configId: String): String {
+        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：testModelConfig"))
+    }
+
+    // ==================== 补全方法：Token 统计 ====================
+
+    @JavascriptInterface
+    fun getTokenStats(): String {
+        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：getTokenStats"))
+    }
+
+    // ==================== 补全方法：其他桩 ====================
+
+    @JavascriptInterface
+    fun executeTerminalCommand(cmd: String): String {
+        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：executeTerminalCommand"))
+    }
+
+    @JavascriptInterface
+    fun onPresetSelected(presetId: String): String {
+        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：onPresetSelected"))
+    }
+
+    @JavascriptInterface
+    fun isAgentEnabled(name: String): Boolean {
+        return false
+    }
+
+    @JavascriptInterface
+    fun setAgentEnabled(name: String, enabled: Boolean): Boolean {
+        return false
+    }
+
+    @JavascriptInterface
+    fun getAgentPresets(): String {
+        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：getAgentPresets"))
+    }
 }
