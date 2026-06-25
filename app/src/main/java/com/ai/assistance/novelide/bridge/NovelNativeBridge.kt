@@ -1333,6 +1333,11 @@ class NovelNativeBridge(
         return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
     }
 
+    @JavascriptInterface
+    fun getNovelStats(workId: String): String {
+        return getWritingStats(workId)
+    }
+
     // ==================== 作品详情 ====================
 
     @JavascriptInterface
