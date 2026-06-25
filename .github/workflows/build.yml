@@ -35,7 +35,14 @@ jobs:
       
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-      
+        with:
+          # 显式列出需要的包，避免默认装 emulator（~600MB，下载易失败）
+          packages: |
+            platform-tools
+            platforms;android-36
+            build-tools;36.0.0
+            cmdline-tools;latest
+
       - name: Install SDK Platform 36 and NDK
         run: |
           sdkmanager "platforms;android-36" "ndk;27.0.12077973"
