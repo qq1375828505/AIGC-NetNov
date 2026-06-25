@@ -393,9 +393,23 @@ object AIServiceFactory {
                     enableToolCall = enableToolCall
                 )
 
+            // 科大讯飞 xf-yun：使用 OpenAI 兼容 chat completions，但鉴权是 Basic Auth
+            ApiProviderType.XUNFEI ->
+                XunFeiProvider(
+                    apiEndpoint = config.apiEndpoint,
+                    apiKeyProvider = apiKeyProvider,
+                    modelName = config.modelName,
+                    client = httpClient,
+                    customHeaders = customHeaders,
+                    providerType = providerType,
+                    supportsVision = supportsVision,
+                    supportsAudio = supportsAudio,
+                    supportsVideo = supportsVideo,
+                    enableToolCall = enableToolCall
+                )
+
             // 其他中文服务商，当前使用OpenAI Provider (大多数兼容OpenAI格式)
             ApiProviderType.BAIDU,
-            ApiProviderType.XUNFEI,
             ApiProviderType.ZHIPU,
             ApiProviderType.BAICHUAN,
             ApiProviderType.IFLOW,
