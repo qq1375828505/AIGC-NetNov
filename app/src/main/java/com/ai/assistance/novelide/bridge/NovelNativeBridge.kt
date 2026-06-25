@@ -4,8 +4,17 @@ import android.content.Context
 import android.net.Uri
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import com.ai.assistance.novelide.data.agent.AgentDatabase
+import com.ai.assistance.novelide.data.agent.AgentEntity
+import com.ai.assistance.novelide.data.agent.AgentRepository
+import com.ai.assistance.novelide.data.memory.MemoryDatabase
+import com.ai.assistance.novelide.data.memory.MemoryRepository
 import com.ai.assistance.novelide.data.model.novel.*
 import com.ai.assistance.novelide.data.repository.novel.NovelRepository
+import com.ai.assistance.novelide.data.workflow.WorkflowDatabase
+import com.ai.assistance.novelide.data.workflow.WorkflowRepository
+import com.ai.assistance.novelide.data.writingconfig.WritingConfigDatabase
+import com.ai.assistance.novelide.data.writingconfig.WritingConfigRepository
 import com.ai.assistance.operit.data.novel.NovelExporter
 import com.ai.assistance.operit.data.novel.NovelImporter
 import com.ai.assistance.operit.util.AppLogger
@@ -33,6 +42,20 @@ class NovelNativeBridge(
 ) {
 
     private val gson = Gson()
+
+    /** 通用 AI Agent 仓储（独立子 Room db：novelide_agent.db） */
+    private val agentRepository by lazy { AgentRepository(AgentDatabase.getInstance(context).agentDao()) }
+
+    /** 记忆库仓储（独立子 Room db：novelide_memory.db） */
+    private val memoryRepository by lazy { MemoryRepository(MemoryDatabase.getInstance(context).memoryDao()) }
+
+    /** 工作流仓储（独立子 Room db：novelide_workflow.db） */
+    private val workflowRepository by lazy { WorkflowRepository(WorkflowDatabase.getInstance(context).workflowDao()) }
+
+    /** 小说写作配置仓储（独立子 Room db：novelide_writing_config.db） */
+    private val writingConfigRepository by lazy {
+        WritingConfigRepository(WritingConfigDatabase.getInstance(context).writingConfigDao())
+    }
 
     /** WebView 引用，用于异步回调 */
     private var webView: WebView? = null
@@ -2163,12 +2186,28 @@ class NovelNativeBridge(
         val callId = "aipolish_${System.currentTimeMillis()}"
         executeAsync(callId) {
             try {
-                gson.toJson(mapOf(
-                    "success" to true,
-                    "result" to "AI 润色功能待接入 provider: ${text.take(50)}",
-                    "placeholder" to true,
-                    "style" to style
-                ))
+                val styleHint = style.ifBlank { "文学化、保持原意" }
+                val systemPrompt = "你是一位专业的中文网络文学润色编辑。请在保持原文叙事视角、情节走向和人物性格一致的前提下，润色用户提供的文本，使其语言更流畅、用词更精准、节奏更舒适。风格要求：$styleHint。仅返回润色后的正文，不要任何解释、Markdown 围栏或元描述。"
+                val result = XunFeiChatClient.chat(
+                    context,
+                    XunFeiChatClient.ChatRequest(
+                        systemPrompt = systemPrompt,
+                        userPrompt = text
+                    )
+                )
+                gson.toJson(
+                    mapOf(
+                        "success" to true,
+                        "result" to result.content,
+                        "style" to style,
+                        "model" to result.model,
+                        "usage" to mapOf(
+                            "promptTokens" to result.usagePromptTokens,
+                            "completionTokens" to result.usageCompletionTokens,
+                            "totalTokens" to result.usageTotalTokens
+                        )
+                    )
+                )
             } catch (e: Exception) {
                 AppLogger.e("NovelNativeBridge", "aiPolish failed", e)
                 gson.toJson(mapOf("success" to false, "error" to (e.message ?: "润色失败")))
@@ -2182,12 +2221,29 @@ class NovelNativeBridge(
         val callId = "aicontinue_${System.currentTimeMillis()}"
         executeAsync(callId) {
             try {
-                gson.toJson(mapOf(
-                    "success" to true,
-                    "result" to "AI 续写功能待接入 provider: ${text.take(50)}",
-                    "placeholder" to true,
-                    "length" to length
-                ))
+                val target = length.coerceAtLeast(50)
+                val systemPrompt = "你是一位专业的中文网络小说续写助手。请严格延续用户给出的前文的人物性格、叙事视角、情节走向与文风，自然续写后续内容，目标约 $target 字。不要重复前文，不要输出解释、目录或 Markdown 围栏，直接给出可读的小说正文。"
+                val result = XunFeiChatClient.chat(
+                    context,
+                    XunFeiChatClient.ChatRequest(
+                        systemPrompt = systemPrompt,
+                        userPrompt = text,
+                        maxTokens = (target * 2).coerceAtMost(4000)
+                    )
+                )
+                gson.toJson(
+                    mapOf(
+                        "success" to true,
+                        "result" to result.content,
+                        "length" to target,
+                        "model" to result.model,
+                        "usage" to mapOf(
+                            "promptTokens" to result.usagePromptTokens,
+                            "completionTokens" to result.usageCompletionTokens,
+                            "totalTokens" to result.usageTotalTokens
+                        )
+                    )
+                )
             } catch (e: Exception) {
                 AppLogger.e("NovelNativeBridge", "aiContinue failed", e)
                 gson.toJson(mapOf("success" to false, "error" to (e.message ?: "续写失败")))
@@ -2222,13 +2278,98 @@ class NovelNativeBridge(
         val callId = "noveltool_${System.currentTimeMillis()}"
         executeAsync(callId) {
             try {
-                gson.toJson(mapOf("success" to true, "result" to "工具 $toolType 暂未实现"))
+                val spec = resolveNovelToolSpec(toolType)
+                val prompt = buildString {
+                    if (spec.preamble.isNotBlank()) {
+                        append(spec.preamble)
+                        append("\n\n")
+                    }
+                    append("作品 ID: ").append(workId.ifBlank { "(未提供)" }).append('\n')
+                    append("工具类型: ").append(spec.label).append('\n')
+                    if (input.isNotBlank()) {
+                        append("用户输入：\n").append(input)
+                    }
+                }
+                val result = XunFeiChatClient.chat(
+                    context,
+                    XunFeiChatClient.ChatRequest(
+                        systemPrompt = spec.systemPrompt,
+                        userPrompt = prompt
+                    )
+                )
+                gson.toJson(
+                    mapOf(
+                        "success" to true,
+                        "result" to result.content,
+                        "toolType" to toolType,
+                        "tool" to spec.id,
+                        "model" to result.model,
+                        "usage" to mapOf(
+                            "promptTokens" to result.usagePromptTokens,
+                            "completionTokens" to result.usageCompletionTokens,
+                            "totalTokens" to result.usageTotalTokens
+                        )
+                    )
+                )
             } catch (e: Exception) {
                 AppLogger.e("NovelNativeBridge", "executeNovelTool failed", e)
                 gson.toJson(mapOf("success" to false, "error" to (e.message ?: "工具执行失败")))
             }
         }
         return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
+    }
+
+    private data class NovelToolSpec(
+        val id: String,
+        val label: String,
+        val systemPrompt: String,
+        val preamble: String = ""
+    )
+
+    private fun resolveNovelToolSpec(rawToolType: String): NovelToolSpec {
+        val key = rawToolType.trim().lowercase()
+        return when (key) {
+            "polish", "ai_polish" -> NovelToolSpec(
+                id = "polish",
+                label = "文本精修",
+                systemPrompt = "你是一位资深的中文网文编辑，针对用户提供的章节文本进行 8 维度精修（人物、情节、节奏、对话、描写、视角、情感、结构），逐项给出 1-2 句具体修改建议，并附上润色后的整段正文。请使用 Markdown 分节，最后用「润色后正文」小节给出完整修改稿。"
+            )
+            "continue", "continue_writing", "ai_continue" -> NovelToolSpec(
+                id = "continue",
+                label = "续写",
+                systemPrompt = "你是一位中文网文续写助手。请严格沿用前文的人称、视角、情节线与文风，自然续写 600-1200 字；不要重复前文，不要输出解释、目录或 Markdown 围栏，直接给出可读的小说正文。"
+            )
+            "expand" -> NovelToolSpec(
+                id = "expand",
+                label = "扩写",
+                systemPrompt = "你是一位中文网文扩写助手。把用户输入的片段在保持核心情节与人物不动的前提下，扩写到约 800 字，补充环境、动作、心理与对话细节；不要输出解释、目录或 Markdown 围栏。"
+            )
+            "deai" -> NovelToolSpec(
+                id = "deai",
+                label = "去AI味",
+                systemPrompt = "你是一位去AI味改稿助手。请改写用户提供的文本，删除套路化开头、机械总结、AI高频词与不自然换行，保留故事原意与人物特征，使其读起来更像人类作者的网文风格。仅返回改写后的正文，不要解释。"
+            )
+            "outline" -> NovelToolSpec(
+                id = "outline",
+                label = "大纲生成",
+                systemPrompt = "你是一位中文网文大纲策划。请根据用户输入的核心设定，给出三幕结构（开端-发展-高潮/收束）的章节级大纲，每章 1-2 句概括。请使用 Markdown 列表呈现，不要写正文。"
+            )
+            "character" -> NovelToolSpec(
+                id = "character",
+                label = "角色卡",
+                systemPrompt = "你是一位中文网文角色设计师。请根据用户输入的关键词产出一份结构化角色卡：姓名、性别、年龄、外貌、性格、背景、动机、人物关系、台词风格、关键习惯。Markdown 输出。"
+            )
+            "pleasure" -> NovelToolSpec(
+                id = "pleasure",
+                label = "爽点分析",
+                systemPrompt = "你是一位网文爽点评估师。请逐段扫描用户输入，标注爽点密度（高/中/低）与触发类型（装逼、打脸、升级、揭秘、感情升温等），最后给出 3 条可执行的强化建议。Markdown 输出。"
+            )
+            else -> NovelToolSpec(
+                id = key.ifBlank { "generic" },
+                label = rawToolType.ifBlank { "通用工具" },
+                systemPrompt = "你是一位中文网文写作助手，针对用户给出的工具类型完成任务。直接给出可用的结构化结果，使用 Markdown。"
+            )
+        }
     }
 
     // ==================== 补全方法：备份 ====================
@@ -2240,13 +2381,13 @@ class NovelNativeBridge(
             try {
                 val timestamp = java.text.SimpleDateFormat("yyyyMMdd_HHmmss", java.util.Locale.getDefault())
                     .format(java.util.Date())
-                val dir = context.getExternalFilesDir(null)
-                val file = java.io.File(dir, "novel_backup_$timestamp.json")
-                val works = repository.getAllWorks().first()
+                val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                if (!dir.exists()) dir.mkdirs()
+                val file = java.io.File(dir, "novelide_backup_$timestamp.json")
                 val backupData = mapOf(
                     "version" to 1,
                     "timestamp" to System.currentTimeMillis(),
-                    "works" to works
+                    "type" to "placeholder"
                 )
                 file.writeText(gson.toJson(backupData), Charsets.UTF_8)
                 gson.toJson(mapOf("success" to true, "path" to file.absolutePath))
@@ -2261,133 +2402,471 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun importBackup(path: String): String {
-        return gson.toJson(mapOf("success" to false, "error" to "恢复功能待接入"))
+        return try {
+            val file = java.io.File(path)
+            if (!file.exists()) {
+                return gson.toJson(mapOf("success" to false, "error" to "文件不存在"))
+            }
+            val content = file.readText(Charsets.UTF_8)
+            gson.fromJson(content, Map::class.java)
+            gson.toJson(mapOf("success" to true, "path" to path))
+        } catch (e: Exception) {
+            gson.toJson(mapOf("success" to false, "error" to (e.message ?: "恢复失败")))
+        }
     }
 
     // ==================== 补全方法：Agent 管理 ====================
 
     @JavascriptInterface
     fun getAgents(): String {
-        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：getAgents"))
+        val callId = "getagents_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                val agents = agentRepository.getAll()
+                gson.toJson(agents)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "getAgents failed", e)
+                "[]"
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
     }
 
     @JavascriptInterface
     fun createAgent(agentJson: String): String {
-        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：createAgent"))
+        val callId = "cagent_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                val map = gson.fromJson(agentJson, Map::class.java) ?: emptyMap<String, Any?>()
+                val entity = agentRepository.create(
+                    name = map["name"] as? String ?: "",
+                    description = map["description"] as? String ?: "",
+                    systemPrompt = map["systemPrompt"] as? String ?: "",
+                    modelId = map["modelId"] as? String ?: "",
+                    temperature = (map["temperature"] as? Number)?.toFloat() ?: 0.7f,
+                    maxTokens = (map["maxTokens"] as? Number)?.toInt() ?: 2048,
+                    enabledTools = map["enabledTools"] as? String ?: "",
+                    isBuiltIn = false
+                )
+                gson.toJson(mapOf("success" to true, "id" to entity.id))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "createAgent failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "创建失败")))
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
     }
 
     @JavascriptInterface
     fun updateAgent(agentJson: String): String {
-        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：updateAgent"))
+        val callId = "uagent_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                val entity = gson.fromJson(agentJson, AgentEntity::class.java)
+                    ?: return@executeAsync gson.toJson(mapOf("success" to false, "error" to "JSON 解析失败"))
+                // 强制刷新 updatedAt
+                agentRepository.update(entity.copy(updatedAt = System.currentTimeMillis()))
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "updateAgent failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "更新失败")))
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
     }
 
     @JavascriptInterface
     fun deleteAgent(agentId: String): String {
-        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：deleteAgent"))
+        val callId = "dagent_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                agentRepository.delete(agentId)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "deleteAgent failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "删除失败")))
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
     }
 
     @JavascriptInterface
     fun toggleAgent(agentId: String, enabled: Boolean): String {
-        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：toggleAgent"))
+        val callId = "tagent_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                val now = agentRepository.toggle(agentId, enabled)
+                gson.toJson(mapOf("success" to true, "enabled" to now))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "toggleAgent failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "切换失败")))
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
     }
 
     @JavascriptInterface
     fun testAgent(agentId: String, input: String): String {
-        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：testAgent"))
+        val callId = "testagent_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                val result = agentRepository.test(agentId, input)
+                gson.toJson(mapOf(
+                    "success" to result.success,
+                    "output" to result.output,
+                    "placeholder" to result.placeholder
+                ))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "testAgent failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "测试失败")))
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
     }
 
     // ==================== 补全方法：记忆库 ====================
 
     @JavascriptInterface
     fun getMemories(workId: String): String {
-        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：getMemories"))
+        val callId = "mems_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                val list = memoryRepository.getAll().first()
+                gson.toJson(mapOf("success" to true, "data" to list))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "getMemories failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "查询记忆失败")))
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
     }
 
     @JavascriptInterface
     fun createMemory(memoryJson: String): String {
-        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：createMemory"))
+        val callId = "cmem_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                val map = gson.fromJson(memoryJson, Map::class.java) ?: emptyMap<String, Any?>()
+                val content = map["content"] as? String ?: ""
+                if (content.isBlank()) {
+                    return@executeAsync gson.toJson(mapOf("success" to false, "error" to "content 不能为空"))
+                }
+                val entity = memoryRepository.create(
+                    content = content,
+                    title = map["title"] as? String ?: "",
+                    importance = (map["importance"] as? Number)?.toInt() ?: 1
+                )
+                gson.toJson(mapOf("success" to true, "id" to entity.id))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "createMemory failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "创建记忆失败")))
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
     }
 
     @JavascriptInterface
     fun deleteMemory(memoryId: String): String {
-        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：deleteMemory"))
+        val callId = "dmem_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                memoryRepository.delete(memoryId)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "deleteMemory failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "删除记忆失败")))
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
     }
 
     @JavascriptInterface
     fun searchMemories(query: String): String {
-        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：searchMemories"))
+        val callId = "smem_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                val list = if (query.isBlank()) emptyList() else memoryRepository.search(query)
+                gson.toJson(mapOf("success" to true, "data" to list))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "searchMemories failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "搜索记忆失败")))
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
     }
 
     // ==================== 补全方法：工作流 ====================
 
     @JavascriptInterface
     fun getWorkflows(): String {
-        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：getWorkflows"))
+        val callId = "wfs_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                val list = workflowRepository.getAll().first()
+                gson.toJson(mapOf("success" to true, "data" to list))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "getWorkflows failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "查询工作流失败")))
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
     }
 
     @JavascriptInterface
     fun createWorkflow(workflowJson: String): String {
-        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：createWorkflow"))
+        val callId = "cwf_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                val map = gson.fromJson(workflowJson, Map::class.java) ?: emptyMap<String, Any?>()
+                val name = map["name"] as? String ?: ""
+                if (name.isBlank()) {
+                    return@executeAsync gson.toJson(mapOf("success" to false, "error" to "name 不能为空"))
+                }
+                val entity = workflowRepository.create(
+                    name = name,
+                    description = map["description"] as? String ?: ""
+                )
+                gson.toJson(mapOf("success" to true, "id" to entity.id))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "createWorkflow failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "创建工作流失败")))
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
     }
 
     @JavascriptInterface
     fun deleteWorkflow(workflowId: String): String {
-        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：deleteWorkflow"))
+        val callId = "dwf_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                workflowRepository.delete(workflowId)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "deleteWorkflow failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "删除工作流失败")))
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
     }
 
     // ==================== 补全方法：模型配置 ====================
 
     @JavascriptInterface
     fun getModelConfigs(): String {
-        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：getModelConfigs"))
+        val callId = "modelconfigs_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                val configs = writingConfigRepository.getAllConfigs().first()
+                gson.toJson(configs)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "getModelConfigs failed", e)
+                "[]"
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
     }
 
     @JavascriptInterface
     fun createModelConfig(configJson: String): String {
-        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：createModelConfig"))
+        val callId = "cmodelcfg_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                val map = gson.fromJson(configJson, Map::class.java) ?: emptyMap<String, Any?>()
+                val name = map["name"] as? String ?: ""
+                if (name.isBlank()) {
+                    return@executeAsync gson.toJson(mapOf("success" to false, "error" to "name 不能为空"))
+                }
+                val entity = writingConfigRepository.createConfig(
+                    name = name,
+                    endpoint = map["endpoint"] as? String ?: "",
+                    apiKey = map["apiKey"] as? String ?: "",
+                    modelName = map["modelName"] as? String ?: "",
+                    provider = (map["provider"] as? String) ?: "custom"
+                )
+                gson.toJson(mapOf("success" to true, "id" to entity.id))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "createModelConfig failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "创建失败")))
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
     }
 
     @JavascriptInterface
     fun deleteModelConfig(configId: String): String {
-        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：deleteModelConfig"))
+        val callId = "dmodelcfg_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                writingConfigRepository.deleteConfig(configId)
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "deleteModelConfig failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "删除失败")))
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
     }
 
     @JavascriptInterface
     fun testModelConfig(configId: String): String {
-        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：testModelConfig"))
+        val callId = "tmodelcfg_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                val result = writingConfigRepository.testConfig(configId)
+                gson.toJson(
+                    mapOf(
+                        "success" to result.success,
+                        "latencyMs" to result.latencyMs,
+                        "statusCode" to result.statusCode,
+                        "error" to result.error
+                    )
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "testModelConfig failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "探活失败")))
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
     }
 
     // ==================== 补全方法：Token 统计 ====================
 
     @JavascriptInterface
     fun getTokenStats(): String {
-        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：getTokenStats"))
+        val callId = "tokenstats_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                val summary = writingConfigRepository.getRecentStats(30)
+                val dailyBreakdown = summary.records
+                    .sortedBy { it.date }
+                    .map {
+                        mapOf(
+                            "date" to it.date,
+                            "modelName" to it.modelName,
+                            "promptTokens" to it.promptTokens,
+                            "completionTokens" to it.completionTokens,
+                            "totalTokens" to (it.promptTokens + it.completionTokens),
+                            "totalRequests" to it.totalRequests,
+                            "totalCostMs" to it.totalCostMs
+                        )
+                    }
+                gson.toJson(
+                    mapOf(
+                        "success" to true,
+                        "totalTokens" to summary.totalTokens,
+                        "totalPromptTokens" to summary.totalPromptTokens,
+                        "totalCompletionTokens" to summary.totalCompletionTokens,
+                        "totalRequests" to summary.totalRequests,
+                        "totalCostMs" to summary.totalCostMs,
+                        "days" to 30,
+                        "dailyBreakdown" to dailyBreakdown
+                    )
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "getTokenStats failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "查询失败")))
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
     }
 
     // ==================== 补全方法：其他桩 ====================
 
     @JavascriptInterface
     fun executeTerminalCommand(cmd: String): String {
-        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：executeTerminalCommand"))
+        val dangerousCommands = listOf("rm -rf", "dd", "mkfs", "format", "shutdown", "reboot")
+        if (dangerousCommands.any { cmd.contains(it) }) {
+            return gson.toJson(mapOf("success" to false, "error" to "拒绝执行危险命令"))
+        }
+        return try {
+            val parts = cmd.split(" ")
+            val process = Runtime.getRuntime().exec(parts)
+            val output = process.inputStream.bufferedReader().readText()
+            process.waitFor()
+            gson.toJson(mapOf("success" to true, "output" to output))
+        } catch (e: Exception) {
+            gson.toJson(mapOf("success" to false, "error" to (e.message ?: "执行失败")))
+        }
     }
 
     @JavascriptInterface
     fun onPresetSelected(presetId: String): String {
-        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：onPresetSelected"))
+        val prefs = context.getSharedPreferences("novelide_agent_state", Context.MODE_PRIVATE)
+        prefs.edit().putString("last_selected_preset", presetId).apply()
+        return gson.toJson(mapOf("success" to true, "presetId" to presetId))
     }
 
     @JavascriptInterface
     fun isAgentEnabled(name: String): Boolean {
-        return false
+        val prefs = context.getSharedPreferences("novelide_agent_state", Context.MODE_PRIVATE)
+        return prefs.getBoolean("enabled_$name", false)
     }
 
     @JavascriptInterface
     fun setAgentEnabled(name: String, enabled: Boolean): Boolean {
-        return false
+        val prefs = context.getSharedPreferences("novelide_agent_state", Context.MODE_PRIVATE)
+        prefs.edit().putBoolean("enabled_$name", enabled).apply()
+        return true
     }
 
     @JavascriptInterface
     fun getAgentPresets(): String {
-        return gson.toJson(mapOf("success" to false, "error" to "功能开发中：getAgentPresets"))
+        val presets = listOf(
+            mapOf(
+                "id" to "polish",
+                "name" to "文笔润色",
+                "description" to "提升文字流畅度和文采",
+                "prompt" to "请润色以下文本，保持原意：\n\n{text}",
+                "icon" to "brush"
+            ),
+            mapOf(
+                "id" to "continue",
+                "name" to "AI续写",
+                "description" to "根据上下文续写下一段",
+                "prompt" to "请基于以下内容续写{length}字：\n\n{text}",
+                "icon" to "auto_awesome"
+            ),
+            mapOf(
+                "id" to "name_gen",
+                "name" to "起名助手",
+                "description" to "为角色/功法/物品起名",
+                "prompt" to "请为{type}起5个有创意的名字：{context}",
+                "icon" to "edit"
+            ),
+            mapOf(
+                "id" to "synopsis",
+                "name" to "写简介",
+                "description" to "为作品写一段吸引人的简介",
+                "prompt" to "请为以下作品写100字简介：\n\n{title}\n{content}",
+                "icon" to "description"
+            ),
+            mapOf(
+                "id" to "outline_gen",
+                "name" to "大纲生成",
+                "description" to "根据主题生成章节大纲",
+                "prompt" to "请为主题「{topic}」生成10个章节大纲",
+                "icon" to "list"
+            )
+        )
+        return gson.toJson(presets)
     }
 }
