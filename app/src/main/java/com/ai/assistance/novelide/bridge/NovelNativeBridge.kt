@@ -902,7 +902,26 @@ class NovelNativeBridge(
         executeAsync(callId) {
             try {
                 val rels = repository.getCharacterRelationshipsByWorkId(workId).first()
-                gson.toJson(rels)
+                // Join character 拿 sourceName / targetName
+                val enriched = rels.map { rel ->
+                    val srcName = repository.getCharacterById(rel.sourceCharacterId)?.name ?: ""
+                    val tgtName = repository.getCharacterById(rel.targetCharacterId)?.name ?: ""
+                    mapOf(
+                        "id" to rel.id,
+                        "workId" to rel.workId,
+                        "sourceCharacterId" to rel.sourceCharacterId,
+                        "sourceName" to srcName,
+                        "targetCharacterId" to rel.targetCharacterId,
+                        "targetName" to tgtName,
+                        "relationType" to rel.relationType,
+                        "intensity" to rel.intensity,
+                        "color" to rel.color,
+                        "description" to rel.description,
+                        "createdAt" to rel.createdAt,
+                        "updatedAt" to rel.updatedAt
+                    )
+                }
+                gson.toJson(enriched)
             } catch (e: Exception) {
                 e.printStackTrace()
                 "[]"
