@@ -62,8 +62,17 @@ class NovelNativeBridge(
     /** WebView 引用，用于异步回调 */
     private var webView: WebView? = null
 
-    /** 异步操作待返回结果 */
-    private val pendingResults = ConcurrentHashMap<String, String>()
+    /** 异步操作待返回结果（带大小限制，防止内存泄漏） */
+    private val pendingResults = object : ConcurrentHashMap<String, String>() {
+        override fun put(key: String, value: String): String? {
+            if (size >= 500) {
+                // 清理最旧的 100 个条目
+                val toRemove = keys().asSequence().take(100).toList()
+                toRemove.forEach { remove(it) }
+            }
+            return super.put(key, value)
+        }
+    }
 
     /** 设置 WebView 引用（由 WebViewHandler 调用） */
     fun setWebView(webView: WebView) {
@@ -130,7 +139,8 @@ class NovelNativeBridge(
                 gson.toJson(works)
             } catch (e: Exception) {
                 e.printStackTrace()
-                "[]"
+                AppLogger.e("NovelNativeBridge", "getChapters failed", e)
+                gson.toJson(emptyList<String>())
             }
         }
         return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
@@ -241,7 +251,8 @@ class NovelNativeBridge(
                 chapter?.content ?: ""
             } catch (e: Exception) {
                 e.printStackTrace()
-                ""
+                AppLogger.e("NovelNativeBridge", "getChapterContent failed", e)
+                gson.toJson(mapOf("success" to false, "error" to "章节不存在"))
             }
         }
         return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
@@ -261,6 +272,18 @@ class NovelNativeBridge(
             }
         }
         return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
+    }
+
+    @JavascriptInterface
+    @JvmOverloads
+    fun saveChapterContent(chapterId: String, content: String): String {
+        return saveChapterContent(chapterId, content, content.length)
+    }
+
+    @JavascriptInterface
+    @JvmOverloads
+    fun updateChapterContent(chapterId: String, content: String): String {
+        return saveChapterContent(chapterId, content, content.length)
     }
 
     @JavascriptInterface
@@ -890,6 +913,116 @@ class NovelNativeBridge(
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "操作失败", e)
                 gson.toJson(mapOf("success" to false, "error" to "操作失败"))
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
+    }
+
+    // ==================== 资料管理 ====================
+
+    @JavascriptInterface
+    @JvmOverloads
+    fun getNovelMaterials(workId: String, type: String = ""): String {
+        val callId = "mat_${workId}_${type}_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                val result = when (type.lowercase()) {
+                    "characters" -> repository.getCharactersByWorkId(workId).first()
+                    "settings" -> repository.getSettingsByWorkId(workId).first()
+                    "locations" -> repository.getLocationsByWorkId(workId).first()
+                    "factions" -> repository.getFactionsByWorkId(workId).first()
+                    "items" -> repository.getItemsByWorkId(workId).first()
+                    "plotHooks" -> repository.getPlotHooksByWorkId(workId).first()
+                    "references" -> repository.getReferencesByWorkId(workId).first()
+                    "todos" -> repository.getTodosByWorkId(workId).first()
+                    else -> emptyList<Any>()
+                }
+                gson.toJson(mapOf("success" to true, "data" to result, "type" to type))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "getNovelMaterials failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "查询失败")))
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
+    }
+
+    @JavascriptInterface
+    @JvmOverloads
+    fun createNovelMaterial(workId: String, type: String, materialJson: String): String {
+        val callId = "cmat_${workId}_${type}_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                val map = gson.fromJson(materialJson, Map::class.java) ?: emptyMap<String, Any?>()
+                when (type.lowercase()) {
+                    "characters" -> {
+                        val name = map["name"] as? String ?: ""
+                        val role = map["role"] as? String ?: ""
+                        val character = NovelCharacter(id = UUID.randomUUID().toString(), workId = workId, name = name, role = role)
+                        repository.insertCharacter(character)
+                        gson.toJson(mapOf("success" to true, "id" to character.id))
+                    }
+                    "settings" -> {
+                        val name = map["name"] as? String ?: ""
+                        val content = map["value"] as? String ?: ""
+                        val setting = NovelSetting(id = UUID.randomUUID().toString(), workId = workId, name = name, content = content)
+                        repository.insertSetting(setting)
+                        gson.toJson(mapOf("success" to true, "id" to setting.id))
+                    }
+                    "locations" -> {
+                        val name = map["name"] as? String ?: ""
+                        val description = map["description"] as? String ?: ""
+                        val location = NovelLocation(id = UUID.randomUUID().toString(), workId = workId, name = name, description = description)
+                        repository.insertLocation(location)
+                        gson.toJson(mapOf("success" to true, "id" to location.id))
+                    }
+                    "factions" -> {
+                        val name = map["name"] as? String ?: ""
+                        val description = map["description"] as? String ?: ""
+                        val faction = NovelFaction(id = UUID.randomUUID().toString(), workId = workId, name = name, description = description)
+                        repository.insertFaction(faction)
+                        gson.toJson(mapOf("success" to true, "id" to faction.id))
+                    }
+                    "items" -> {
+                        val name = map["name"] as? String ?: ""
+                        val description = map["description"] as? String ?: ""
+                        val item = NovelItem(id = UUID.randomUUID().toString(), workId = workId, name = name, description = description)
+                        repository.insertItem(item)
+                        gson.toJson(mapOf("success" to true, "id" to item.id))
+                    }
+                    else -> gson.toJson(mapOf("success" to false, "error" to "未知类型"))
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "createNovelMaterial failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "创建失败")))
+            }
+        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
+    }
+
+    @JavascriptInterface
+    @JvmOverloads
+    fun deleteNovelMaterial(materialId: String, type: String): String {
+        val callId = "dmat_${materialId}_${type}_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                when (type.lowercase()) {
+                    "characters" -> repository.deleteCharacter(materialId)
+                    "settings" -> repository.deleteSetting(materialId)
+                    "locations" -> repository.deleteLocation(materialId)
+                    "factions" -> repository.deleteFaction(materialId)
+                    "items" -> repository.deleteItem(materialId)
+                    "plotHooks" -> repository.deletePlotHook(materialId)
+                    "references" -> repository.deleteReference(materialId)
+                    "todos" -> repository.deleteTodo(materialId)
+                    else -> return@executeAsync gson.toJson(mapOf("success" to false, "error" to "未知类型"))
+                }
+                gson.toJson(mapOf("success" to true))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "deleteNovelMaterial failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "删除失败")))
             }
         }
         return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
@@ -2390,6 +2523,7 @@ class NovelNativeBridge(
                         append("用户输入：\n").append(input)
                     }
                 }
+                val startMs = System.currentTimeMillis()
                 val result = XunFeiChatClient.chat(
                     context,
                     XunFeiChatClient.ChatRequest(
@@ -2397,6 +2531,18 @@ class NovelNativeBridge(
                         userPrompt = prompt
                     )
                 )
+                val costMs = System.currentTimeMillis() - startMs
+                // 写入 token 统计（用于统计页日 / 月聚合展示）
+                try {
+                    writingConfigRepository.recordUsage(
+                        modelName = result.model ?: "astron-code-latest",
+                        promptTokens = (result.usagePromptTokens ?: 0).toLong(),
+                        completionTokens = (result.usageCompletionTokens ?: 0).toLong(),
+                        costMs = costMs
+                    )
+                } catch (statEx: Exception) {
+                    AppLogger.w("NovelNativeBridge", "recordUsage(executeNovelTool) failed: ${statEx.message}")
+                }
                 gson.toJson(
                     mapOf(
                         "success" to true,
@@ -2590,7 +2736,9 @@ class NovelNativeBridge(
                         "entries" to entries,
                         "manifest" to manifest,
                         "restoredCount" to restoredCount,
-                        "note" to "数据库文件已恢复，建议重启 App 以确保 Room 重新打开新数据库。"
+                        "note" to "数据库文件已恢复，建议重启 App 以确保 Room 重新打开新数据库。",
+                        "refreshWebView" to true,
+                        "restartNeeded" to true
                     )
                 )
             } catch (e: Exception) {
