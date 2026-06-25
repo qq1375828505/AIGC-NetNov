@@ -2,6 +2,7 @@ package com.ai.assistance.novelide.data.agent
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
 import java.util.UUID
 
 /**
@@ -21,6 +22,7 @@ data class AgentEntity(
     val maxTokens: Int = 2048,
     val enabledTools: String = "",   // 逗号分隔工具名
     val enabled: Boolean = true,
+    @SerializedName("isBuiltIn")
     val isBuiltIn: Boolean = false,  // 内置不可删
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis()

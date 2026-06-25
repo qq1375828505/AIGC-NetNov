@@ -80,12 +80,13 @@ class NovelNativeBridge(
                 val result = block()
                 pendingResults[callId] = result
                 // 尝试通过 WebView 回调
+                // block() 已经返回 JSON 字符串，这里直接作为 JSON 字面量嵌入 JS 调用，
+                // 不再二次 gson.toJson（避免被解析为嵌套的 JSON 字符串导致前端 JSON.parse 失败）。
                 val wv = webView
                 if (wv != null) {
-                    val escapedResult = gson.toJson(result) // 转义JSON字符串
                     wv.post {
                         wv.evaluateJavascript(
-                            "window.__onNovelBridgeResult && window.__onNovelBridgeResult('$callId', $escapedResult)",
+                            "window.__onNovelBridgeResult && window.__onNovelBridgeResult('$callId', $result)",
                             null
                         )
                     }
@@ -2220,6 +2221,7 @@ class NovelNativeBridge(
             try {
                 val styleHint = style.ifBlank { "文学化、保持原意" }
                 val systemPrompt = "你是一位专业的中文网络文学润色编辑。请在保持原文叙事视角、情节走向和人物性格一致的前提下，润色用户提供的文本，使其语言更流畅、用词更精准、节奏更舒适。风格要求：$styleHint。仅返回润色后的正文，不要任何解释、Markdown 围栏或元描述。"
+                val startMs = System.currentTimeMillis()
                 val result = XunFeiChatClient.chat(
                     context,
                     XunFeiChatClient.ChatRequest(
@@ -2227,6 +2229,18 @@ class NovelNativeBridge(
                         userPrompt = text
                     )
                 )
+                val costMs = System.currentTimeMillis() - startMs
+                // 写入 token 统计（用于统计页日 / 月聚合展示）
+                try {
+                    writingConfigRepository.recordUsage(
+                        modelName = result.model ?: "astron-code-latest",
+                        promptTokens = (result.usagePromptTokens ?: 0).toLong(),
+                        completionTokens = (result.usageCompletionTokens ?: 0).toLong(),
+                        costMs = costMs
+                    )
+                } catch (statEx: Exception) {
+                    AppLogger.w("NovelNativeBridge", "recordUsage(aiPolish) failed: ${statEx.message}")
+                }
                 gson.toJson(
                     mapOf(
                         "success" to true,
@@ -2256,6 +2270,7 @@ class NovelNativeBridge(
             try {
                 val target = length.coerceAtLeast(50)
                 val systemPrompt = "你是一位专业的中文网络小说续写助手。请严格延续用户给出的前文的人物性格、叙事视角、情节走向与文风，自然续写后续内容，目标约 $target 字。不要重复前文，不要输出解释、目录或 Markdown 围栏，直接给出可读的小说正文。"
+                val startMs = System.currentTimeMillis()
                 val result = XunFeiChatClient.chat(
                     context,
                     XunFeiChatClient.ChatRequest(
@@ -2264,6 +2279,18 @@ class NovelNativeBridge(
                         maxTokens = (target * 2).coerceAtMost(4000)
                     )
                 )
+                val costMs = System.currentTimeMillis() - startMs
+                // 写入 token 统计
+                try {
+                    writingConfigRepository.recordUsage(
+                        modelName = result.model ?: "astron-code-latest",
+                        promptTokens = (result.usagePromptTokens ?: 0).toLong(),
+                        completionTokens = (result.usageCompletionTokens ?: 0).toLong(),
+                        costMs = costMs
+                    )
+                } catch (statEx: Exception) {
+                    AppLogger.w("NovelNativeBridge", "recordUsage(aiContinue) failed: ${statEx.message}")
+                }
                 gson.toJson(
                     mapOf(
                         "success" to true,
@@ -2288,6 +2315,46 @@ class NovelNativeBridge(
     @JavascriptInterface
     fun voiceInput(): String {
         return gson.toJson(mapOf("success" to false, "error" to "语音功能待接入"))
+    }
+
+    /**
+     * 写入 xf-yun 凭证到专用 SharedPreferences。
+     * 设置页可调用此方法覆盖默认凭证（值格式 `id:secret`），写入后立即生效。
+     * 同步返回结果，无需异步回调。
+     */
+    @JavascriptInterface
+    fun setXfyunApiKey(apiKey: String): String {
+        return try {
+            val trimmed = apiKey.trim()
+            if (trimmed.isEmpty()) {
+                return gson.toJson(mapOf("success" to false, "error" to "API Key 不能为空"))
+            }
+            XunFeiChatClient.writeCredential(context, "XFYUN_API_KEY", trimmed)
+            gson.toJson(mapOf("success" to true, "note" to "已写入专用 SharedPreferences，重启后依然生效"))
+        } catch (e: Exception) {
+            AppLogger.e("NovelNativeBridge", "setXfyunApiKey failed", e)
+            gson.toJson(mapOf("success" to false, "error" to (e.message ?: "写入失败")))
+        }
+    }
+
+    /**
+     * 读取当前生效的 xf-yun 凭证来源（仅返回是否存在与来源描述，不返回明文）。
+     */
+    @JavascriptInterface
+    fun getXfyunApiKeySource(): String {
+        return try {
+            val credPrefs = context.getSharedPreferences("novelide_ai_credentials", Context.MODE_PRIVATE)
+            val source = when {
+                !credPrefs.getString("XFYUN_API_KEY", null).isNullOrBlank() -> "credentials_prefs"
+                !com.ai.assistance.operit.data.preferences.EnvPreferences.getInstance(context)
+                    .getEnv("XFYUN_API_KEY").isNullOrBlank() -> "env_preferences"
+                else -> "fallback_default"
+            }
+            gson.toJson(mapOf("success" to true, "source" to source))
+        } catch (e: Exception) {
+            AppLogger.e("NovelNativeBridge", "getXfyunApiKeySource failed", e)
+            gson.toJson(mapOf("success" to false, "error" to (e.message ?: "查询失败")))
+        }
     }
 
     @JavascriptInterface
@@ -2414,16 +2481,42 @@ class NovelNativeBridge(
             try {
                 val timestamp = java.text.SimpleDateFormat("yyyyMMdd_HHmmss", java.util.Locale.getDefault())
                     .format(java.util.Date())
-                val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-                if (!dir.exists()) dir.mkdirs()
-                val file = java.io.File(dir, "novelide_backup_$timestamp.json")
-                val backupData = mapOf(
-                    "version" to 1,
-                    "timestamp" to System.currentTimeMillis(),
-                    "type" to "placeholder"
-                )
-                file.writeText(gson.toJson(backupData), Charsets.UTF_8)
-                gson.toJson(mapOf("success" to true, "path" to file.absolutePath))
+                val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                if (!downloadsDir.exists()) downloadsDir.mkdirs()
+                val outFile = java.io.File(downloadsDir, "novelide_backup_$timestamp.zip")
+
+                val dbDir = context.getDatabasePath("any").parentFile ?: context.filesDir
+                java.util.zip.ZipOutputStream(java.io.FileOutputStream(outFile)).use { zos ->
+                    val dbFiles = listOf(
+                        "novelide.db",
+                        "novelide_memory.db",
+                        "novelide_workflow.db",
+                        "novelide_agent.db",
+                        "novelide_writing_config.db"
+                    )
+                    var includedCount = 0
+                    for (name in dbFiles) {
+                        val f = java.io.File(dbDir, name)
+                        if (f.exists() && f.length() > 0) {
+                            zos.putNextEntry(java.util.zip.ZipEntry("databases/$name"))
+                            f.inputStream().use { it.copyTo(zos) }
+                            zos.closeEntry()
+                            includedCount++
+                        }
+                    }
+                    // 同时塞一个 manifest.json
+                    zos.putNextEntry(java.util.zip.ZipEntry("manifest.json"))
+                    val manifest = gson.toJson(mapOf(
+                        "version" to 1,
+                        "timestamp" to System.currentTimeMillis(),
+                        "type" to "full_db_backup",
+                        "databases" to dbFiles,
+                        "includedCount" to includedCount
+                    ))
+                    zos.write(manifest.toByteArray(Charsets.UTF_8))
+                    zos.closeEntry()
+                }
+                gson.toJson(mapOf("success" to true, "path" to outFile.absolutePath, "size" to outFile.length()))
             } catch (e: Exception) {
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "exportBackup failed", e)
@@ -2435,17 +2528,78 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun importBackup(path: String): String {
-        return try {
-            val file = java.io.File(path)
-            if (!file.exists()) {
-                return gson.toJson(mapOf("success" to false, "error" to "文件不存在"))
+        val callId = "importbackup_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            try {
+                val file = java.io.File(path)
+                if (!file.exists()) {
+                    return@executeAsync gson.toJson(mapOf("success" to false, "error" to "文件不存在"))
+                }
+                if (file.length() == 0L) {
+                    return@executeAsync gson.toJson(mapOf("success" to false, "error" to "备份文件为空"))
+                }
+                // 真解析 ZIP 备份，读取 manifest 与 db 文件名
+                val manifest = java.util.HashMap<String, Any?>()
+                val entries = java.util.ArrayList<String>()
+                val dbDir = context.getDatabasePath("any").parentFile ?: context.filesDir
+                val tempDir = java.io.File(context.cacheDir, "import_${System.currentTimeMillis()}")
+                tempDir.mkdirs()
+                var restoredCount = 0
+                java.util.zip.ZipInputStream(java.io.FileInputStream(file)).use { zis ->
+                    var entry = zis.nextEntry
+                    while (entry != null) {
+                        val name = entry.name
+                        entries.add(name)
+                        if (name == "manifest.json") {
+                            val text = zis.bufferedReader(Charsets.UTF_8).use { it.readText() }
+                            @Suppress("UNCHECKED_CAST")
+                            val parsed = gson.fromJson(text, Map::class.java) as? Map<String, Any?>
+                            parsed?.forEach { (k, v) -> manifest[k] = v }
+                        } else if (name.startsWith("databases/")) {
+                            val dbName = name.removePrefix("databases/")
+                            val out = java.io.File(tempDir, dbName)
+                            java.io.FileOutputStream(out).use { fos ->
+                                zis.copyTo(fos)
+                            }
+                        }
+                        zis.closeEntry()
+                        entry = zis.nextEntry
+                    }
+                }
+                // 校验 manifest 里的 databases 列表
+                @Suppress("UNCHECKED_CAST")
+                val expectedDbs = (manifest["databases"] as? List<String>) ?: emptyList()
+                // 实际恢复：把临时目录里的 db 文件覆盖到 databases 目录
+                // 注意：需要在 App 重启后生效（Room 已缓存连接）
+                for (dbName in expectedDbs) {
+                    val src = java.io.File(tempDir, dbName)
+                    if (src.exists() && src.length() > 0) {
+                        val dst = java.io.File(dbDir, dbName)
+                        try {
+                            src.copyTo(dst, overwrite = true)
+                            restoredCount++
+                        } catch (e: Exception) {
+                            AppLogger.e("NovelNativeBridge", "Failed to copy $dbName during import", e)
+                        }
+                    }
+                }
+                gson.toJson(
+                    mapOf(
+                        "success" to true,
+                        "path" to path,
+                        "entries" to entries,
+                        "manifest" to manifest,
+                        "restoredCount" to restoredCount,
+                        "note" to "数据库文件已恢复，建议重启 App 以确保 Room 重新打开新数据库。"
+                    )
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "importBackup failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "恢复失败")))
             }
-            val content = file.readText(Charsets.UTF_8)
-            gson.fromJson(content, Map::class.java)
-            gson.toJson(mapOf("success" to true, "path" to path))
-        } catch (e: Exception) {
-            gson.toJson(mapOf("success" to false, "error" to (e.message ?: "恢复失败")))
         }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
     }
 
     // ==================== 补全方法：Agent 管理 ====================
@@ -2548,16 +2702,46 @@ class NovelNativeBridge(
         val callId = "testagent_${System.currentTimeMillis()}"
         executeAsync(callId) {
             try {
-                val result = agentRepository.test(agentId, input)
+                val agent = agentRepository.getById(agentId)
+                    ?: return@executeAsync gson.toJson(mapOf("success" to false, "error" to "Agent 不存在"))
+                if (input.isBlank()) {
+                    return@executeAsync gson.toJson(mapOf("success" to false, "error" to "输入不能为空"))
+                }
+                val result = XunFeiChatClient.chat(
+                    context,
+                    XunFeiChatClient.ChatRequest(
+                        systemPrompt = agent.systemPrompt.ifBlank { "你是一位通用 AI 助手。" },
+                        userPrompt = input,
+                        temperature = agent.temperature.toDouble(),
+                        maxTokens = agent.maxTokens
+                    )
+                )
                 gson.toJson(mapOf(
-                    "success" to result.success,
-                    "output" to result.output,
-                    "placeholder" to result.placeholder
+                    "success" to true,
+                    "output" to result.content,
+                    "placeholder" to false,
+                    "model" to result.model,
+                    "usage" to mapOf(
+                        "promptTokens" to result.usagePromptTokens,
+                        "completionTokens" to result.usageCompletionTokens,
+                        "totalTokens" to result.usageTotalTokens
+                    )
                 ))
             } catch (e: Exception) {
                 e.printStackTrace()
                 AppLogger.e("NovelNativeBridge", "testAgent failed", e)
-                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "测试失败")))
+                // 失败时 fallback 到桩实现
+                try {
+                    val fallback = agentRepository.test(agentId, input)
+                    gson.toJson(mapOf(
+                        "success" to fallback.success,
+                        "output" to fallback.output,
+                        "placeholder" to fallback.placeholder,
+                        "warning" to "真实 AI 调用失败，已回退占位：${e.message ?: "未知错误"}"
+                    ))
+                } catch (e2: Exception) {
+                    gson.toJson(mapOf("success" to false, "error" to (e.message ?: "测试失败")))
+                }
             }
         }
         return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
@@ -2798,6 +2982,9 @@ class NovelNativeBridge(
                             "promptTokens" to it.promptTokens,
                             "completionTokens" to it.completionTokens,
                             "totalTokens" to (it.promptTokens + it.completionTokens),
+                            "totalInput" to it.promptTokens,
+                            "totalOutput" to it.completionTokens,
+                            "totalChats" to it.totalRequests,
                             "totalRequests" to it.totalRequests,
                             "totalCostMs" to it.totalCostMs
                         )
@@ -2806,6 +2993,9 @@ class NovelNativeBridge(
                     mapOf(
                         "success" to true,
                         "totalTokens" to summary.totalTokens,
+                        "totalInput" to summary.totalPromptTokens,
+                        "totalOutput" to summary.totalCompletionTokens,
+                        "totalChats" to summary.totalRequests,
                         "totalPromptTokens" to summary.totalPromptTokens,
                         "totalCompletionTokens" to summary.totalCompletionTokens,
                         "totalRequests" to summary.totalRequests,
@@ -2827,19 +3017,35 @@ class NovelNativeBridge(
 
     @JavascriptInterface
     fun executeTerminalCommand(cmd: String): String {
-        val dangerousCommands = listOf("rm -rf", "dd", "mkfs", "format", "shutdown", "reboot")
-        if (dangerousCommands.any { cmd.contains(it) }) {
-            return gson.toJson(mapOf("success" to false, "error" to "拒绝执行危险命令"))
+        val callId = "execcmd_${System.currentTimeMillis()}"
+        executeAsync(callId) {
+            val dangerousCommands = listOf("rm -rf /", "dd if=", "mkfs", "format c:", "shutdown", "reboot", "init ")
+            if (dangerousCommands.any { cmd.contains(it, ignoreCase = true) }) {
+                return@executeAsync gson.toJson(mapOf("success" to false, "error" to "拒绝执行危险命令"))
+            }
+            try {
+                val parts = cmd.split(" ").filter { it.isNotBlank() }.toTypedArray()
+                if (parts.isEmpty()) {
+                    return@executeAsync gson.toJson(mapOf("success" to false, "error" to "空命令"))
+                }
+                val process = ProcessBuilder(*parts)
+                    .redirectErrorStream(true)
+                    .start()
+                val output = process.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+                val exited = process.waitFor(15, java.util.concurrent.TimeUnit.SECONDS)
+                if (!exited) {
+                    process.destroyForcibly()
+                    gson.toJson(mapOf("success" to false, "error" to "命令执行超时（15s）", "output" to output))
+                } else {
+                    gson.toJson(mapOf("success" to true, "output" to output, "exitCode" to process.exitValue()))
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                AppLogger.e("NovelNativeBridge", "executeTerminalCommand failed", e)
+                gson.toJson(mapOf("success" to false, "error" to (e.message ?: "执行失败")))
+            }
         }
-        return try {
-            val parts = cmd.split(" ").toTypedArray()
-            val process = Runtime.getRuntime().exec(parts)
-            val output = process.inputStream.bufferedReader().readText()
-            process.waitFor()
-            gson.toJson(mapOf("success" to true, "output" to output))
-        } catch (e: Exception) {
-            gson.toJson(mapOf("success" to false, "error" to (e.message ?: "执行失败")))
-        }
+        return gson.toJson(mapOf("success" to true, "callId" to callId, "async" to true))
     }
 
     @JavascriptInterface
