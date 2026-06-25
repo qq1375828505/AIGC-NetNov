@@ -2768,6 +2768,105 @@ body{
 </div>
 
 <script>
+// ====================================================================
+// P0-8: NativeBridge 异步回调处理
+// ====================================================================
+var nativeAsyncCallbacks = {};
+window.__onNovelBridgeResult = function(callId, result) {
+    var cb = nativeAsyncCallbacks[callId];
+    if (cb) {
+        delete nativeAsyncCallbacks[callId];
+        try {
+            var parsed = (typeof result === "string") ? JSON.parse(result) : result;
+            cb.resolve(parsed);
+        } catch (e) {
+            cb.resolve(null);
+        }
+    }
+};
+function __waitForNativeAsync(callId, timeoutMs) {
+    timeoutMs = timeoutMs || 30000;
+    return new Promise(function(resolve, reject) {
+        nativeAsyncCallbacks[callId] = { resolve: resolve, reject: reject };
+        var timedOut = false;
+        setTimeout(function() {
+            if (timedOut) return;
+            timedOut = true;
+            delete nativeAsyncCallbacks[callId];
+            reject(new Error("NativeBridge 异步超时"));
+        }, timeoutMs);
+        // 后备轮询
+        var pollInterval = setInterval(function() {
+            if (timedOut) { clearInterval(pollInterval); return; }
+            try {
+                var r = window.NativeBridge.getAsyncResult(callId);
+                if (r && r.trim() !== "") {
+                    clearInterval(pollInterval);
+                    delete nativeAsyncCallbacks[callId];
+                    resolve(JSON.parse(r));
+                }
+            } catch (e) {}
+        }, 500);
+    });
+}
+function __callNativeAsync(fnName, args) {
+    // args: 原始参数数组
+    var result = window.NativeBridge[fnName].apply(window.NativeBridge, args);
+    var parsed = NB_parse(result);
+    if (parsed && parsed.async) {
+        return __waitForNativeAsync(parsed.callId);
+    }
+    return parsed;
+}
+
+// ====================================================================
+// P0-2: 资料管理分发函数
+// ====================================================================
+function getNovelMaterials(workId, type) {
+    switch(type) {
+        case 'characters': return window.NativeBridge.getCharacters(workId);
+        case 'settings': return window.NativeBridge.getSettings(workId);
+        case 'locations': return window.NativeBridge.getLocations(workId);
+        case 'factions': return window.NativeBridge.getFactions(workId);
+        case 'items': return window.NativeBridge.getItems(workId);
+        case 'plotHooks': return window.NativeBridge.getPlotHooks(workId);
+        case 'references': return window.NativeBridge.getReferences(workId);
+        case 'todos': return window.NativeBridge.getTodos(workId);
+        default: return '[]';
+    }
+}
+function createNovelMaterial(workId, type, jsonStr) {
+    try {
+        var data = JSON.parse(jsonStr);
+        switch(type) {
+            case 'characters': return window.NativeBridge.createCharacter(workId, data.name || '', data.role || '');
+            case 'settings': return window.NativeBridge.createSetting(workId, data.name || '', data.value || '');
+            case 'locations': return window.NativeBridge.createLocation(workId, data.name || '', data.description || '');
+            case 'factions': return window.NativeBridge.createFaction(workId, data.name || '', data.description || '');
+            case 'items': return window.NativeBridge.createItem(workId, data.name || '', data.description || '');
+            case 'plotHooks': return window.NativeBridge.createPlotHook(workId, data.name || '', data.description || '');
+            case 'references': return window.NativeBridge.createReference(workId, data.name || '', data.content || '');
+            case 'todos': return window.NativeBridge.createTodo(workId, data.title || '', '');
+            default: return JSON.stringify({success: false, error: '未知类型'});
+        }
+    } catch (e) {
+        return JSON.stringify({success: false, error: 'JSON 解析失败'});
+    }
+}
+function deleteNovelMaterial(id, type) {
+    switch(type) {
+        case 'characters': return window.NativeBridge.deleteCharacter(id);
+        case 'settings': return window.NativeBridge.deleteSetting(id);
+        case 'locations': return window.NativeBridge.deleteLocation(id);
+        case 'factions': return window.NativeBridge.deleteFaction(id);
+        case 'items': return window.NativeBridge.deleteItem(id);
+        case 'plotHooks': return window.NativeBridge.deletePlotHook(id);
+        case 'references': return window.NativeBridge.deleteReference(id);
+        case 'todos': return window.NativeBridge.deleteTodo(id);
+        default: return false;
+    }
+}
+
 // ===== Navigation =====
 function navigateTo(screenId) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -4475,7 +4574,7 @@ function createNewWork() {
   var description = prompt('作品简介（可留空）：', '') || '';
   if (!NB_check()) return;
   try {
-    var id = window.NativeBridge.createNovelWork(title.trim(), genre.trim(), description.trim());
+    var id = window.NativeBridge.createWork(title.trim(), genre.trim(), description.trim());
     if (id) {
       renderNovelWorks();
     } else {
@@ -4509,7 +4608,7 @@ function deleteWork(workId) {
   if (!confirm('确认删除该作品？所有章节和资料将一并删除。')) return;
   if (!NB_check()) return;
   try {
-    if (window.NativeBridge.deleteNovelWork(workId)) {
+    if (window.NativeBridge.deleteWork(workId)) {
       if (currentWorkId === workId) currentWorkId = null;
       renderNovelWorks();
     } else {
@@ -4602,7 +4701,7 @@ function saveChapterContent() {
   var editor = document.getElementById('editorText');
   if (!editor) return;
   try {
-    if (window.NativeBridge.updateChapterContent(currentChapterId, editor.value)) {
+    if (window.NativeBridge.saveChapterContent(currentChapterId, editor.value, editor.value.length)) {
       setSaveStatus('已自动保存');
     } else {
       setSaveStatus('保存失败');
@@ -4735,7 +4834,7 @@ function renderStats() {
   if (!NB_check()) return;
   var stats = null;
   try {
-    stats = NB_parse(window.NativeBridge.getNovelStats(currentWorkId));
+    stats = NB_parse(window.NativeBridge.getWritingStats(currentWorkId));
   } catch (e) {}
   if (!stats) {
     if (elWord) elWord.textContent = '加载失败';
@@ -4879,7 +4978,7 @@ function addMemory() {
   if (isNaN(importance) || importance < 1 || importance > 5) importance = 3;
   if (!NB_check()) return;
   try {
-    var id = window.NativeBridge.createMemory(content.trim(), title.trim(), importance);
+    var id = window.NativeBridge.createMemory(JSON.stringify({content: content.trim(), title: title.trim(), importance: importance}));
     if (id) {
       renderMemories();
     } else {
@@ -4965,7 +5064,7 @@ function addWorkflow() {
   if (!description || !description.trim()) description = '';
   if (!NB_check()) return;
   try {
-    var id = window.NativeBridge.createWorkflow(name.trim(), description.trim());
+    var id = window.NativeBridge.createWorkflow(JSON.stringify({name: name.trim(), description: description.trim()}));
     if (id) {
       renderWorkflows();
     } else {
@@ -5040,7 +5139,7 @@ function addModelConfig() {
   var providerType = prompt('Provider 类型（如 openai/anthropic/...）：', 'openai') || 'openai';
   if (!NB_check()) return;
   try {
-    var id = window.NativeBridge.createModelConfig(name.trim(), endpoint.trim(), apiKey.trim(), modelName.trim(), providerType.trim());
+    var id = window.NativeBridge.createModelConfig(JSON.stringify({name: name.trim(), endpoint: endpoint.trim(), apiKey: apiKey.trim(), modelName: modelName.trim(), provider: providerType.trim()}));
     if (id) {
       renderModelConfigs();
     } else {
